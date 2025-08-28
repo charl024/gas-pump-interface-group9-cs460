@@ -1,7 +1,9 @@
+package IOPort;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Wire {
+public class IOPort {
     // some example fields of what it might have, thoughts?
     ServerSocket serverSocket;
     Socket controllerSocket;
