@@ -1,19 +1,20 @@
 package IOPort;
 
+import MessagePassed.Message;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class IOPort {
+    int port;
     private ServerSocket serverSocket;
-    private Socket peerSocket;
-    private Socket deviceSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-    private final BlockingQueue<String> messageQueue;
+    private Socket socket;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    private final BlockingQueue<Message> messageQueue;
 
     /*
         A component that connects the main controller to other devices
@@ -24,57 +25,68 @@ public class IOPort {
      */
 
     public IOPort(int connector) {
-
         // port is obtained from mapping connector to a port #, where port directly corresponds to a device
-        int device_port = connector;
+        this.port = connector;
+        this.messageQueue = new LinkedBlockingQueue<>();
+
+        Thread establishConnection = getThread();
 
         try {
-            System.out.println("Connecting to port " + device_port);
-            serverSocket = new ServerSocket(device_port);
-
-            Thread acceptThread = new Thread(() -> {
-                try {
-                    peerSocket = serverSocket.accept();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            acceptThread.start();
-
-            deviceSocket = new Socket("localhost", device_port);
-
-            acceptThread.join();
-
-            in = new BufferedReader(new InputStreamReader(peerSocket.getInputStream()));
-            out = new PrintWriter(deviceSocket.getOutputStream(), true);
-            messageQueue =  new LinkedBlockingQueue<>(1);
-            System.out.println("Socket stream connected");
-        } catch (IOException | InterruptedException e) {
+            establishConnection.join();
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+        } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
 
-        Thread listener = new Thread(() -> {
+        Thread listen = new Thread(() -> {
             try {
-                String message;
-                while ((message = in.readLine()) != null) {
-                    synchronized (messageQueue) {
-                        messageQueue.put(message);
-                    }
+                Message message;
+                while ((message = (Message) in.readObject()) != null) {
+                    messageQueue.put(message);
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (InterruptedException | IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        listener.start();
-        System.out.println("IO Port listening for messages");
+        listen.start();
     }
 
-    public void send(String message) {
-        out.println(message);
+    private Thread getThread() {
+        Thread establishConnection = new Thread(() -> {
+            try {
+                try {
+                    // try this first, if success connect as a client
+                    socket = new Socket("localhost", port);
+                } catch (IOException e) {
+                    // if the above fails, connect as server
+                    serverSocket = new ServerSocket(port);
+                    socket = serverSocket.accept();
+                }
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        establishConnection.start();
+        return establishConnection;
     }
 
-    public String get() {
+    public void send(Message message) {
+        if (out != null) {
+            try {
+                out.writeObject(message);
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+    public Message get() {
         try {
             return messageQueue.take();
         } catch (InterruptedException e) {
@@ -82,9 +94,9 @@ public class IOPort {
         }
     }
 
-    public String read() {
+    public Message read() {
         try {
-            String message = messageQueue.take();
+            Message message = messageQueue.take();
             messageQueue.put(message);
             return message;
         } catch (InterruptedException e) {
