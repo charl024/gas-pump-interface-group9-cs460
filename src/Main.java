@@ -1,21 +1,24 @@
 import IOPort.IOPort;
-import Screen.Screen;
+import MessagePassed.Message;
 
 class Main {
     public static void main(String[] args) {
-        /*
-          this is where we do our testing
-          create and connect stuff here maybe (for testing)?
-         */
+        // main from Main
 
+        IOPort screenPort1 = new IOPort(5050);
 
-        IOPort screenPort = new IOPort(5050);
+        Message message = new Message("What's up from Main");
+        screenPort1.send(message);
 
-        screenPort.send("test!");
+        Message reply = screenPort1.get();
+        System.out.println("Main 1 Received: " + reply.getDescription());
 
-        System.out.println(screenPort.read());
-        System.out.println(screenPort.get());
-
-        System.out.println("Hello world!");
+//        // main from Screen
+//
+//        IOPort screenPort2 = new IOPort(5050);
+//
+//        Message message = screenPort2.get();
+//        System.out.println("Screen received: " + message.getDescription());
+//        screenPort2.send(new Message("Hello from Screen"));
     }
 }
