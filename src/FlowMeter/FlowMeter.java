@@ -24,7 +24,7 @@ public class FlowMeter extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
-        root.setMinSize(410,200);
+        root.setMinSize(410, 200);
         FMDisplay fmDisplay = new FMDisplay();
         root.getChildren().add(fmDisplay.getPane());
         primaryStage.setScene(new Scene(root));
