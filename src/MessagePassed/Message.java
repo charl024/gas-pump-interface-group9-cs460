@@ -1,6 +1,8 @@
 package MessagePassed;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
     private String description; //No clue what to name this, don't want same
 
     // name as the class
