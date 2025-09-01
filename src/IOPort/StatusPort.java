@@ -17,7 +17,6 @@ public class StatusPort extends IOPort {
 
     /**
      * Reads the next available {@link Message} without consuming it.
-     * Blocks if no message is currently available.
      *
      * @return The next status message.
      */

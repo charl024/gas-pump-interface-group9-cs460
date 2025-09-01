@@ -27,7 +27,6 @@ public class CommPort extends IOPort {
 
     /**
      * Retrieves and removes the next available {@link Message} from the queue.
-     * Blocks if no message is currently available.
      *
      * @return The next message.
      */
