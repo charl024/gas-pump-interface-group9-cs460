@@ -14,9 +14,19 @@ public class FlowMeter extends Application {
 
     //This class should be called first, so that it can do create the GUI's
     // and what not first
+    private FMDisplay display;
+    private FMIOClient client;
 
+    private String hostName;
+    private int portNumber;
 
-    public FlowMeter() {
+    public FlowMeter(String hostName, int portNumber) {
+        this.hostName = hostName;
+        this.portNumber = portNumber;
+        display = new FMDisplay();
+        //I need the client to know about the display so that it can update the GUI
+        client = new FMIOClient(hostName, portNumber, display);
+        display.setClient(client);
 
     }
 
