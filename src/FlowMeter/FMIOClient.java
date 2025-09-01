@@ -1,3 +1,7 @@
+/**
+ * Flow Meter IO Client
+ * Handles all messages that need to be sent or received by the IOport
+ */
 package FlowMeter;
 //Class will handle all messages received by the connected IO port
 
@@ -8,6 +12,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * Flow Meter IO Client
+ */
 public class FMIOClient implements Runnable {
     private Socket socket;
     private ObjectInputStream in;
@@ -17,6 +24,12 @@ public class FMIOClient implements Runnable {
 
     private final FMDisplay display;
 
+    /**
+     * Constructor for Flow Meter client
+     * @param hostName Host name of socket
+     * @param portNumber Port number of socket
+     * @param display Display class that shows the GUI
+     */
     public FMIOClient(String hostName, int portNumber, FMDisplay display) {
         this.hostName = hostName;
         this.portNumber = portNumber;
@@ -24,6 +37,10 @@ public class FMIOClient implements Runnable {
         handleConnection();
     }
 
+    /**
+     * Handles connection that needs to be made between the Flow Meter and
+     * the IOport
+     */
     private void handleConnection() {
         try {
             socket = new Socket(hostName, portNumber);
@@ -37,6 +54,10 @@ public class FMIOClient implements Runnable {
         }
     }
 
+    /**
+     * Run method that checks if any messages are being sent to the Flow
+     * meter by the IOport
+     */
     @Override
     public void run() {
         //Update later
@@ -61,6 +82,10 @@ public class FMIOClient implements Runnable {
         }
     }
 
+    /**
+     * Handle messages that are sent by the IOport
+     * @param message Message sent by the IOPort
+     */
     //Handle any messages received by the string
     private void handleMessage(Message message) {
         //The string should give three types of information:
@@ -120,6 +145,10 @@ public class FMIOClient implements Runnable {
         }
     }
 
+    /**
+     * Send a message back to the connected IOport
+     * @param message Message being sent
+     */
     public void sendMessage(Message message) {
         try {
             out.writeObject(message);

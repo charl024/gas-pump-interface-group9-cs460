@@ -1,3 +1,6 @@
+/**
+ * Flow Meter Display class, will display the simulation of a flow meter
+ */
 package FlowMeter;
 
 import MessagePassed.Message;
@@ -14,12 +17,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-//Flow meter tells how much gas has been pumped
-//When gas is finished pumping, and a new car starts pumping, reset volume
-// count to zero
+/**
+ * Flow Meter Display
+ */
 public class FMDisplay {
     private FMIOClient client;
-
 
     private final BorderPane pane; //Where all images/text will be placed on
     private final FMUserInput FMUserInput;
@@ -42,7 +44,10 @@ public class FMDisplay {
     //Would an actual progress bar be helpful? If so, what is considered
     // being full/how would we know
 
-
+    /**
+     * Flow meter constructor, will create the text boxes and button needed
+     * to simulate the flow meter
+     */
     public FMDisplay() {
         pane = new BorderPane();
         pane.setMinSize(400, 200);
@@ -64,10 +69,13 @@ public class FMDisplay {
         pane.setRight(stopFuel);
         BorderPane.setAlignment(stopFuel, Pos.CENTER);
         info.setAlignment(Pos.CENTER);
-
     }
 
-
+    /**
+     * Called when the gas has started to begun pumping. While the gas is
+     * being pumped, the amount of gas that is pumped and the cost of the gas
+     * will be updated every second
+     */
     public void startGasTimer() {
 
         final long start = System.currentTimeMillis();
@@ -104,17 +112,24 @@ public class FMDisplay {
 
     }
 
-
+    /**
+     * Called when the flow of the gas needed to be stopped
+     */
     public void handleStop() {
         timerRunning = false;
         executor.shutdown();
         Message stopMessage = new Message("FM-Stopped");
-        client.sendMessage(stopMessage); //COMMENT OUT WHEN RUNNING GUI ALONE
+        client.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI
+        // ALONE
 
         System.out.println("Timer off");
     }
 
-
+    /**
+     * Updates the gas information that needs to be displayed
+     * @param volume How much gas has been pumped out so far
+     * @param cost Cost of the gas pumped out so far
+     */
     private void updateGas(double volume, double cost) {
         String format = String.format("%.2f", volume);
         volInfo.setText("Gallons: " + format);
@@ -122,32 +137,58 @@ public class FMDisplay {
         costInfo.setText("Cost: $" + format);
     }
 
+    /**
+     * Get client class that is connected to the IOport
+     * @param client FMIO Client
+     */
     public void setClient(FMIOClient client) {
         this.client = client;
     }
 
+    /**
+     * Get the main pane that the display uses
+     * @return Pane
+     */
     public BorderPane getPane() {
         return pane;
     }
 
+    /**
+     * Check if the timer is running
+     * @return True if timer running, False if not
+     */
     public boolean isTimerRunning() {
         return timerRunning;
     }
 
+    /**
+     * Set the cost per gallon
+     * @param gasRate Cost per gallon
+     */
     public void setGasRate(double gasRate) {
         this.gasRate = gasRate;
     }
 
-
+    /**
+     * Set how much gallons are pumped per minute
+     * @param volRate Gallons per minute
+     */
     public void setVolRate(double volRate) {
         this.volRate = volRate;
     }
 
-
+    /**
+     * Set total gallons that a car can transport
+     * @param totalVolume Total gallons
+     */
     public void setTotalVolume(double totalVolume) {
         this.totalVolume = totalVolume;
     }
 
+    /**
+     * Turn timer on or off
+     * @param timerRunning True if timer on, False if not
+     */
     public void setTimerRunning(boolean timerRunning) {
         this.timerRunning = timerRunning;
     }

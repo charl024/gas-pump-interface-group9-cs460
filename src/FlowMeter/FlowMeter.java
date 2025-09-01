@@ -1,10 +1,18 @@
+/**
+ * FlowMeter class, will simulate a flow meter in real life, keeping track of
+ * how much gas and the cost of the gas as it is being pumped
+ */
 package FlowMeter;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * FlowMeter
+ */
 public class FlowMeter extends Application {
     //When connection is made with IO, save port information and sockets in
     // order to send information back if needed
@@ -25,6 +33,13 @@ public class FlowMeter extends Application {
 
     }
 
+    /**
+     * Main constructor that should be called when Flow meter needs to be
+     * created
+     *
+     * @param hostName   Host name for application
+     * @param portNumber Port number for application
+     */
     //Used when Main main calls/creates this
     public FlowMeter(String hostName, int portNumber) {
         this.hostName = hostName;
@@ -51,6 +66,11 @@ public class FlowMeter extends Application {
 
         primaryStage.setResizable(false);
         primaryStage.setTitle("Flow Meter");
+
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit(); //Shut program completely if ran
+        });
+
         primaryStage.show();
 
         //WHEN PROGRAM IS EXITED, TURN OFF PROGRAM
