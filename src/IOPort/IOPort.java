@@ -2,6 +2,7 @@ package IOPort;
 
 import MessagePassed.Message;
 
+import javax.sound.sampled.Port;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -64,7 +65,7 @@ public class IOPort {
      */
     protected IOPort(int connector) {
         // port is obtained from mapping connector to a port #, where port directly corresponds to a device
-        this.port = connector;
+        this.port = PortLookupMap.PortMap(connector);
         this.messageQueue = new LinkedBlockingQueue<>(1);
 
         // Start a thread to establish a connection (client if possible, otherwise server).
