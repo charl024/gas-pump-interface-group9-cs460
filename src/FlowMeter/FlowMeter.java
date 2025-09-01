@@ -20,9 +20,12 @@ public class FlowMeter extends Application {
     private String hostName;
     private int portNumber;
 
+    //Needed to test program by itself,
     public FlowMeter() {
 
     }
+
+    //Used when Main main calls/creates this
     public FlowMeter(String hostName, int portNumber) {
         this.hostName = hostName;
         this.portNumber = portNumber;
@@ -45,6 +48,9 @@ public class FlowMeter extends Application {
         fmDisplay.setVolRate(10);
         fmDisplay.setGasRate(3.5);
         fmDisplay.startGasTimer();
+
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("Flow Meter");
         primaryStage.show();
 
         //WHEN PROGRAM IS EXITED, TURN OFF PROGRAM

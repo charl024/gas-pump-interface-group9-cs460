@@ -1,7 +1,7 @@
 package FlowMeter;
 
 public class FMUserInput {
-    private FMDisplay display;
+    private final FMDisplay display;
 
     public FMUserInput(FMDisplay display) {
         this.display = display;
@@ -13,6 +13,6 @@ public class FMUserInput {
         } else {
             display.handleStop(); //stop timer
         }
-        System.out.println("Stop button");
+        System.out.println("Stop button clicked");
     }
 }

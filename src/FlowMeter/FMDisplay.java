@@ -28,7 +28,7 @@ public class FMDisplay {
     private final Label volInfo;
     private VBox info;
 
-    private double cost = 0;
+    private double curCost = 0;
     private double curVol = 0;
     private double totalVolume;
 
@@ -53,7 +53,7 @@ public class FMDisplay {
         stopFuel.setFocusTraversable(false);
         stopFuel.setOnAction(event -> FMUserInput.handleStop());
 
-        costInfo = new Label("Cost: $" + cost);
+        costInfo = new Label("Cost: $" + curCost);
         costInfo.setFont(new Font(20));
 
         volInfo = new Label("Gallons:  " + curVol);
@@ -69,39 +69,47 @@ public class FMDisplay {
 
 
     public void startGasTimer() {
-        //use a time that gets updated every millisecond?
+
         final long start = System.currentTimeMillis();
 
         executor = Executors.newScheduledThreadPool(1);
 
         executor.scheduleAtFixedRate(() -> {
-            //If stopped, then ignore this
+            //If stopped, then ignore timer
             if (!timerRunning) {
                 return;
             }
 
+
             long elapsedTime = System.currentTimeMillis() - start;
-            double elapsedSeconds = elapsedTime / 1000.0; //convert mili to
-            // seconds
+            double elapsedSeconds = elapsedTime / 1000.0; //convert milliseconds to seconds
 
             //initial delay, how often to repeat, time unit
-            double gallons = elapsedSeconds * (volRate /60) ;
+            double gallons = elapsedSeconds * (volRate / 60);
+            curVol = gallons;
+
+
             double cost = gallons * gasRate;
+            curCost = cost;
+
             Platform.runLater(() -> {
                 updateGas(gallons, cost);
             });
-            //updateGas(gallons, cost);
+            //If current volume is greater than total volume, then we are done
+            if (curVol > totalVolume) {
+                timerRunning = false;
+            }
 
         }, 0, 100, TimeUnit.MILLISECONDS); //100 ms
 
     }
 
-    //create methods that will update current cost and volumes
+
     public void handleStop() {
         timerRunning = false;
         executor.shutdown();
         Message stopMessage = new Message("FM-Stopped");
-        //client.sendMessage(stopMessage);
+        client.sendMessage(stopMessage); //COMMENT OUT WHEN RUNNING GUI ALONE
 
         System.out.println("Timer off");
     }
@@ -110,7 +118,7 @@ public class FMDisplay {
     private void updateGas(double volume, double cost) {
         String format = String.format("%.2f", volume);
         volInfo.setText("Gallons: " + format);
-        format =  String.format("%.2f", cost);
+        format = String.format("%.2f", cost);
         costInfo.setText("Cost: $" + format);
     }
 
@@ -126,25 +134,15 @@ public class FMDisplay {
         return timerRunning;
     }
 
-    public double getGasRate() {
-        return gasRate;
-    }
-
     public void setGasRate(double gasRate) {
         this.gasRate = gasRate;
     }
 
-    public double getVolRate() {
-        return volRate;
-    }
 
     public void setVolRate(double volRate) {
         this.volRate = volRate;
     }
 
-    public double getTotalVolume() {
-        return totalVolume;
-    }
 
     public void setTotalVolume(double totalVolume) {
         this.totalVolume = totalVolume;
