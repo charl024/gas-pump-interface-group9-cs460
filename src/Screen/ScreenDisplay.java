@@ -34,13 +34,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 public class ScreenDisplay extends Application {
+
+    public enum ButtonColor {
+        RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, GOLD, PINK, CYAN, BLACK
+    }
 
     Map<Button, Integer> buttonMap = new HashMap<>();
     GridPane centerPane;
@@ -158,5 +165,33 @@ public class ScreenDisplay extends Application {
     private void removeText(){
         GridPane.setColumnSpan(mergedNode, 1);
         centerPane.getChildren().remove(mergedNode);
+    }
+    //TODO:
+    private Color convertColor(ButtonColor color) {
+        if (color == null) {
+            return Color.TRANSPARENT;
+        }
+        switch (color) {
+            case RED:
+                return Color.RED;
+            case GREEN:
+                return Color.GREEN;
+            case BLUE:
+                return Color.BLUE;
+            case YELLOW:
+                return Color.YELLOW;
+            case ORANGE:
+                return Color.ORANGE;
+            case PURPLE:
+                return Color.PURPLE;
+            case GOLD:
+                return Color.GOLD;
+            case PINK:
+                return Color.PINK;
+            case CYAN:
+                return Color.CYAN;
+            default:
+                return Color.BLACK;
+        }
     }
 }
