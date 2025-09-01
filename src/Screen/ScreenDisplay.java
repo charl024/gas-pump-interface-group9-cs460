@@ -247,5 +247,4 @@ public class ScreenDisplay extends Application {
 //    }
 
 
-
 }
