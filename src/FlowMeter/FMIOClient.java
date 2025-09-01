@@ -12,10 +12,10 @@ public class FMIOClient implements Runnable {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private int portNumber;
-    private String hostName;
+    private final int portNumber;
+    private final String hostName;
 
-    private FMDisplay display;
+    private final FMDisplay display;
 
     public FMIOClient(String hostName, int portNumber, FMDisplay display) {
         this.hostName = hostName;
@@ -23,8 +23,18 @@ public class FMIOClient implements Runnable {
         this.display = display;
         handleConnection();
     }
-    private void handleConnection(){
 
+    private void handleConnection() {
+        try {
+            socket = new Socket(hostName, portNumber);
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+        } catch (IOException ex) {
+            System.out.println("Connection failed");
+            ex.printStackTrace();
+            System.exit(1); //End program is connection not made
+        }
     }
 
     @Override
@@ -71,27 +81,52 @@ public class FMIOClient implements Runnable {
 
 
         String deviceType = parts[0];
+        if (!(deviceType.equals("FM"))) {
+            //Wrong messaged received if we get here
+            Message invalidMessage = new Message("FM-Invalid");
+            sendMessage(invalidMessage);
+        } else {
 
+            double costPerGal = Double.parseDouble(parts[1]);
 
-        double costPerGal = Double.parseDouble(parts[1]);
+            //Handle optional parts
+            int gasFlowRate = -1;
+            if (parts.length > 2) {
+                gasFlowRate = Integer.parseInt(parts[2]);
+            }
 
-        //Handle optional parts
-        int gasFlowRate = -1;
-        if (parts.length > 2) {
-            gasFlowRate = Integer.parseInt(parts[2]);
+            int totalGas = -1;
+            if (parts.length > 3) {
+                totalGas = Integer.parseInt(parts[3]);
+            }
+
+            //After getting the required information, start the timer to have the flow start
+            display.setGasRate(costPerGal);
+            if (!(gasFlowRate == -1)) {
+                display.setVolRate(gasFlowRate);
+            } else {
+                display.setVolRate(10); //default should just be 10 gallons be per minute
+            }
+            if (!(totalGas == -1)) {
+                display.setTotalVolume(totalGas);
+            } else {
+                display.setTotalVolume(15); //Not sure if there should even be a default volume size
+            }
+
+            //After all rates are set, we can now start the timer
+            display.setTimerRunning(true);
+            display.startGasTimer();
+
         }
-
-        int totalGas = -1;
-        if (parts.length > 3) {
-            totalGas = Integer.parseInt(parts[3]);
-        }
-
-        //After getting the required information, start the timer to have the flow start
-
-
     }
 
     public void sendMessage(Message message) {
-
+        try {
+            out.writeObject(message);
+            out.flush();
+        } catch (IOException e) {
+            System.out.println("Error sending message");
+            e.printStackTrace();
+        }
     }
 }

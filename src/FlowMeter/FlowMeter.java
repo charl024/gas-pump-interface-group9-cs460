@@ -20,6 +20,9 @@ public class FlowMeter extends Application {
     private String hostName;
     private int portNumber;
 
+    public FlowMeter() {
+
+    }
     public FlowMeter(String hostName, int portNumber) {
         this.hostName = hostName;
         this.portNumber = portNumber;
@@ -38,7 +41,13 @@ public class FlowMeter extends Application {
         FMDisplay fmDisplay = new FMDisplay();
         root.getChildren().add(fmDisplay.getPane());
         primaryStage.setScene(new Scene(root));
+        fmDisplay.setTimerRunning(true);
+        fmDisplay.setVolRate(10);
+        fmDisplay.setGasRate(3.5);
+        fmDisplay.startGasTimer();
         primaryStage.show();
+
+        //WHEN PROGRAM IS EXITED, TURN OFF PROGRAM
     }
 
     public static void main(String[] args) {

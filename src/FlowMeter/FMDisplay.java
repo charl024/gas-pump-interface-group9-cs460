@@ -1,5 +1,7 @@
 package FlowMeter;
 
+import MessagePassed.Message;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -66,7 +68,7 @@ public class FMDisplay {
     }
 
 
-    private void gasTimer() {
+    public void startGasTimer() {
         //use a time that gets updated every millisecond?
         final long start = System.currentTimeMillis();
 
@@ -78,14 +80,17 @@ public class FMDisplay {
                 return;
             }
 
-            long elapsedTime = System.nanoTime() - start;
+            long elapsedTime = System.currentTimeMillis() - start;
             double elapsedSeconds = elapsedTime / 1000.0; //convert mili to
             // seconds
 
             //initial delay, how often to repeat, time unit
-            double gallons = elapsedSeconds * volRate;
+            double gallons = elapsedSeconds * (volRate /60) ;
             double cost = gallons * gasRate;
-            updateGas(gallons, cost);
+            Platform.runLater(() -> {
+                updateGas(gallons, cost);
+            });
+            //updateGas(gallons, cost);
 
         }, 0, 100, TimeUnit.MILLISECONDS); //100 ms
 
@@ -95,13 +100,18 @@ public class FMDisplay {
     public void handleStop() {
         timerRunning = false;
         executor.shutdown();
+        Message stopMessage = new Message("FM-Stopped");
+        //client.sendMessage(stopMessage);
+
         System.out.println("Timer off");
     }
 
 
     private void updateGas(double volume, double cost) {
-        volInfo.setText("Gallons: " + volume);
-        costInfo.setText("Cost: $" + cost);
+        String format = String.format("%.2f", volume);
+        volInfo.setText("Gallons: " + format);
+        format =  String.format("%.2f", cost);
+        costInfo.setText("Cost: $" + format);
     }
 
     public void setClient(FMIOClient client) {
@@ -130,5 +140,17 @@ public class FMDisplay {
 
     public void setVolRate(double volRate) {
         this.volRate = volRate;
+    }
+
+    public double getTotalVolume() {
+        return totalVolume;
+    }
+
+    public void setTotalVolume(double totalVolume) {
+        this.totalVolume = totalVolume;
+    }
+
+    public void setTimerRunning(boolean timerRunning) {
+        this.timerRunning = timerRunning;
     }
 }
