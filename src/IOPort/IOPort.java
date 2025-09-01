@@ -65,7 +65,7 @@ public class IOPort {
     protected IOPort(int connector) {
         // port is obtained from mapping connector to a port #, where port directly corresponds to a device
         this.port = connector;
-        this.messageQueue = new LinkedBlockingQueue<>();
+        this.messageQueue = new LinkedBlockingQueue<>(1);
 
         // Start a thread to establish a connection (client if possible, otherwise server).
         Thread establishConnection = getThread();
@@ -86,9 +86,9 @@ public class IOPort {
             try {
                 Message message;
                 while ((message = (Message) in.readObject()) != null) {
-                    messageQueue.put(message);
+                    boolean offerResult = messageQueue.offer(message);
                 }
-            } catch (InterruptedException | IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -143,32 +143,20 @@ public class IOPort {
 
     /**
      * Retrieves and removes the next available Message from the queue.
-     * This call will block until a message is available.
      *
      * @return The next Message from the queue.
      */
     protected Message get() {
-        try {
-            return messageQueue.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return messageQueue.poll();
     }
 
     /**
      * Reads (peeks) the next available Message without removing it from the queue.
      * Achieved by taking the message out and immediately putting it back in.
-     * This call will block until a message is available.
      *
      * @return The next Message from the queue.
      */
     protected Message read() {
-        try {
-            Message message = messageQueue.take();
-            messageQueue.put(message);
-            return message;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return messageQueue.peek();
     }
 }
