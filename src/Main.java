@@ -1,11 +1,11 @@
-import IOPort.IOPort;
+import IOPort.CommPort;
 import MessagePassed.Message;
 
 class Main {
     public static void main(String[] args) {
         // main from Main
 
-        IOPort screenPort1 = new IOPort(5050);
+        CommPort screenPort1 = new CommPort(5050);
 
         Message message = new Message("What's up from Main");
         screenPort1.send(message);
@@ -15,7 +15,7 @@ class Main {
 
 //        // main from Screen
 //
-//        IOPort screenPort2 = new IOPort(5050);
+//        CommPort screenPort1 = new CommPort(5050);
 //
 //        Message message = screenPort2.get();
 //        System.out.println("Screen received: " + message.getDescription());
