@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * </p>
  * <pre>{@code
  *      // On both Program A and Program B
- *      IOPort port = new IOPort(5050);   // Both use the same port number
+ *      IOPort port = new IOPort(1);   // Both use the same port number
  *
  *       // Sending a message
  *      port.send(new Message("Hello"));
