@@ -34,7 +34,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -45,12 +44,42 @@ import java.util.Map;
 
 public class ScreenDisplay extends Application {
 
-    public enum ButtonColor {
-        RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, GOLD, PINK, CYAN, BLACK
+//    public enum ButtonColor {
+//        RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, GOLD, PINK, CYAN, BLACK
+//    }
+
+    public enum PossibleActionsForButton{
+        //0.
+        CHOOSE_GAS_TYPE_ONE(0),
+        //1.
+        CHOSE_GAS_TYPE_TWO(1),
+        //2.
+        CHOOSE_GAS_TYPE_THREE(2),
+        //3.
+        ACCEPT_RECEIPT(3),
+        //4.
+        DENY_RECEIPT(4),
+        //5.
+        CANCEL(5);
+        //6.
+
+        private final int actionNum;
+
+        PossibleActionsForButton(int actionNum){
+            this.actionNum = actionNum;
+        }
+
+        public int getActionNum(){
+            return this.actionNum;
+        }
+
+
     }
 
-    Map<Button, Integer> buttonMap = new HashMap<>();
+    Map<Integer, Button> buttonMap = new HashMap<>();
     GridPane centerPane;
+    //TODO: might need to create an array to hold all nodes/Labels
+    //TODO continued: placed on the screen
     Node mergedNode;
 
     public static void main(String[] args) {
@@ -63,7 +92,8 @@ public class ScreenDisplay extends Application {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
         writeText();
-        removeText();
+//        removeText();
+
 
 
 
@@ -87,16 +117,11 @@ public class ScreenDisplay extends Application {
 
         for(int i = 0; i < 10; i++){
             Button b = new Button(""+i);
-            buttonMap.put(b, i);
+            buttonMap.put(i, b);
             b.setPrefSize(200, screenBounds.getHeight() / 5);
             b.setStyle("-fx-alignment: bottom-right;");
 
-            b.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-//                    PerformSomeAction();
-                }
-            });
+
 
             if(i % 2 == 0){
                 left.getChildren().add(b);
@@ -139,7 +164,7 @@ public class ScreenDisplay extends Application {
     //TODO: or entire GridPane
     private void writeText(){
         //TODO: set current text style to preferred style
-        mergedNode = new Label("Question");
+        mergedNode = new Label("Question being posed");
         GridPane.setColumnSpan(mergedNode, 2);
         GridPane.setHalignment(mergedNode, HPos.CENTER);
         centerPane.add(mergedNode, 0, 0);
@@ -153,7 +178,6 @@ public class ScreenDisplay extends Application {
                 centerPane.add(btn, col, row);
             }
         }
-
     }
 
     //TODO: Decide whether to pass and return gridPane (Center Portion)
@@ -166,32 +190,62 @@ public class ScreenDisplay extends Application {
         GridPane.setColumnSpan(mergedNode, 1);
         centerPane.getChildren().remove(mergedNode);
     }
-    //TODO:
-    private Color convertColor(ButtonColor color) {
-        if (color == null) {
-            return Color.TRANSPARENT;
-        }
-        switch (color) {
-            case RED:
-                return Color.RED;
-            case GREEN:
-                return Color.GREEN;
-            case BLUE:
-                return Color.BLUE;
-            case YELLOW:
-                return Color.YELLOW;
-            case ORANGE:
-                return Color.ORANGE;
-            case PURPLE:
-                return Color.PURPLE;
-            case GOLD:
-                return Color.GOLD;
-            case PINK:
-                return Color.PINK;
-            case CYAN:
-                return Color.CYAN;
-            default:
-                return Color.BLACK;
+    private void changeFont(char fontStyle){
+        if(fontStyle == 'i'){
+            mergedNode.setStyle("-fx-font-style: italic");
+        }else if(fontStyle == 'b'){
+            mergedNode.setStyle("-fx-font-style: normal");
+            mergedNode.setStyle("-fx-font-weight: bold");
+        }else if(fontStyle == 'n'){
+            mergedNode.setStyle("-fx-font-style: normal");
         }
     }
+    private void changeTextSize(String num){
+        mergedNode.setStyle("-fx-font-size: " + num + ";");
+    }
+
+    private void changeButtonColor(int num, String s){
+        buttonMap.get(num).setStyle("-fx-background-color: " + s + ";");
+    }
+
+    //TODO:
+    private String convertColor(String color) {
+        if (color == null) {
+            return "transparent";
+        }
+        switch (color) {
+            case "re":
+                return "crimson";
+            case "gr":
+                return "forestgreen";
+            case "bl":
+                return "deepskyblue";
+            case "ye":
+                return "yellow";
+            case "or":
+                return "orangered";
+            case "pu":
+                return "darkslateblue";
+            case "go":
+                return "goldenrod";
+            case "pi":
+                return "thistle";
+            case "cy":
+                return "aquamarine";
+            default:
+                return "ghostwhite";
+        }
+    }
+
+//    private void giveButtonAction(int button, int action){
+//        buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//
+//            }
+//        });
+//    }
+
+
+
 }
