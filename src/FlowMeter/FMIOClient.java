@@ -5,6 +5,7 @@
 package FlowMeter;
 
 import MessagePassed.Message;
+import Observer.Listener;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,7 +15,7 @@ import java.net.Socket;
 /**
  * Flow Meter IO Client
  */
-public class FMIOClient implements Runnable {
+public class FMIOClient implements Runnable, Listener {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -144,6 +145,12 @@ public class FMIOClient implements Runnable {
         }
     }
 
+    @Override
+    public void messageReceived(Message message) {
+        //Pass message so that it can be handled
+        handleMessage(message);
+    }
+
     /**
      * Send a message back to the connected IOport
      * @param message Message being sent
@@ -157,4 +164,6 @@ public class FMIOClient implements Runnable {
             e.printStackTrace();
         }
     }
+
+
 }

@@ -15,6 +15,7 @@ public class FMMain extends Application {
         //Create IO port first, then create the device
         CommPort port = new CommPort(2);
         FlowMeter flowMeter = new FlowMeter("localhost", 31);
+        port.setDevice(flowMeter.getClient());
 
         //How should I correctly use the port variable, should I just have
         // the client class have an instance of the port? Currently, it seems

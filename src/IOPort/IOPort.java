@@ -1,6 +1,7 @@
 package IOPort;
 
 import MessagePassed.Message;
+import Observer.Listener;
 
 import javax.sound.sampled.Port;
 import java.io.*;
@@ -51,6 +52,7 @@ public class IOPort {
     private final ObjectInputStream in;
     private final BlockingQueue<Message> messageQueue;
 
+    private Listener device;
     /*
         A component that connects two endpoints together by passing in a single port number.
         For example, an IoPort in Program A can connect with an IoPort in Program B by having the same port number.
@@ -148,6 +150,8 @@ public class IOPort {
      * @return The next Message from the queue.
      */
     protected Message get() {
+        device.messageReceived(messageQueue.peek()); //Added this so that
+        // when a message is received, the device is notified
         return messageQueue.poll();
     }
 
@@ -159,5 +163,9 @@ public class IOPort {
      */
     protected Message read() {
         return messageQueue.peek();
+    }
+
+    public void setDevice(Listener device) {
+        this.device = device;
     }
 }

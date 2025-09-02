@@ -11,7 +11,7 @@ package FlowMeter;
 public class FlowMeter {
 
     private final FMDisplay display;
-
+    private final FMIOClient client;
     /**
      * Main constructor that should be called when Flow meter needs to be
      * created
@@ -21,11 +21,15 @@ public class FlowMeter {
      */
     public FlowMeter(String hostName, int portNumber) {
         display = new FMDisplay();
-        display.setClient(new FMIOClient(hostName, portNumber, display));
+        client = new FMIOClient(hostName, portNumber, display);
+        display.setClient(client);
     }
 
     public FMDisplay getDisplay() {
         return display;
+    }
+    public FMIOClient getClient() {
+        return client;
     }
 
 }
