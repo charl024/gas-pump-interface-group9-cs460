@@ -3,7 +3,6 @@
  * Handles all messages that need to be sent or received by the IOport
  */
 package FlowMeter;
-//Class will handle all messages received by the connected IO port
 
 import MessagePassed.Message;
 

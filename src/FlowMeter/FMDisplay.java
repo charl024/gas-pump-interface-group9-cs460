@@ -119,8 +119,7 @@ public class FMDisplay {
         timerRunning = false;
         executor.shutdown();
         Message stopMessage = new Message("FM-Stopped");
-        client.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI
-        // ALONE
+        client.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI ALONE
 
         System.out.println("Timer off");
     }

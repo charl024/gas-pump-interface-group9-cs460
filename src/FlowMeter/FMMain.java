@@ -12,44 +12,31 @@ public class FMMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //TODO IM GOING TO FIX THIS LATER
+        //Create IO port first, then create the device
+        CommPort port = new CommPort(2);
+        FlowMeter flowMeter = new FlowMeter("localhost", 31);
+
+        //How should I correctly use the port variable, should I just have
+        // the client class have an instance of the port? Currently, it seems
+        // like FMIOClient is just connecting to a socket
+
         Pane root = new Pane();
         root.setMinSize(410, 200);
-
-        System.out.println("Checking if here");
-        CommPort port = new CommPort(1);
-        //Use localhost for hostName
-        CommPort port2 = new CommPort(1);
-
-        System.out.println("Check if here 2");
-        Message testMessage = new Message("FM-2.86-10-15");
-        System.out.println("here");
-        FlowMeter flowMeter = new FlowMeter("localhost", 31);
         root.getChildren().add(flowMeter.getDisplay().getPane());
-
-        //FMDisplay fmDisplay = new FMDisplay();
-//        root.getChildren().add(fmDisplay.getPane());
         primaryStage.setScene(new Scene(root));
-//        fmDisplay.setTimerRunning(true);
-//        fmDisplay.setVolRate(10);
-//        fmDisplay.setGasRate(3.5);
-//        fmDisplay.startGasTimer();
-
         primaryStage.setResizable(false);
         primaryStage.setTitle("Flow Meter");
 
+        //If GUI is exited, turn program off
         primaryStage.setOnCloseRequest(event -> {
-            Platform.exit(); //Shut program completely if ran
+            Platform.exit();
         });
 
         primaryStage.show();
 
-
     }
 
     public static void main(String[] args) {
-
-
         launch(args);
     }
 }

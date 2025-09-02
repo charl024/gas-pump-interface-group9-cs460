@@ -19,6 +19,18 @@ class Main {
         Message reply = screenPort1.get();
         System.out.println("Main 1 Received: " + reply.getDescription());
 
+        //TESTING CODE FOR FLOW METER:
+
+        CommPort flowIOPort = new CommPort(2);
+        //Message that we want to send to the Flow Meter
+        Message flowMessage = new Message("FM-2.86-10-15");
+        flowIOPort.send(flowMessage); //Idk if the flow should send a message
+        // back saying indicating that it received the message correctly
+
+        //TESTING CODE FOR FLOW METER ENDING
+
+
+
 //        // main from Screen
 //
 //        CommPort screenPort2 = new CommPort(1);
