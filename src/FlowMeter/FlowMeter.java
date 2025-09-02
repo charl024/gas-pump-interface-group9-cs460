@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 /**
  * FlowMeter
  */
-public class FlowMeter extends Application {
+public class FlowMeter
+        //extends Application
+{
     //When connection is made with IO, save port information and sockets in
     // order to send information back if needed
 
@@ -48,35 +50,38 @@ public class FlowMeter extends Application {
         //I need the client to know about the display so that it can update the GUI
         client = new FMIOClient(hostName, portNumber, display);
         display.setClient(client);
+    }
 
+    public FMDisplay getDisplay() {
+        return display;
     }
 
     //USING THIS TO TEST GUI ONLY
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Pane root = new Pane();
-        root.setMinSize(410, 200);
-        FMDisplay fmDisplay = new FMDisplay();
-        root.getChildren().add(fmDisplay.getPane());
-        primaryStage.setScene(new Scene(root));
-        fmDisplay.setTimerRunning(true);
-        fmDisplay.setVolRate(10);
-        fmDisplay.setGasRate(3.5);
-        fmDisplay.startGasTimer();
+//    @Override
+//    public void start(Stage primaryStage) throws Exception {
+//        Pane root = new Pane();
+//        root.setMinSize(410, 200);
+//        FMDisplay fmDisplay = new FMDisplay();
+//        root.getChildren().add(fmDisplay.getPane());
+//        primaryStage.setScene(new Scene(root));
+//        fmDisplay.setTimerRunning(true);
+//        fmDisplay.setVolRate(10);
+//        fmDisplay.setGasRate(3.5);
+//        fmDisplay.startGasTimer();
+//
+//        primaryStage.setResizable(false);
+//        primaryStage.setTitle("Flow Meter");
+//
+//        primaryStage.setOnCloseRequest(event -> {
+//            Platform.exit(); //Shut program completely if ran
+//        });
+//
+//        primaryStage.show();
+//
+//        //WHEN PROGRAM IS EXITED, TURN OFF PROGRAM
+//    }
 
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("Flow Meter");
-
-        primaryStage.setOnCloseRequest(event -> {
-            Platform.exit(); //Shut program completely if ran
-        });
-
-        primaryStage.show();
-
-        //WHEN PROGRAM IS EXITED, TURN OFF PROGRAM
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
 }
