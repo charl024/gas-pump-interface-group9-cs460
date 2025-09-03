@@ -190,7 +190,7 @@ public class ScreenDisplay extends Application {
         GridPane.setColumnSpan(mergedNode, 1);
         centerPane.getChildren().remove(mergedNode);
     }
-    private void changeFont(char fontStyle){
+    public void changeFont(char fontStyle){
         if(fontStyle == 'i'){
             mergedNode.setStyle("-fx-font-style: italic");
         }else if(fontStyle == 'b'){
@@ -200,11 +200,11 @@ public class ScreenDisplay extends Application {
             mergedNode.setStyle("-fx-font-style: normal");
         }
     }
-    private void changeTextSize(String num){
+    public void changeTextSize(String num){
         mergedNode.setStyle("-fx-font-size: " + num + ";");
     }
 
-    private void changeButtonColor(int num, String s){
+    public void changeButtonColor(int num, String s){
         buttonMap.get(num).setStyle("-fx-background-color: " + s + ";");
     }
 
@@ -237,7 +237,7 @@ public class ScreenDisplay extends Application {
         }
     }
 
-//    private void giveButtonAction(int button, int action){
+//    public void giveButtonAction(int button, int action){
 //        buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
 //            @Override
 //            public void handle(ActionEvent event) {
