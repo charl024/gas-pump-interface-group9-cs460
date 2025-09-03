@@ -169,6 +169,17 @@ public class ScreenDisplay extends Application {
             }
         }
     }
+    private void createLabel(int height, int width, int section){
+        Label label = new Label();
+        GridPane.setColumnSpan(label, width);
+        GridPane.setRowSpan(label, height);
+
+        stackMap.get(section).getChildren().add(label);
+
+
+    }
+
+
 
 
     //TODO: need to pass string value (for map) of which label to add text to
