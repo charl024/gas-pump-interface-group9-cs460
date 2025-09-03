@@ -72,15 +72,16 @@ public class ScreenDisplay extends Application {
         public int getActionNum(){
             return this.actionNum;
         }
-
-
     }
 
-    Map<Integer, Button> buttonMap = new HashMap<>();
-    GridPane centerPane;
-    //TODO: might need to create an array to hold all nodes/Labels
-    //TODO continued: placed on the screen
-    Node mergedNode;
+    //TODO: super important TODO, make sure to have getters and/or
+    //TODO continued: setters for these global variables
+
+    private Map<Integer, Button> buttonMap = new HashMap<>();
+    private GridPane centerPane;
+    private Map<String, Node> nodeMap = new HashMap<>();
+    private Map<Integer, Node> stackMap = new HashMap<>();
+    private Node mergedNode;
 
     public static void main(String[] args) {
         launch(args);
@@ -91,11 +92,11 @@ public class ScreenDisplay extends Application {
 
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
+
+        addStackPanes();
+
         writeText();
 //        removeText();
-
-
-
 
 
         primaryStage.setScene(new Scene(root));
@@ -111,8 +112,8 @@ public class ScreenDisplay extends Application {
         BorderPane root = new BorderPane();
         VBox left = new VBox();
         VBox right = new VBox();
-        //TODO: getVisualBounds means it excludes taskbars/docs
-        //TODO: for absolute full resolution, including areas covered by taskbar, use getBounds()
+        //getVisualBounds means it excludes taskbars/docs
+        //for absolute full resolution, including areas covered by taskbar, use getBounds()
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
         for(int i = 0; i < 10; i++){
@@ -120,8 +121,6 @@ public class ScreenDisplay extends Application {
             buttonMap.put(i, b);
             b.setPrefSize(200, screenBounds.getHeight() / 5);
             b.setStyle("-fx-alignment: bottom-right;");
-
-
 
             if(i % 2 == 0){
                 left.getChildren().add(b);
@@ -138,12 +137,6 @@ public class ScreenDisplay extends Application {
     private GridPane createMiddle(){
         centerPane = new GridPane();
 
-
-//        gridPane.setHgap(5);
-//        gridPane.setVgap(5);
-//        gridPane.setPadding(new Insets(10));
-
-
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setPercentWidth(50);
         ColumnConstraints col2 = new ColumnConstraints();
@@ -159,11 +152,28 @@ public class ScreenDisplay extends Application {
         return centerPane;
     }
 
+    private void addStackPanes(){
+        int index = 0;
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 2; col++) {
 
-    //TODO: Decide whether to pass and return gridPane (Center Portion)
-    //TODO: or entire GridPane
+                StackPane s = new StackPane();
+                Label l = new Label();
+
+                s.getChildren().add(l);
+                centerPane.add(s, col, row);
+
+                stackMap.put(index, s);
+                nodeMap.put(""+index, l);
+                index++;
+            }
+        }
+    }
+
+
+    //TODO: need to pass string value (for map) of which label to add text to
+    //TODO: add label to map (perform same action in removeText())
     private void writeText(){
-        //TODO: set current text style to preferred style
         mergedNode = new Label("Question being posed");
         GridPane.setColumnSpan(mergedNode, 2);
         GridPane.setHalignment(mergedNode, HPos.CENTER);
@@ -171,45 +181,38 @@ public class ScreenDisplay extends Application {
 
 
         // This is example code
-        for (int row = 1; row < 5; row++) {
-            for (int col = 0; col < 2; col++) {
-                Button btn = new Button("R" + row + "C" + col);
-                btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                centerPane.add(btn, col, row);
-            }
-        }
+//        for (int row = 1; row < 5; row++) {
+//            for (int col = 0; col < 2; col++) {
+//                Button btn = new Button("R" + row + "C" + col);
+//                btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//                centerPane.add(btn, col, row);
+//            }
+//        }
     }
-
-    //TODO: Decide whether to pass and return gridPane (Center Portion)
-    //TODO: or entire GridPane
-
-    //TODO maybe change Node parameter to a better choice, likely Label object
-
-    //TODO: If needing to remove specific node, keep track of exact reference of that object
+    //TODO: need to pass string value (for map) of which label to remove text from
     private void removeText(){
         GridPane.setColumnSpan(mergedNode, 1);
         centerPane.getChildren().remove(mergedNode);
     }
-    public void changeFont(char fontStyle){
-        if(fontStyle == 'i'){
-            mergedNode.setStyle("-fx-font-style: italic");
-        }else if(fontStyle == 'b'){
-            mergedNode.setStyle("-fx-font-style: normal");
-            mergedNode.setStyle("-fx-font-weight: bold");
-        }else if(fontStyle == 'n'){
-            mergedNode.setStyle("-fx-font-style: normal");
+    public void changeFont(String fontStyle, int numNode){
+        if(fontStyle.equals("i")){
+            nodeMap.get(""+numNode).setStyle("-fx-font-style: italic");
+        }else if(fontStyle.equals("b")){
+            nodeMap.get(""+numNode).setStyle("-fx-font-style: normal");
+            nodeMap.get(""+numNode).setStyle("-fx-font-weight: bold");
+        }else if(fontStyle.equals("n")){
+            nodeMap.get(""+numNode).setStyle("-fx-font-style: normal");
         }
     }
-    public void changeTextSize(String num){
-        mergedNode.setStyle("-fx-font-size: " + num + ";");
+    public void changeTextSize(String num, int numNode){
+        nodeMap.get(""+numNode).setStyle("-fx-font-size: " + num + ";");
     }
 
-    public void changeButtonColor(int num, String s){
-        buttonMap.get(num).setStyle("-fx-background-color: " + s + ";");
+    public void changeButtonColor(String s, int buttonNum){
+        buttonMap.get(buttonNum).setStyle("-fx-background-color: " + s + ";");
     }
 
-    //TODO:
-    private String convertColor(String color) {
+    public String convertColor(String color) {
         if (color == null) {
             return "transparent";
         }
@@ -237,13 +240,14 @@ public class ScreenDisplay extends Application {
         }
     }
 
-//    public void giveButtonAction(int button, int action){
-//        buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//
-//            }
-//        });
-//    }
+    //TODO: Finish this
+    public void giveButtonAction(int action, int button){
+        buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+    }
 
 }
