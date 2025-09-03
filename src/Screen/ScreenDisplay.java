@@ -80,7 +80,7 @@ public class ScreenDisplay extends Application {
     private Map<Integer, Button> buttonMap = new HashMap<>();
     private GridPane centerPane;
     private Map<String, Node> nodeMap = new HashMap<>();
-    private Map<Integer, Node> stackMap = new HashMap<>();
+    private Map<Integer, StackPane> stackMap = new HashMap<>();
     private Node mergedNode;
 
     public static void main(String[] args) {
@@ -176,8 +176,8 @@ public class ScreenDisplay extends Application {
 
         stackMap.get(section).getChildren().add(label);
 
-
     }
+
 
 
 
