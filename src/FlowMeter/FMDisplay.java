@@ -126,8 +126,9 @@ public class FMDisplay {
 
     /**
      * Updates the gas information that needs to be displayed
+     *
      * @param volume How much gas has been pumped out so far
-     * @param cost Cost of the gas pumped out so far
+     * @param cost   Cost of the gas pumped out so far
      */
     private void updateGas(double volume, double cost) {
         String format = String.format("%.2f", volume);
@@ -138,6 +139,7 @@ public class FMDisplay {
 
     /**
      * Get client class that is connected to the IOport
+     *
      * @param client FMIO Client
      */
     public void setClient(FMIOClient client) {
@@ -146,6 +148,7 @@ public class FMDisplay {
 
     /**
      * Get the main pane that the display uses
+     *
      * @return Pane
      */
     public BorderPane getPane() {
@@ -154,6 +157,7 @@ public class FMDisplay {
 
     /**
      * Check if the timer is running
+     *
      * @return True if timer running, False if not
      */
     public boolean isTimerRunning() {
@@ -162,6 +166,7 @@ public class FMDisplay {
 
     /**
      * Set the cost per gallon
+     *
      * @param gasRate Cost per gallon
      */
     public void setGasRate(double gasRate) {
@@ -170,6 +175,7 @@ public class FMDisplay {
 
     /**
      * Set how much gallons are pumped per minute
+     *
      * @param volRate Gallons per minute
      */
     public void setVolRate(double volRate) {
@@ -178,6 +184,7 @@ public class FMDisplay {
 
     /**
      * Set total gallons that a car can transport
+     *
      * @param totalVolume Total gallons
      */
     public void setTotalVolume(double totalVolume) {
@@ -186,6 +193,7 @@ public class FMDisplay {
 
     /**
      * Turn timer on or off
+     *
      * @param timerRunning True if timer on, False if not
      */
     public void setTimerRunning(boolean timerRunning) {

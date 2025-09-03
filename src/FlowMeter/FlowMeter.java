@@ -12,22 +12,29 @@ public class FlowMeter {
 
     private final FMDisplay display;
     private final FMIOClient client;
+
     /**
      * Main constructor that should be called when Flow meter needs to be
      * created
-     *
-     * @param hostName   Host name for application
-     * @param portNumber Port number for application
      */
-    public FlowMeter(String hostName, int portNumber) {
+    public FlowMeter() {
         display = new FMDisplay();
-        client = new FMIOClient(hostName, portNumber, display);
+        client = new FMIOClient(display);
         display.setClient(client);
     }
 
+    /**
+     * Get the display that shows the GUI
+     * @return Display
+     */
     public FMDisplay getDisplay() {
         return display;
     }
+
+    /**
+     * Get the client that handles the IOPort messages
+     * @return Client
+     */
     public FMIOClient getClient() {
         return client;
     }

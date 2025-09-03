@@ -4,89 +4,33 @@
  */
 package FlowMeter;
 
+import IOPort.CommPort;
 import MessagePassed.Message;
 import Observer.Listener;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 /**
  * Flow Meter IO Client
  */
-public class FMIOClient implements Runnable, Listener {
-    private Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private final int portNumber;
-    private final String hostName;
+public class FMIOClient implements Listener {
+
 
     private final FMDisplay display;
+    private CommPort port;
 
     /**
      * Constructor for Flow Meter client
-     * @param hostName Host name of socket
-     * @param portNumber Port number of socket
      * @param display Display class that shows the GUI
      */
-    public FMIOClient(String hostName, int portNumber, FMDisplay display) {
-        this.hostName = hostName;
-        this.portNumber = portNumber;
+    public FMIOClient(FMDisplay display) {
         this.display = display;
-        handleConnection();
     }
 
-    /**
-     * Handles connection that needs to be made between the Flow Meter and
-     * the IOport
-     */
-    private void handleConnection() {
-        try {
-            socket = new Socket(hostName, portNumber);
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
-            out.flush();
-        } catch (IOException ex) {
-            System.out.println("Connection failed");
-            ex.printStackTrace();
-            System.exit(1); //End program is connection not made
-        }
-    }
-
-    /**
-     * Run method that checks if any messages are being sent to the Flow
-     * meter by the IOport
-     */
-    @Override
-    public void run() {
-        //Update later
-        try {
-            while (true) {
-                Message message = (Message) in.readObject();
-                if (message != null) {
-                    handleMessage(message);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error handling message");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Invalid message received");
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                System.out.println("Error closing socket");
-            }
-        }
-    }
 
     /**
      * Handle messages that are sent by the IOport
      * @param message Message sent by the IOPort
      */
-    //Handle any messages received by the string
     private void handleMessage(Message message) {
         //The string should give three types of information:
         //Gas cost (based on octane they selected)
@@ -145,10 +89,16 @@ public class FMIOClient implements Runnable, Listener {
         }
     }
 
+    /**
+     * Notify the device that a messaged has been passed
+     * @param message Message received
+     */
     @Override
     public void messageReceived(Message message) {
         //Pass message so that it can be handled
         handleMessage(message);
+        //Not sure if I like this, seems kind of pointless if I just end up
+        // only calling another method
     }
 
     /**
@@ -156,14 +106,14 @@ public class FMIOClient implements Runnable, Listener {
      * @param message Message being sent
      */
     public void sendMessage(Message message) {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException e) {
-            System.out.println("Error sending message");
-            e.printStackTrace();
-        }
+        port.send(message);
     }
 
-
+    /**
+     * Set IOPort for Device
+     * @param port Connected device
+     */
+    public void setPort(CommPort port) {
+        this.port = port;
+    }
 }

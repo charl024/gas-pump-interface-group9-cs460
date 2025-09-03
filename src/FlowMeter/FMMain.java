@@ -1,7 +1,6 @@
 package FlowMeter;
 
 import IOPort.CommPort;
-import MessagePassed.Message;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -13,14 +12,14 @@ public class FMMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Create IO port first, then create the device
+
         CommPort port = new CommPort(2);
-        FlowMeter flowMeter = new FlowMeter("localhost", 31);
-        port.setDevice(flowMeter.getClient());
+        FlowMeter flowMeter = new FlowMeter();
+        port.setDevice(flowMeter.getClient());//Save client to port
+        flowMeter.getClient().setPort(port); //Save port to client
 
-        //How should I correctly use the port variable, should I just have
-        // the client class have an instance of the port? Currently, it seems
-        // like FMIOClient is just connecting to a socket
 
+        //Adjusting size of pane
         Pane root = new Pane();
         root.setMinSize(410, 200);
         root.getChildren().add(flowMeter.getDisplay().getPane());
@@ -34,6 +33,8 @@ public class FMMain extends Application {
         });
 
         primaryStage.show();
+        //TODO TO UPDATE HOW TO HANDLE MESSAGES SENT FROM MAIN!
+        port.get();
 
     }
 
