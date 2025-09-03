@@ -34,7 +34,15 @@ public class FMMain extends Application {
 
         primaryStage.show();
         //TODO TO UPDATE HOW TO HANDLE MESSAGES SENT FROM MAIN!
-        port.get();
+        //Use this to show the GUI, then get the message from ioPort
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000); // wait 5 seconds
+                port.get();         // blocking call
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
     }
 

@@ -20,6 +20,7 @@ public class FMIOClient implements Listener {
 
     /**
      * Constructor for Flow Meter client
+     *
      * @param display Display class that shows the GUI
      */
     public FMIOClient(FMDisplay display) {
@@ -29,6 +30,7 @@ public class FMIOClient implements Listener {
 
     /**
      * Handle messages that are sent by the IOport
+     *
      * @param message Message sent by the IOPort
      */
     private void handleMessage(Message message) {
@@ -91,6 +93,7 @@ public class FMIOClient implements Listener {
 
     /**
      * Notify the device that a messaged has been passed
+     *
      * @param message Message received
      */
     @Override
@@ -103,6 +106,7 @@ public class FMIOClient implements Listener {
 
     /**
      * Send a message back to the connected IOport
+     *
      * @param message Message being sent
      */
     public void sendMessage(Message message) {
@@ -111,6 +115,7 @@ public class FMIOClient implements Listener {
 
     /**
      * Set IOPort for Device
+     *
      * @param port Connected device
      */
     public void setPort(CommPort port) {

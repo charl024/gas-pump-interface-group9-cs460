@@ -25,6 +25,7 @@ public class FlowMeter {
 
     /**
      * Get the display that shows the GUI
+     *
      * @return Display
      */
     public FMDisplay getDisplay() {
@@ -33,6 +34,7 @@ public class FlowMeter {
 
     /**
      * Get the client that handles the IOPort messages
+     *
      * @return Client
      */
     public FMIOClient getClient() {
