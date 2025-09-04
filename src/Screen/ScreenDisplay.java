@@ -267,7 +267,6 @@ public class ScreenDisplay extends Application {
         l.setAlignment(Pos.CENTER);
     }
 
-
     //TODO: need to pass string value (for map) of which label to add text to
     //TODO: add label to map (perform same action in removeText())
 
