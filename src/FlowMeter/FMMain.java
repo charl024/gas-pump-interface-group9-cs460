@@ -1,6 +1,7 @@
 package FlowMeter;
 
 import IOPort.CommPort;
+import MessagePassed.Message;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -15,7 +16,7 @@ public class FMMain extends Application {
 
         CommPort port = new CommPort(2);
         FlowMeter flowMeter = new FlowMeter();
-        port.setDevice(flowMeter.getClient());//Save client to port
+//        port.setDevice(flowMeter.getClient());//Save client to port
         flowMeter.getClient().setPort(port); //Save port to client
 
 
@@ -33,12 +34,19 @@ public class FMMain extends Application {
         });
 
         primaryStage.show();
-        //TODO TO UPDATE HOW TO HANDLE MESSAGES SENT FROM MAIN!
+        //TODO TO UPDATE HOW TO HANDLE MESSAGES SENT FROM MAIN! --- DONE
         //Use this to show the GUI, then get the message from ioPort
         new Thread(() -> {
             try {
-                Thread.sleep(5000); // wait 5 seconds
-                port.get();         // blocking call
+                while (true) {
+                    Thread.sleep(10); // wait 10ms
+                    Message message = port.get();         // blocking call
+                    if (message != null) {
+                        flowMeter.getClient().handleMessage(message);
+                    }
+                }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
