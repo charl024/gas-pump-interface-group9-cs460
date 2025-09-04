@@ -45,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 public class ScreenDisplay extends Application {
 
     // Shows the possible actions that a button can have
@@ -58,8 +57,14 @@ public class ScreenDisplay extends Application {
         CANCEL(5);
 
         private final int actionNum;
-        PossibleActionsForButton(int actionNum) { this.actionNum = actionNum; }
-        public int getActionNum() { return actionNum; }
+
+        PossibleActionsForButton(int actionNum) {
+            this.actionNum = actionNum;
+        }
+
+        public int getActionNum() {
+            return actionNum;
+        }
     }
 
     //TODO: super important TODO, make sure to have getters and/or
@@ -82,11 +87,11 @@ public class ScreenDisplay extends Application {
         root.setCenter(createMiddle());
 
         addMidLabels();
-        changeLabel(1,2,0);
+        changeLabel(1, 2, 0);
         writeText("Would you like a receipt?", 0);
 
-        Label two = labelMap.get(""+2);
-        Label three = labelMap.get(""+3);
+        Label two = labelMap.get("" + 2);
+        Label three = labelMap.get("" + 3);
 
         two.setText("YES");
         two.setTextFill(Color.WHITE);
@@ -112,10 +117,6 @@ public class ScreenDisplay extends Application {
         changeButtonColor("red", 3);
 
 
-
-
-
-
         primaryStage.setScene(new Scene(root));
         ///////
 //        primaryStage.setFullScreen(true);
@@ -127,7 +128,7 @@ public class ScreenDisplay extends Application {
 
     // Method creates buttons 0-9 (placed on left and right side of screen)
     // Occupies left and right side of BorderPane
-    private BorderPane createSideButtons(){
+    private BorderPane createSideButtons() {
         BorderPane root = new BorderPane();
         VBox left = new VBox();
         VBox right = new VBox();
@@ -135,8 +136,8 @@ public class ScreenDisplay extends Application {
         //for absolute full resolution, including areas covered by taskbar, use getBounds()
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        for(int i = 0; i < 10; i++){
-            Button b = new Button(""+i);
+        for (int i = 0; i < 10; i++) {
+            Button b = new Button("" + i);
             buttonMap.put(i, b);
             b.setPrefSize(200, screenBounds.getHeight() / 5);
             //Code for unbordered labels
@@ -148,9 +149,9 @@ public class ScreenDisplay extends Application {
                             "-fx-border-width: 2;" +
                             "-fx-border-radius: 5;"
             );
-            if(i % 2 == 0){
+            if (i % 2 == 0) {
                 left.getChildren().add(b);
-            }else{
+            } else {
                 right.getChildren().add(b);
             }
         }
@@ -168,16 +169,16 @@ public class ScreenDisplay extends Application {
 
     // TODO: need to finish/work on message sending from buttons and test
     // Assign action and label to a button
-    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color){
+    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color) {
         Button btn = buttonMap.get(buttonNum);
-        if(btn == null) return;
+        if (btn == null) return;
 
         btn.setText(label);
         btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
 
         btn.setOnAction(e -> {
             System.out.println("Button " + buttonNum + " pressed: " + action.name());
-            if(screenHandler != null){
+            if (screenHandler != null) {
                 //screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
             }
         });
@@ -185,7 +186,7 @@ public class ScreenDisplay extends Application {
 
     // Creates a 2x5 grid on GridPane.
     // GridPane occupies entire center of BorderPane
-    private GridPane createMiddle(){
+    private GridPane createMiddle() {
         centerPane = new GridPane();
 
         ColumnConstraints col1 = new ColumnConstraints();
@@ -195,7 +196,7 @@ public class ScreenDisplay extends Application {
 
         centerPane.getColumnConstraints().addAll(col1, col2);
 
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             RowConstraints row = new RowConstraints();
             row.setPercentHeight(20);
             centerPane.getRowConstraints().add(row);
@@ -205,7 +206,7 @@ public class ScreenDisplay extends Application {
 
     // Previously known as addStackPanes
     // Adds labels to each cell of the 2x5 grid
-    private void addMidLabels(){
+    private void addMidLabels() {
         int index = 0;
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 2; col++) {
@@ -223,21 +224,21 @@ public class ScreenDisplay extends Application {
 
                 centerPane.add(l, col, row);
 
-                labelMap.put(""+index, l);
+                labelMap.put("" + index, l);
                 index++;
             }
         }
     }
+
     // Previously known as createLabel(int height, int width, int section)
     // Changes the size of a specified label to a specified height and width
-    private void changeLabel(int height, int width, int section){
+    private void changeLabel(int height, int width, int section) {
 
 
-        Label l = labelMap.get(""+section);
+        Label l = labelMap.get("" + section);
 
         int startRow = section / 2;
         int startCol = section % 2;
-
 
 
         for (int row = 0; row < height; row++) {
@@ -250,9 +251,6 @@ public class ScreenDisplay extends Application {
                 }
             }
         }
-
-
-
 
 
         l.setStyle("-fx-background-color: white;");
@@ -271,11 +269,10 @@ public class ScreenDisplay extends Application {
     //TODO: add label to map (perform same action in removeText())
 
     //TODO: change this method
-    private void writeText(String text, int label){
-        Label l = labelMap.get(""+label);
+    private void writeText(String text, int label) {
+        Label l = labelMap.get("" + label);
         l.setText(text);
         changeTextSize("40", 0);
-
 
 
         // This is example code
@@ -287,30 +284,35 @@ public class ScreenDisplay extends Application {
 //            }
 //        }
     }
+
     //TODO: need to pass string value (for map) of which label to remove text from
-    private void removeText(){
+    private void removeText() {
         GridPane.setColumnSpan(mergedNode, 1);
         centerPane.getChildren().remove(mergedNode);
     }
+
     // Changes the font of specified label
-    public void changeFont(String fontStyle, int numNode){
-        if(fontStyle.equals("i")){
-            labelMap.get(""+numNode).setStyle("-fx-font-style: italic");
-        }else if(fontStyle.equals("b")){
-            labelMap.get(""+numNode).setStyle("-fx-font-style: normal");
-            labelMap.get(""+numNode).setStyle("-fx-font-weight: bold");
-        }else if(fontStyle.equals("n")){
-            labelMap.get(""+numNode).setStyle("-fx-font-style: normal");
+    public void changeFont(String fontStyle, int numNode) {
+        if (fontStyle.equals("i")) {
+            labelMap.get("" + numNode).setStyle("-fx-font-style: italic");
+        } else if (fontStyle.equals("b")) {
+            labelMap.get("" + numNode).setStyle("-fx-font-style: normal");
+            labelMap.get("" + numNode).setStyle("-fx-font-weight: bold");
+        } else if (fontStyle.equals("n")) {
+            labelMap.get("" + numNode).setStyle("-fx-font-style: normal");
         }
     }
+
     // Changes text size of specified label
-    public void changeTextSize(String num, int numNode){
-        labelMap.get(""+numNode).setStyle("-fx-font-size: " + num + ";");
+    public void changeTextSize(String num, int numNode) {
+        labelMap.get("" + numNode).setStyle("-fx-font-size: " + num + ";");
     }
+
     // Changes button color of specified number
-    public void changeButtonColor(String s, int buttonNum){
+    public void changeButtonColor(String s, int buttonNum) {
         buttonMap.get(buttonNum).setStyle("-fx-background-color: " + s + ";");
     }
+
     // Converts color representation from message received to actual color
     public String convertColor(String color) {
         if (color == null) {
@@ -341,7 +343,7 @@ public class ScreenDisplay extends Application {
     }
 
     //TODO: Finish this
-    public void giveButtonAction(int action, int button){
+    public void giveButtonAction(int action, int button) {
         buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

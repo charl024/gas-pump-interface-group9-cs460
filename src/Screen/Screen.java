@@ -1,6 +1,7 @@
 package Screen;
 
 import java.net.Socket;
+
 import IOPort.CommPort;
 import MessagePassed.Message;
 
@@ -28,6 +29,7 @@ public class Screen {
         this.screenDisplay = screenDisplay;
 
     }
+
     private void handleMessage(Message msg) {
         String messageStr = msg.getDescription();
         String[] parts = messageStr.split("-");
@@ -36,24 +38,24 @@ public class Screen {
         if (!(deviceType.equals("SC"))) {
             Message invalidMessage = new Message("SC-Invalid");
             sendMessage(invalidMessage);
-        }else{
+        } else {
 
-            if(!parts[1].equals("*")){
+            if (!parts[1].equals("*")) {
                 String[] s = parts[1].split("\\.");
                 screenDisplay.changeFont(s[0], Integer.parseInt(s[1]));
             }
-            if(!parts[2].equals("*")){
+            if (!parts[2].equals("*")) {
                 String[] s = parts[2].split("\\.");
                 screenDisplay.changeTextSize(s[0], Integer.parseInt(s[1]));
             }
-            if(!parts[3].equals("*")){
+            if (!parts[3].equals("*")) {
                 String[] s = parts[3].split("\\.");
                 screenDisplay.changeButtonColor(
                         screenDisplay.convertColor(s[0]),
                         Integer.parseInt(s[1])
                 );
             }
-            if(!parts[4].equals("*")){
+            if (!parts[4].equals("*")) {
                 String[] s = parts[4].split("\\.");
                 screenDisplay.giveButtonAction(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
             }
@@ -76,13 +78,16 @@ public class Screen {
 //            }
         }
     }
+
     public void messageReceived(Message msg) {
         handleMessage(msg);
     }
+
     public void sendMessage(Message msg) {
         port.send(msg);
 
     }
+
     public void setPort(CommPort port) {
         this.port = port;
     }
