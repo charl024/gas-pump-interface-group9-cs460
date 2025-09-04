@@ -83,47 +83,56 @@ public class ScreenDisplay extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        BorderPane root = createSideButtons();
-        root.setCenter(createMiddle());
+        boolean showGasScreen = true; // Start with gas screen first
 
-        addMidLabels();
-        changeLabel(1, 2, 0);
-        writeText("Would you like a receipt?", 0);
+        Runnable showReceiptScreen = () -> {
+            BorderPane root = createSideButtons();
+            root.setCenter(createMiddle());
 
-        Label two = labelMap.get("" + 2);
-        Label three = labelMap.get("" + 3);
+            addMidLabels();
+            changeLabel(1, 2, 0);
+            writeText("Would you like a receipt?", 0);
 
-        two.setText("YES");
-        two.setTextFill(Color.WHITE);
-        two.setFont(Font.font("Verdana", 40));
-        two.setAlignment(Pos.CENTER_LEFT);
-        two.setStyle(
-                "-fx-background-color: #111111;" +
-                        "-fx-border-color: white;" +
-                        "-fx-border-width: 2;" +
-                        "-fx-border-radius: 5;"
-        );
-        three.setText("NO");
-        three.setTextFill(Color.WHITE);
-        three.setFont(Font.font("Verdana", 40));
-        three.setAlignment(Pos.CENTER_RIGHT);
-        three.setStyle(
-                "-fx-background-color: #111111;" +
-                        "-fx-border-color: white;" +
-                        "-fx-border-width: 2;" +
-                        "-fx-border-radius: 5;"
-        );
-        changeButtonColor("green", 2);
-        changeButtonColor("red", 3);
+            Label two = labelMap.get("" + 2);
+            Label three = labelMap.get("" + 3);
 
+            two.setText("YES");
+            two.setTextFill(Color.WHITE);
+            two.setFont(Font.font("Verdana", 40));
+            two.setAlignment(Pos.CENTER_LEFT);
+            two.setStyle(
+                    "-fx-background-color: #111111;" +
+                            "-fx-border-color: white;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 5;"
+            );
 
-        primaryStage.setScene(new Scene(root));
-        ///////
-//        primaryStage.setFullScreen(true);
+            three.setText("NO");
+            three.setTextFill(Color.WHITE);
+            three.setFont(Font.font("Verdana", 40));
+            three.setAlignment(Pos.CENTER_RIGHT);
+            three.setStyle(
+                    "-fx-background-color: #111111;" +
+                            "-fx-border-color: white;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 5;"
+            );
+
+            changeButtonColor("green", 2);
+            changeButtonColor("red", 3);
+
+            primaryStage.setScene(new Scene(root));
+        };
+
+        if (showGasScreen) {
+            GasSelectionScreen gasScreen = new GasSelectionScreen();
+            primaryStage.setScene(gasScreen.createScene(primaryStage, showReceiptScreen));
+        } else {
+            showReceiptScreen.run();
+        }
+
         primaryStage.setMaximized(true);
-        ///////
         primaryStage.show();
-
     }
 
     // Method creates buttons 0-9 (placed on left and right side of screen)
@@ -165,6 +174,36 @@ public class ScreenDisplay extends Application {
 //        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "Premium", "orangered");
 
         return root;
+    }
+
+    private void addGasButtonsToCenter() {
+        String[] gasNames = { "Regular", "Plus", "Premium" };
+        String[] gasColors = { "forestgreen", "dodgerblue", "orangered" };
+        PossibleActionsForButton[] actions = {
+                PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE,
+                PossibleActionsForButton.CHOSE_GAS_TYPE_TWO,
+                PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE
+        };
+
+        for (int i = 0; i < 3; i++) {
+            Button gasBtn = new Button(gasNames[i]);
+            gasBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            gasBtn.setStyle(
+                    "-fx-background-color: " + gasColors[i] + ";" +
+                            "-fx-text-fill: white; -fx-font-size: 20px;"
+            );
+
+            int buttonIndex = i; // for lambda
+            gasBtn.setOnAction(e -> {
+                System.out.println("Gas button pressed: " + actions[buttonIndex]);
+                if (screenHandler != null) {
+                    // screenHandler.sendMessage(new Message(...));
+                }
+            });
+
+            // Row 1, 2, 3 in column 0
+            centerPane.add(gasBtn, 0, i + 1);
+        }
     }
 
     // TODO: need to finish/work on message sending from buttons and test
