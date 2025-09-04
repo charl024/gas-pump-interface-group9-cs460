@@ -1,13 +1,10 @@
 package IOPort;
 
 import MessagePassed.Message;
-import Observer.Listener;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * The {@code IOPort} class provides a communication channel between two endpoints
@@ -15,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * <p>
  *     Once established, both endpoints can exchange {@link Message} objects using
- *     object streams. Incoming messages are stored in a thread-safe queue, which can
+ *     object streams. Incoming messages are stored in a single variable, which can
  *     be accessed using {@link #get()} or {@link #read()}.
  * </p>
  *
@@ -40,7 +37,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * <p>
  *     Each IOPort runs two internal threads:
  *     One to establish the connection (as client or server).<
- *     One to continuously listen for incoming messages and enqueue them.
+ *     One to continuously listen for incoming messages and stores them.
  * </p>
  */
 public class IOPort {
@@ -49,7 +46,7 @@ public class IOPort {
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private final BlockingQueue<Message> messageQueue;
+    private Message currentMessage;
 
     /*
         A component that connects two endpoints together by passing in a single port number.
@@ -66,7 +63,7 @@ public class IOPort {
     protected IOPort(int connector) {
         // port is obtained from mapping connector to a port #, where port directly corresponds to a device
         this.port = PortLookupMap.PortMap(connector);
-        this.messageQueue = new LinkedBlockingQueue<>(1);
+        this.currentMessage = null;
 
         // Start a thread to establish a connection (client if possible, otherwise server).
         Thread establishConnection = getThread();
@@ -82,12 +79,12 @@ public class IOPort {
             close();
         }
 
-        // Start a thread to continuously listen for incoming messages and place them into the message queue.
+        // Start a thread to continuously listen for incoming messages and place them into a variable.
         Thread listen = new Thread(() -> {
             try {
                 Message message;
                 while ((message = (Message) in.readObject()) != null) {
-                    boolean offerResult = messageQueue.offer(message);
+                    currentMessage = message;
                 }
             } catch (IOException | ClassNotFoundException e) {
                 close();
@@ -180,21 +177,22 @@ public class IOPort {
     }
 
     /**
-     * Retrieves and removes the next available Message from the queue.
+     * Retrieves and returns current message, which is then set to null.
      *
-     * @return The next Message from the queue.
+     * @return The current Message.
      */
     protected Message get() {
-        return messageQueue.poll();
+        Message toSend = currentMessage;
+        currentMessage = null;
+        return toSend;
     }
 
     /**
-     * Reads (peeks) the next available Message without removing it from the queue.
-     * Achieved by taking the message out and immediately putting it back in.
+     * Reads the current message.
      *
-     * @return The next Message from the queue.
+     * @return The current Message.
      */
     protected Message read() {
-        return messageQueue.peek();
+        return currentMessage;
     }
 }

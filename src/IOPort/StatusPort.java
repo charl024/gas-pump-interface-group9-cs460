@@ -7,7 +7,7 @@ import MessagePassed.Message;
  * observing the latest status updates.
  *
  * <p>
- * It exposes only {@link #read()}, which allows for reading the most recent message without removing it from queue.
+ * It exposes only {@link #read()}, which allows for reading the current message without removing it.
  * </p>
  */
 public class StatusPort extends IOPort {
@@ -16,9 +16,9 @@ public class StatusPort extends IOPort {
     }
 
     /**
-     * Reads the next available {@link Message} without consuming it.
+     * Reads the current message.
      *
-     * @return The next status message.
+     * @return The current Message.
      */
     public Message read() {
         return super.read();

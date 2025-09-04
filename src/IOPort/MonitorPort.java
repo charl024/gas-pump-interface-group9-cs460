@@ -8,7 +8,7 @@ import MessagePassed.Message;
  *
  * <p>
  * It exposes {@link #send(Message)} for outgoing messages, and
- * {@link #read()} to read the most recent message in the queue (doesn't remove the message from queue).
+ * {@link #read()} to read the current message, but does not remove it.
  * </p>
  */
 public class MonitorPort extends IOPort {
@@ -26,9 +26,9 @@ public class MonitorPort extends IOPort {
     }
 
     /**
-     * Reads the next available {@link Message} without consuming it.
+     * Reads the current message.
      *
-     * @return The next message in the queue.
+     * @return The current Message.
      */
     public Message read() {
         return super.read();
