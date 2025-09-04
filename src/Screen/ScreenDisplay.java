@@ -27,8 +27,9 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -44,10 +45,7 @@ import java.util.Map;
 
 public class ScreenDisplay extends Application {
 
-//    public enum ButtonColor {
-//        RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, GOLD, PINK, CYAN, BLACK
-//    }
-
+    // Shows the possible actions that a button can have
     public enum PossibleActionsForButton{
         //0.
         CHOOSE_GAS_TYPE_ONE(0),
@@ -79,7 +77,7 @@ public class ScreenDisplay extends Application {
 
     private Map<Integer, Button> buttonMap = new HashMap<>();
     private GridPane centerPane;
-    private Map<String, Node> nodeMap = new HashMap<>();
+    private Map<String, Label> labelMap = new HashMap<>();
     private Map<Integer, StackPane> stackMap = new HashMap<>();
     private Node mergedNode;
 
@@ -93,10 +91,8 @@ public class ScreenDisplay extends Application {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
 
-        addStackPanes();
-
-        writeText();
-//        removeText();
+        addMidLabels();
+        changeLabel(1,2,0);
 
 
         primaryStage.setScene(new Scene(root));
@@ -108,6 +104,8 @@ public class ScreenDisplay extends Application {
 
     }
 
+    // Method creates buttons 0-9 (placed on left and right side of screen)
+    // Occupies left and right side of BorderPane
     private BorderPane createSideButtons(){
         BorderPane root = new BorderPane();
         VBox left = new VBox();
@@ -133,7 +131,8 @@ public class ScreenDisplay extends Application {
         return root;
     }
 
-
+    // Creates a 2x5 grid on GridPane.
+    // GridPane occupies entire center of BorderPane
     private GridPane createMiddle(){
         centerPane = new GridPane();
 
@@ -152,34 +151,48 @@ public class ScreenDisplay extends Application {
         return centerPane;
     }
 
-    private void addStackPanes(){
+    // Previously known as addStackPanes
+    // Adds labels to each cell of the 2x5 grid
+    private void addMidLabels(){
         int index = 0;
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 2; col++) {
 
-                StackPane s = new StackPane();
                 Label l = new Label();
+                l.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-                s.getChildren().add(l);
-                centerPane.add(s, col, row);
+                /////////////
+//                if(index % 2 == 0){
+//                    l.setStyle("-fx-border-color: black;");
+//                }else{
+//                    l.setStyle("-fx-border-color: orange;");
+//                }
+                /////////////
 
-                stackMap.put(index, s);
-                nodeMap.put(""+index, l);
+                centerPane.add(l, col, row);
+
+                labelMap.put(""+index, l);
                 index++;
             }
         }
     }
-    private void createLabel(int height, int width, int section){
-        Label label = new Label();
-        GridPane.setColumnSpan(label, width);
-        GridPane.setRowSpan(label, height);
+    // Previously known as createLabel(int height, int width, int section)
+    // Changes the size of a specified label to a specified height and width
+    private void changeLabel(int height, int width, int section){
 
-        stackMap.get(section).getChildren().add(label);
 
+        Label l = labelMap.get(""+section);
+
+        GridPane.setColumnSpan(l, width);
+        GridPane.setRowSpan(l, height);
+
+        ////// This is used for testing purposes
+        l.setStyle("-fx-background-color: green;");
+        l.setText("dddd");
+        //////
+
+        l.setAlignment(Pos.CENTER);
     }
-
-
-
 
 
     //TODO: need to pass string value (for map) of which label to add text to
@@ -187,8 +200,7 @@ public class ScreenDisplay extends Application {
     private void writeText(){
         mergedNode = new Label("Question being posed");
         GridPane.setColumnSpan(mergedNode, 2);
-        GridPane.setHalignment(mergedNode, HPos.CENTER);
-        centerPane.add(mergedNode, 0, 0);
+
 
 
         // This is example code
@@ -205,24 +217,26 @@ public class ScreenDisplay extends Application {
         GridPane.setColumnSpan(mergedNode, 1);
         centerPane.getChildren().remove(mergedNode);
     }
+    // Changes the font of specified label
     public void changeFont(String fontStyle, int numNode){
         if(fontStyle.equals("i")){
-            nodeMap.get(""+numNode).setStyle("-fx-font-style: italic");
+            labelMap.get(""+numNode).setStyle("-fx-font-style: italic");
         }else if(fontStyle.equals("b")){
-            nodeMap.get(""+numNode).setStyle("-fx-font-style: normal");
-            nodeMap.get(""+numNode).setStyle("-fx-font-weight: bold");
+            labelMap.get(""+numNode).setStyle("-fx-font-style: normal");
+            labelMap.get(""+numNode).setStyle("-fx-font-weight: bold");
         }else if(fontStyle.equals("n")){
-            nodeMap.get(""+numNode).setStyle("-fx-font-style: normal");
+            labelMap.get(""+numNode).setStyle("-fx-font-style: normal");
         }
     }
+    // Changes text size of specified label
     public void changeTextSize(String num, int numNode){
-        nodeMap.get(""+numNode).setStyle("-fx-font-size: " + num + ";");
+        labelMap.get(""+numNode).setStyle("-fx-font-size: " + num + ";");
     }
-
+    // Changes button color of specified number
     public void changeButtonColor(String s, int buttonNum){
         buttonMap.get(buttonNum).setStyle("-fx-background-color: " + s + ";");
     }
-
+    // Converts color representation from message received to actual color
     public String convertColor(String color) {
         if (color == null) {
             return "transparent";
@@ -260,5 +274,4 @@ public class ScreenDisplay extends Application {
             }
         });
     }
-
 }
