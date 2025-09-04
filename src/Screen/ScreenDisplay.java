@@ -46,34 +46,22 @@ import java.util.Map;
 public class ScreenDisplay extends Application {
 
     // Shows the possible actions that a button can have
-    public enum PossibleActionsForButton{
-        //0.
+    public enum PossibleActionsForButton {
         CHOOSE_GAS_TYPE_ONE(0),
-        //1.
         CHOSE_GAS_TYPE_TWO(1),
-        //2.
         CHOOSE_GAS_TYPE_THREE(2),
-        //3.
         ACCEPT_RECEIPT(3),
-        //4.
         DENY_RECEIPT(4),
-        //5.
         CANCEL(5);
-        //6.
 
         private final int actionNum;
-
-        PossibleActionsForButton(int actionNum){
-            this.actionNum = actionNum;
-        }
-
-        public int getActionNum(){
-            return this.actionNum;
-        }
+        PossibleActionsForButton(int actionNum) { this.actionNum = actionNum; }
+        public int getActionNum() { return actionNum; }
     }
 
     //TODO: super important TODO, make sure to have getters and/or
     //TODO continued: setters for these global variables
+    private Screen screenHandler; // Reference to Screen class to send messages
 
     private Map<Integer, Button> buttonMap = new HashMap<>();
     private GridPane centerPane;
@@ -128,7 +116,31 @@ public class ScreenDisplay extends Application {
         }
         root.setLeft(left);
         root.setRight(right);
+
+
+        // Assign first 3 buttons to gas options
+        setupGasButton(0, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "Regular", "forestgreen");
+        setupGasButton(1, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "Plus", "dodgerblue");
+        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "Premium", "orangered");
+
         return root;
+    }
+
+    // TODO: need to finish/work on message sending from buttons and test
+    // Assign action and label to a button
+    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color){
+        Button btn = buttonMap.get(buttonNum);
+        if(btn == null) return;
+
+        btn.setText(label);
+        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        btn.setOnAction(e -> {
+            System.out.println("Button " + buttonNum + " pressed: " + action.name());
+            if(screenHandler != null){
+                //screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
+            }
+        });
     }
 
     // Creates a 2x5 grid on GridPane.
@@ -187,8 +199,8 @@ public class ScreenDisplay extends Application {
         GridPane.setRowSpan(l, height);
 
         ////// This is used for testing purposes
-        l.setStyle("-fx-background-color: green;");
-        l.setText("dddd");
+//        l.setStyle("-fx-background-color: green;");
+//        l.setText("dddd");
         //////
 
         l.setAlignment(Pos.CENTER);
