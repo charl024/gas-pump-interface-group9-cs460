@@ -1,13 +1,10 @@
 package IOPort;
 
 import MessagePassed.Message;
-import Observer.Listener;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * The {@code IOPort} class provides a communication channel between two endpoints
@@ -49,7 +46,7 @@ public class IOPort {
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private final BlockingQueue<Message> messageQueue;
+    private Message currentMessage;
 
     /*
         A component that connects two endpoints together by passing in a single port number.
@@ -66,7 +63,7 @@ public class IOPort {
     protected IOPort(int connector) {
         // port is obtained from mapping connector to a port #, where port directly corresponds to a device
         this.port = PortLookupMap.PortMap(connector);
-        this.messageQueue = new LinkedBlockingQueue<>(1);
+        this.currentMessage = null;
 
         // Start a thread to establish a connection (client if possible, otherwise server).
         Thread establishConnection = getThread();
@@ -87,7 +84,7 @@ public class IOPort {
             try {
                 Message message;
                 while ((message = (Message) in.readObject()) != null) {
-                    boolean offerResult = messageQueue.offer(message);
+                    currentMessage = message;
                 }
             } catch (IOException | ClassNotFoundException e) {
                 close();
@@ -185,7 +182,9 @@ public class IOPort {
      * @return The next Message from the queue.
      */
     protected Message get() {
-        return messageQueue.poll();
+        Message toSend = currentMessage;
+        currentMessage = null;
+        return toSend;
     }
 
     /**
@@ -195,6 +194,6 @@ public class IOPort {
      * @return The next Message from the queue.
      */
     protected Message read() {
-        return messageQueue.peek();
+        return currentMessage;
     }
 }
