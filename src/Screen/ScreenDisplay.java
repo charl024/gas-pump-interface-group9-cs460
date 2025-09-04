@@ -134,7 +134,8 @@ public class ScreenDisplay extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
-
+    
+    // TODO: need to finish/work on message sending from buttons and test
     // Modified to go to receipt after selecting gas
     private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color, Stage primaryStage) {
         Button btn = buttonMap.get(buttonNum);
@@ -254,23 +255,6 @@ public class ScreenDisplay extends Application {
             // Row 1, 2, 3 in column 0
             centerPane.add(gasBtn, 0, i + 1);
         }
-    }
-
-    // TODO: need to finish/work on message sending from buttons and test
-    // Assign action and label to a button
-    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color) {
-        Button btn = buttonMap.get(buttonNum);
-        if (btn == null) return;
-
-        btn.setText(label);
-        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
-
-        btn.setOnAction(e -> {
-            System.out.println("Button " + buttonNum + " pressed: " + action.name());
-            if (screenHandler != null) {
-                //screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
-            }
-        });
     }
 
     // Creates a 2x5 grid on GridPane.
