@@ -3,7 +3,6 @@ package IOPort;
 import MessagePassed.Message;
 import Observer.Listener;
 
-import javax.sound.sampled.Port;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -48,11 +47,10 @@ public class IOPort {
     private final int port;
     private ServerSocket serverSocket;
     private Socket socket;
-    private final ObjectOutputStream out;
-    private final ObjectInputStream in;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     private final BlockingQueue<Message> messageQueue;
 
-    private Listener device;
     /*
         A component that connects two endpoints together by passing in a single port number.
         For example, an IoPort in Program A can connect with an IoPort in Program B by having the same port number.
@@ -81,7 +79,7 @@ public class IOPort {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
         } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+            close();
         }
 
         // Start a thread to continuously listen for incoming messages and place them into the message queue.
@@ -92,7 +90,7 @@ public class IOPort {
                     boolean offerResult = messageQueue.offer(message);
                 }
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                close();
             }
         });
 
@@ -119,12 +117,49 @@ public class IOPort {
                 }
 
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                close();
             }
         });
 
         establishConnection.start();
         return establishConnection;
+    }
+
+    /**
+     * Safely closes all resources associated with this IOPort.
+     *
+     * <p>
+     * This method is called whenever an error occurs
+     * (e.g., connection failure, I/O exception, or stream corruption),
+     * or when the connection is explicitly terminated.
+     * </p>
+     *
+     * <p>
+     * Resources closed include:
+     * <ul>
+     *     <li>{@link Socket} — disconnects the client/server socket.</li>
+     *     <li>{@link ServerSocket} — stops listening for incoming connections.</li>
+     *     <li>{@link ObjectOutputStream} — terminates the outgoing stream.</li>
+     *     <li>{@link ObjectInputStream} — terminates the incoming stream.</li>
+     * </ul>
+     * </p>
+     */
+    private void close() {
+        System.err.println("Connection closed!");
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+        } catch (IOException ignored) {}
     }
 
     /**
@@ -138,7 +173,7 @@ public class IOPort {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                close();
             }
         }
 
@@ -150,8 +185,6 @@ public class IOPort {
      * @return The next Message from the queue.
      */
     protected Message get() {
-        device.messageReceived(messageQueue.peek()); //Added this so that
-        // when a message is received, the device is notified
         return messageQueue.poll();
     }
 
@@ -163,9 +196,5 @@ public class IOPort {
      */
     protected Message read() {
         return messageQueue.peek();
-    }
-
-    public void setDevice(Listener device) {
-        this.device = device;
     }
 }
