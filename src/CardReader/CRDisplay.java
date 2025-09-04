@@ -23,12 +23,12 @@ public class CRDisplay {
     public CRDisplay(CRIOClient client) {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        pane.setMinSize(350,250);
-        pane.setMaxSize(350,250);
+        pane.setMinSize(350, 250);
+        pane.setMaxSize(350, 250);
         imagePane = new StackPane();
         status = new Label("Status: ");
-        status.setMinSize(50,50);
-        input = new CRInput(client,this);
+        status.setMinSize(50, 50);
+        input = new CRInput(client, this);
         createDisplay();
     }
 
@@ -37,7 +37,7 @@ public class CRDisplay {
         imagePane.getChildren().add(imageView);
         imagePane.setBackground(new Background(new BackgroundFill(Color.BLACK,
                 CornerRadii.EMPTY, Insets.EMPTY)));
-        Font customFont = new Font(24);
+        Font customFont = new Font(18);
         Label info = new Label("Tap to Pay!");
         info.setFont(customFont);
         status.setFont(customFont);
@@ -73,11 +73,16 @@ public class CRDisplay {
         imageView.setFitHeight(100);
     }
 
-    private void validCard() {
-        status.setText("Invalid Card, please try again");
+    public void validCard() {
+        status.setText("Status: Invalid card, please try again");
     }
-    private void invalidCard() {
-        status.setText("Card was authorized!");
+
+    public void invalidCard() {
+        status.setText("Status: Card was authorized!");
+    }
+
+    public void finishCard() {
+        status.setText("Status: ");
     }
 
     public BorderPane getPane() {
