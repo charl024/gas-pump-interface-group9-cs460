@@ -1,3 +1,6 @@
+/**
+ * Creates the user interface for Card Reader
+ */
 package CardReader;
 
 import javafx.geometry.Insets;
@@ -11,6 +14,9 @@ import javafx.scene.text.Font;
 
 import java.io.File;
 
+/**
+ * Card Reader display
+ */
 public class CRDisplay {
     private final CRInput input;
     private final BorderPane pane;
@@ -20,6 +26,11 @@ public class CRDisplay {
 
     private final Label status;
 
+    /**
+     * Card Reader Display constructor
+     *
+     * @param client Client that handles IOPort messages
+     */
     public CRDisplay(CRIOClient client) {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -32,6 +43,9 @@ public class CRDisplay {
         createDisplay();
     }
 
+    /**
+     * Creates the components of the main display
+     */
     private void createDisplay() {
         loadImage();
         imagePane.getChildren().add(imageView);
@@ -53,6 +67,9 @@ public class CRDisplay {
         });
     }
 
+    /**
+     * Load the tap to pay image so that it can then be displayed
+     */
     private void loadImage() {
 //        String fileName = "Images/BlackTTP.png";
         String fileName = "Images/WhiteTTP.png";
@@ -73,18 +90,32 @@ public class CRDisplay {
         imageView.setFitHeight(100);
     }
 
+    /**
+     * Update text box to indicate that the card was valid
+     */
     public void validCard() {
         status.setText("Status: Invalid card, please try again");
     }
 
+    /**
+     * Update the text box to indicate that the card was invalid
+     */
     public void invalidCard() {
         status.setText("Status: Card was authorized!");
     }
 
+    /**
+     * Called when the user has finished pumping gas
+     */
     public void finishCard() {
         status.setText("Status: ");
     }
 
+    /**
+     * Get the main borderPane that holds all components
+     *
+     * @return BorderPane
+     */
     public BorderPane getPane() {
         return pane;
     }
