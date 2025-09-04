@@ -35,6 +35,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -80,6 +83,37 @@ public class ScreenDisplay extends Application {
 
         addMidLabels();
         changeLabel(1,2,0);
+        writeText("Would you like a receipt?", 0);
+
+        Label two = labelMap.get(""+2);
+        Label three = labelMap.get(""+3);
+
+        two.setText("YES");
+        two.setTextFill(Color.WHITE);
+        two.setFont(Font.font("Verdana", 40));
+        two.setAlignment(Pos.CENTER_LEFT);
+        two.setStyle(
+                "-fx-background-color: #111111;" +
+                        "-fx-border-color: white;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 5;"
+        );
+        three.setText("NO");
+        three.setTextFill(Color.WHITE);
+        three.setFont(Font.font("Verdana", 40));
+        three.setAlignment(Pos.CENTER_RIGHT);
+        three.setStyle(
+                "-fx-background-color: #111111;" +
+                        "-fx-border-color: white;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 5;"
+        );
+        changeButtonColor("green", 2);
+        changeButtonColor("red", 3);
+
+
+
+
 
 
         primaryStage.setScene(new Scene(root));
@@ -105,8 +139,15 @@ public class ScreenDisplay extends Application {
             Button b = new Button(""+i);
             buttonMap.put(i, b);
             b.setPrefSize(200, screenBounds.getHeight() / 5);
-            b.setStyle("-fx-alignment: bottom-right;");
-
+            //Code for unbordered labels
+//            b.setStyle("-fx-alignment: bottom-right;");
+//            b.setStyle("-fx-background-color: #1E1E1E;");
+            b.setStyle(
+                    "-fx-background-color: #1E1E1E;" +
+                            "-fx-border-color: white;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 5;"
+            );
             if(i % 2 == 0){
                 left.getChildren().add(b);
             }else{
@@ -118,9 +159,9 @@ public class ScreenDisplay extends Application {
 
 
         // Assign first 3 buttons to gas options
-        setupGasButton(0, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "Regular", "forestgreen");
-        setupGasButton(1, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "Plus", "dodgerblue");
-        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "Premium", "orangered");
+//        setupGasButton(0, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "Regular", "forestgreen");
+//        setupGasButton(1, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "Plus", "dodgerblue");
+//        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "Premium", "orangered");
 
         return root;
     }
@@ -171,7 +212,7 @@ public class ScreenDisplay extends Application {
 
                 Label l = new Label();
                 l.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
+                l.setStyle("-fx-background-color: #111111;");
                 /////////////
 //                if(index % 2 == 0){
 //                    l.setStyle("-fx-border-color: black;");
@@ -194,6 +235,27 @@ public class ScreenDisplay extends Application {
 
         Label l = labelMap.get(""+section);
 
+        int startRow = section / 2;
+        int startCol = section % 2;
+
+
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                int index = (startRow + row) * 2 + (startCol + col);
+                if (index != section) {
+                    Label below = labelMap.get("" + index);
+                    below.setStyle("-fx-background-color: transparent;"); // or transparent
+                    System.out.println(index);
+                }
+            }
+        }
+
+
+
+
+
+        l.setStyle("-fx-background-color: white;");
         GridPane.setColumnSpan(l, width);
         GridPane.setRowSpan(l, height);
 
@@ -208,9 +270,12 @@ public class ScreenDisplay extends Application {
 
     //TODO: need to pass string value (for map) of which label to add text to
     //TODO: add label to map (perform same action in removeText())
-    private void writeText(){
-        mergedNode = new Label("Question being posed");
-        GridPane.setColumnSpan(mergedNode, 2);
+
+    //TODO: change this method
+    private void writeText(String text, int label){
+        Label l = labelMap.get(""+label);
+        l.setText(text);
+        changeTextSize("40", 0);
 
 
 
