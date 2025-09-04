@@ -12,7 +12,7 @@ import Observer.Listener;
 /**
  * Flow Meter IO Client
  */
-public class FMIOClient implements Listener {
+public class FMIOClient {
 
 
     private final FMDisplay display;
@@ -33,7 +33,7 @@ public class FMIOClient implements Listener {
      *
      * @param message Message sent by the IOPort
      */
-    private void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         //The string should give three types of information:
         //Gas cost (based on octane they selected)
         //Maybe flow rate? Not sure if that makes sense but ill handle it
@@ -91,18 +91,18 @@ public class FMIOClient implements Listener {
         }
     }
 
-    /**
-     * Notify the device that a messaged has been passed
-     *
-     * @param message Message received
-     */
-    @Override
-    public void messageReceived(Message message) {
-        //Pass message so that it can be handled
-        handleMessage(message);
-        //Not sure if I like this, seems kind of pointless if I just end up
-        // only calling another method
-    }
+//    /**
+//     * Notify the device that a messaged has been passed
+//     *
+//     * @param message Message received
+//     */
+//    @Override
+//    public void messageReceived(Message message) {
+//        //Pass message so that it can be handled
+//        handleMessage(message);
+//        //Not sure if I like this, seems kind of pointless if I just end up
+//        // only calling another method
+//    }
 
     /**
      * Send a message back to the connected IOport
