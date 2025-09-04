@@ -26,9 +26,9 @@ public class CommPort extends IOPort {
     }
 
     /**
-     * Retrieves and removes the next available {@link Message} from the queue.
+     * Retrieves and returns current message, which is then set to null.
      *
-     * @return The next message.
+     * @return The current Message.
      */
     public Message get() {
         return super.get();

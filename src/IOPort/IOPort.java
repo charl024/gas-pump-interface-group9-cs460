@@ -12,7 +12,7 @@ import java.net.Socket;
  *
  * <p>
  *     Once established, both endpoints can exchange {@link Message} objects using
- *     object streams. Incoming messages are stored in a thread-safe queue, which can
+ *     object streams. Incoming messages are stored in a single variable, which can
  *     be accessed using {@link #get()} or {@link #read()}.
  * </p>
  *
@@ -37,7 +37,7 @@ import java.net.Socket;
  * <p>
  *     Each IOPort runs two internal threads:
  *     One to establish the connection (as client or server).<
- *     One to continuously listen for incoming messages and enqueue them.
+ *     One to continuously listen for incoming messages and stores them.
  * </p>
  */
 public class IOPort {
@@ -79,7 +79,7 @@ public class IOPort {
             close();
         }
 
-        // Start a thread to continuously listen for incoming messages and place them into the message queue.
+        // Start a thread to continuously listen for incoming messages and place them into a variable.
         Thread listen = new Thread(() -> {
             try {
                 Message message;
@@ -177,9 +177,9 @@ public class IOPort {
     }
 
     /**
-     * Retrieves and removes the next available Message from the queue.
+     * Retrieves and returns current message, which is then set to null.
      *
-     * @return The next Message from the queue.
+     * @return The current Message.
      */
     protected Message get() {
         Message toSend = currentMessage;
@@ -188,10 +188,9 @@ public class IOPort {
     }
 
     /**
-     * Reads (peeks) the next available Message without removing it from the queue.
-     * Achieved by taking the message out and immediately putting it back in.
+     * Reads the current message.
      *
-     * @return The next Message from the queue.
+     * @return The current Message.
      */
     protected Message read() {
         return currentMessage;
