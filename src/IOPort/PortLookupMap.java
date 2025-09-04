@@ -28,12 +28,12 @@ public class PortLookupMap {
      * </p>
      */
     private static final Map<Integer, Integer> PortMap = Map.of(
-            1, 31,
-            2, 32,
-            3, 33,
-            4, 34,
-            5, 35,
-            6, 36
+            1, 5050,
+            2, 5051,
+            3, 5052,
+            4, 5053,
+            5, 5054,
+            6, 5055
     );
 
     /**
