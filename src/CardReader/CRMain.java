@@ -1,3 +1,6 @@
+/**
+ * Class where IOPort and the Card Reader is created
+ */
 package CardReader;
 
 import IOPort.CommPort;
@@ -10,6 +13,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * Main for Card Reader
+ */
 public class CRMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -33,6 +39,11 @@ public class CRMain extends Application {
 
     }
 
+    /**
+     * Main
+     *
+     * @param args Arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
