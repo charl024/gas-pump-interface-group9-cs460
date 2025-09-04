@@ -83,54 +83,104 @@ public class ScreenDisplay extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        boolean showGasScreen = true; // Start with gas screen first
+        showGasSelectionScreen(primaryStage);
+    }
 
-        Runnable showReceiptScreen = () -> {
-            BorderPane root = createSideButtons();
-            root.setCenter(createMiddle());
+    private void showGasSelectionScreen(Stage primaryStage) {
+        BorderPane root = createSideButtons(); // Keep side buttons
+        root.setCenter(createMiddle());        // Same middle layout
+        addMidLabels();
 
-            addMidLabels();
-            changeLabel(1, 2, 0);
-            writeText("Would you like a receipt?", 0);
+        // First label: instruction
+        changeLabel(1, 2, 0);  // Span 1 row, 2 columns
+        Label titleLabel = labelMap.get("0");
+        titleLabel.setText("SELECT GAS:");
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setFont(Font.font("Verdana", 40));
+        titleLabel.setAlignment(Pos.CENTER);
+        titleLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-            Label two = labelMap.get("" + 2);
-            Label three = labelMap.get("" + 3);
+        // Gas option labels stacked vertically
+        changeLabel(1, 2, 2);  // REGULAR
+        Label regLabel = labelMap.get("2");
+        regLabel.setText("REGULAR");
+        regLabel.setTextFill(Color.WHITE);
+        regLabel.setFont(Font.font("Verdana", 40));
+        regLabel.setAlignment(Pos.CENTER);
+        regLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-            two.setText("YES");
-            two.setTextFill(Color.WHITE);
-            two.setFont(Font.font("Verdana", 40));
-            two.setAlignment(Pos.CENTER_LEFT);
-            two.setStyle(
-                    "-fx-background-color: #111111;" +
-                            "-fx-border-color: white;" +
-                            "-fx-border-width: 2;" +
-                            "-fx-border-radius: 5;"
-            );
+        changeLabel(1, 2, 4);  // PLUS (next row down)
+        Label plusLabel = labelMap.get("4");
+        plusLabel.setText("PLUS");
+        plusLabel.setTextFill(Color.WHITE);
+        plusLabel.setFont(Font.font("Verdana", 40));
+        plusLabel.setAlignment(Pos.CENTER);
+        plusLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-            three.setText("NO");
-            three.setTextFill(Color.WHITE);
-            three.setFont(Font.font("Verdana", 40));
-            three.setAlignment(Pos.CENTER_RIGHT);
-            three.setStyle(
-                    "-fx-background-color: #111111;" +
-                            "-fx-border-color: white;" +
-                            "-fx-border-width: 2;" +
-                            "-fx-border-radius: 5;"
-            );
+        changeLabel(1, 2, 6);  // PREMIUM (next row down)
+        Label premLabel = labelMap.get("6");
+        premLabel.setText("PREMIUM");
+        premLabel.setTextFill(Color.WHITE);
+        premLabel.setFont(Font.font("Verdana", 40));
+        premLabel.setAlignment(Pos.CENTER);
+        premLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-            changeButtonColor("green", 2);
-            changeButtonColor("red", 3);
+        // Assign side buttons to gas options
+        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "REGULAR", "forestgreen", primaryStage);
+        setupGasButton(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "PLUS", "dodgerblue", primaryStage);
+        setupGasButton(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "PREMIUM", "orangered", primaryStage);
 
-            primaryStage.setScene(new Scene(root));
-        };
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setMaximized(true);
+        primaryStage.show();
+    }
 
-        if (showGasScreen) {
-            GasSelectionScreen gasScreen = new GasSelectionScreen();
-            primaryStage.setScene(gasScreen.createScene(primaryStage, showReceiptScreen));
-        } else {
-            showReceiptScreen.run();
-        }
+    // Modified to go to receipt after selecting gas
+    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color, Stage primaryStage) {
+        Button btn = buttonMap.get(buttonNum);
+        if (btn == null) return;
 
+        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        btn.setOnAction(e -> {
+            // Keep your original message functionality
+            System.out.println("Button " + buttonNum + " pressed: " + action.name());
+            if (screenHandler != null) {
+                // Example:
+                // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
+            }
+
+            // After selecting gas type → go to receipt screen
+            showReceiptScreen(primaryStage);
+        });
+    }
+
+    private void showReceiptScreen(Stage primaryStage) {
+        BorderPane root = createSideButtons();
+        root.setCenter(createMiddle());
+        addMidLabels();
+
+        changeLabel(1, 2, 0);
+        writeText("Would you like a receipt?", 0);
+
+        Label yes = labelMap.get("2");
+        yes.setText("YES");
+        yes.setTextFill(Color.WHITE);
+        yes.setFont(Font.font("Verdana", 40));
+        yes.setAlignment(Pos.CENTER_LEFT);
+        yes.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        Label no = labelMap.get("3");
+        no.setText("NO");
+        no.setTextFill(Color.WHITE);
+        no.setFont(Font.font("Verdana", 40));
+        no.setAlignment(Pos.CENTER_RIGHT);
+        no.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        changeButtonColor("green", 2);
+        changeButtonColor("red", 3);
+
+        primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
