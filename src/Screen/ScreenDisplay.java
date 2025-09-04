@@ -87,7 +87,6 @@ public class ScreenDisplay extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
 
