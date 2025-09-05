@@ -226,7 +226,6 @@ public class ScreenDisplay extends Application {
 
         return root;
     }
-
     private void addGasButtonsToCenter() {
         String[] gasNames = { "Regular", "Plus", "Premium" };
         String[] gasColors = { "forestgreen", "dodgerblue", "orangered" };
