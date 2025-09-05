@@ -47,7 +47,7 @@ class Main {
 
 
         //TESTING CODE FOR CARD READER:
-        CommPort cardIOPort = new CommPort(3);
+//        CommPort cardIOPort = new CommPort(3);
 //        Message cardMessage = new Message("CR");
 //        cardIOPort.send(cardMessage);
 //        try {
@@ -72,7 +72,12 @@ class Main {
 //        }
         //TESTING CODE FOR CARD READER ENDING
 
+        //TESTING CODE FOR BANK SERVER
+        CommPort bankIOPort = new CommPort(4);
+        Message bankMessage = new Message("BS-12312398");
+        bankIOPort.send(bankMessage);
 
+        //TESTING CODE FOR BANK SERVER ENDING
 
 //        // main from Screen
 //
