@@ -235,7 +235,6 @@ public class ScreenDisplay extends Application {
                 PossibleActionsForButton.CHOSE_GAS_TYPE_TWO,
                 PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE
         };
-
         for (int i = 0; i < 3; i++) {
             Button gasBtn = new Button(gasNames[i]);
             gasBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
