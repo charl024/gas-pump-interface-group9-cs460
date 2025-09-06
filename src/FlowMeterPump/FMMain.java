@@ -11,12 +11,11 @@ import javafx.stage.Stage;
 public class FMMain extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         //Create IO port first, then create the device
 
         CommPort port = new CommPort(2);
         FlowMeter flowMeter = new FlowMeter();
-//        port.setDevice(flowMeter.getClient());//Save client to port
         flowMeter.getClient().setPort(port); //Save port to client
 
 
@@ -34,7 +33,7 @@ public class FMMain extends Application {
         });
 
         primaryStage.show();
-        //TODO TO UPDATE HOW TO HANDLE MESSAGES SENT FROM MAIN! --- DONE
+
         //Use this to show the GUI, then get the message from ioPort
         new Thread(() -> {
             try {

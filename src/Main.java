@@ -28,9 +28,9 @@ class Main {
 
         CommPort flowIOPort = new CommPort(2);
 //        //Message that we want to send to the Flow Meter
-//        Message flowMessage = new Message("FM-2.86-10-15");
-//        flowIOPort.send(flowMessage); //Idk if the flow should send a message
-//        System.out.println("testing here");
+        Message flowMessage = new Message("FM-START-2.86-10-15");
+        flowIOPort.send(flowMessage); //Idk if the flow should send a message
+        //System.out.println("testing here");
 //        // back saying indicating that it received the message correctly
 //
 //        //TESTING CODE FOR FLOW METER ENDING

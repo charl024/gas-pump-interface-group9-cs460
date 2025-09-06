@@ -25,11 +25,8 @@ public class FMDisplay {
     private FMIOClient client;
 
     private final BorderPane pane; //Where all images/text will be placed on
-    private final FMUserInput FMUserInput;
-    private final Button stopFuel;
     private final Label costInfo;
     private final Label volInfo;
-    private VBox info;
 
     private double curCost = 0;
     private double curVol = 0;
@@ -43,9 +40,9 @@ public class FMDisplay {
     private ScheduledExecutorService executor;
 
 
-    private HBox pumpStuff;
-    private StackPane pump;
-    private Pane pumpCord;
+    private final Pane pumpCord;
+    private final String redCord = "-fx-background-color: red; -fx-pref-width: 300;" +
+            " -fx-pref-height: 50;";
 
 
     //Would an actual progress bar be helpful? If so, what is considered
@@ -59,12 +56,7 @@ public class FMDisplay {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
-        FMUserInput = new FMUserInput(this);
 
-        //pane.setStyle("-fx-border-color: black; -fx-border-width: 1;");
-        stopFuel = new Button("Stop");
-        stopFuel.setFocusTraversable(false);
-        stopFuel.setOnAction(event -> FMUserInput.handleStop());
 
         costInfo = new Label("Cost: $" + curCost);
         costInfo.setFont(new Font(20));
@@ -74,7 +66,8 @@ public class FMDisplay {
         volInfo.setFont(new Font(20));
 
 
-        info = new VBox(costInfo, volInfo);
+        VBox info = new VBox(costInfo, volInfo);
+
         info.setBorder(new Border(new BorderStroke(
                 Color.BLACK,
                 BorderStrokeStyle.SOLID,
@@ -85,22 +78,20 @@ public class FMDisplay {
         info.setMinWidth(140);
         Pane paneHolder = new Pane(info);
 
-        pump = new StackPane();
+        //Create pump that is just a blue square
+        StackPane pump = new StackPane();
         pump.setStyle("-fx-background-color: lightblue; -fx-pref-width: 300; -fx-pref-height: 200;");
         Label pumpText = new Label("Pump");
         pump.getChildren().add(pumpText);
 
+        //Creat the cord that will change color based on the status of the tank
         pumpCord = new Pane();
-        pumpCord.setStyle("-fx-background-color: red; -fx-pref-width: 300; -fx-pref-height: 50;");
+        pumpCord.setStyle(redCord);
         pumpCord.setMaxHeight(50);
-        pumpStuff = new HBox(pump, pumpCord);
+        HBox pumpStuff = new HBox(pump, pumpCord);
         pumpStuff.setAlignment(Pos.CENTER);
         pane.setTop(paneHolder);
         pane.setCenter(pumpStuff);
-        //pane.setRight(pumpCord);
-        //pane.setRight(stopFuel);
-        //BorderPane.setAlignment(pumpCord, Pos.CENTER);
-        //info.setAlignment(Pos.CENTER);
     }
 
     /**
@@ -150,9 +141,9 @@ public class FMDisplay {
     public void handleStop() {
         timerRunning = false;
         executor.shutdown();
-        Message stopMessage = new Message("FM-Stopped");
+        Message stopMessage = new Message("FM-PUMPSTOP");
         client.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI ALONE
-
+        setRedCord();
         System.out.println("Timer off");
     }
 
@@ -167,6 +158,16 @@ public class FMDisplay {
         volInfo.setText("Gallons: " + format);
         format = String.format("%.2f", cost);
         costInfo.setText("Cost: $" + format);
+    }
+
+    public void setGreenCord() {
+        String greenCord = "-fx-background-color: green; -fx-pref-width: " +
+                "300; -fx-pref-height: 50;";
+        pumpCord.setStyle(greenCord);
+    }
+
+    public void setRedCord() {
+        pumpCord.setStyle(redCord);
     }
 
     /**
