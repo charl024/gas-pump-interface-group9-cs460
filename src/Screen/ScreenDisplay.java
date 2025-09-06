@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ScreenDisplay extends Application {
+public class ScreenDisplay{
 
     // Shows the possible actions that a button can have
     public enum PossibleActionsForButton {
@@ -77,16 +77,9 @@ public class ScreenDisplay extends Application {
     private Map<Integer, StackPane> stackMap = new HashMap<>();
     private Node mergedNode;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 
-    @Override
-    public void start(Stage primaryStage) {
-        showGasSelectionScreen(primaryStage);
-    }
 
-    private void showGasSelectionScreen(Stage primaryStage) {
+    public void showGasSelectionScreen(Stage primaryStage) {
         BorderPane root = createSideButtons(); // Keep side buttons
         root.setCenter(createMiddle());        // Same middle layout
         addMidLabels();

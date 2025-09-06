@@ -4,11 +4,13 @@ import java.net.Socket;
 
 import IOPort.CommPort;
 import MessagePassed.Message;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 
 //Program for screen should start here
 
-public class Screen {
+public class Screen  extends Application {
     private Socket socket;
     private String hostName;
     private CommPort port;
@@ -59,25 +61,25 @@ public class Screen {
                 String[] s = parts[4].split("\\.");
                 screenDisplay.giveButtonAction(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
             }
-
-//            if (parts.length > 1) {
-//               String font = parts[1];
-//                screenDisplay.changeFont(font);
-//            }
-//            if (parts.length > 2) {
-//                int size =  Integer.parseInt(parts[2]);
-//                screenDisplay. changeTextSize(size);
-//            }
-//            if (parts.length > 3) {
-//                int color = Integer.parseInt(parts[3]);
-//                screenDisplay.changeButtonColor(color);
-//            }
-//            if (parts.length > 4) {
-//                String action =  parts[4];
-//                screenDisplay.giveButtonAction(action);
-//            }
         }
     }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        screenDisplay.showGasSelectionScreen(primaryStage);
+
+
+        //TODO FOR CHARLES: PUT THREAD CODE BELOW HERE
+
+        ////////////////////////////////////////
+    }
+
+
+
 
     public void messageReceived(Message msg) {
         handleMessage(msg);
