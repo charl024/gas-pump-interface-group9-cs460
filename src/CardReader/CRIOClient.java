@@ -5,12 +5,11 @@ package CardReader;
 
 import IOPort.CommPort;
 import MessagePassed.Message;
-import Observer.Listener;
 
 /**
  * Card Reader Client class
  */
-public class CRIOClient implements Listener {
+public class CRIOClient {
     private final CommPort port;
     private CRDisplay display;
 
@@ -56,15 +55,6 @@ public class CRIOClient implements Listener {
         port.send(message);
     }
 
-    /**
-     * Method called to notify the device that a new message has been received
-     *
-     * @param message Message that was just received
-     */
-    @Override
-    public void messageReceived(Message message) {
-        handleMessage(message);
-    }
 
     /**
      * Set display
