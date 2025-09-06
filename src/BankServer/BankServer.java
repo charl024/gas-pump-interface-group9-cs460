@@ -3,12 +3,10 @@ package BankServer;
 import IOPort.CommPort;
 
 public class BankServer {
-    private CommPort port;
-    private BSDisplay display;
-    private BSIOClient client;
+    private final BSDisplay display;
+    private final BSIOClient client;
 
     public BankServer(CommPort port) {
-        this.port = port;
         display = new BSDisplay();
         client = new BSIOClient(display, port);
     }

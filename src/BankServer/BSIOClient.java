@@ -2,12 +2,11 @@ package BankServer;
 
 import IOPort.CommPort;
 import MessagePassed.Message;
-import Observer.Listener;
 import javafx.application.Platform;
 
-public class BSIOClient implements Listener {
-    private BSDisplay display;
-    private CommPort port;
+public class BSIOClient {
+    private final BSDisplay display;
+    private final CommPort port;
 
     public BSIOClient(BSDisplay display, CommPort port) {
         this.display = display;
@@ -56,10 +55,5 @@ public class BSIOClient implements Listener {
 
     private void sendMessage(Message message) {
         port.send(message);
-    }
-
-    @Override
-    public void messageReceived(Message message) {
-        handleMessage(message);
     }
 }

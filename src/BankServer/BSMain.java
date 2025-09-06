@@ -25,7 +25,8 @@ public class BSMain extends Application {
         });
 
         primaryStage.show();
-
+        //Have a thread that just watches to see if there are any messages
+        // from the connected IOPort
         new Thread(() -> {
             try {
                 while (true) {
