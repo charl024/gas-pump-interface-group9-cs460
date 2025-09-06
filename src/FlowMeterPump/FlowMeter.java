@@ -2,7 +2,7 @@
  * FlowMeter class, will simulate a flow meter in real life, keeping track of
  * how much gas and the cost of the gas as it is being pumped
  */
-package FlowMeter;
+package FlowMeterPump;
 
 
 /**

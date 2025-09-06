@@ -1,4 +1,4 @@
-package FlowMeter;
+package FlowMeterPump;
 
 import IOPort.CommPort;
 import MessagePassed.Message;

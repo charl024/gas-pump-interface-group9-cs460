@@ -2,11 +2,10 @@
  * Flow Meter IO Client
  * Handles all messages that need to be sent or received by the IOport
  */
-package FlowMeter;
+package FlowMeterPump;
 
 import IOPort.CommPort;
 import MessagePassed.Message;
-import Observer.Listener;
 
 
 /**

@@ -1,4 +1,4 @@
-package FlowMeter;
+package FlowMeterPump;
 
 public class FMUserInput {
     private final FMDisplay display;

@@ -1,15 +1,16 @@
 /**
  * Flow Meter Display class, will display the simulation of a flow meter
  */
-package FlowMeter;
+package FlowMeterPump;
 
 import MessagePassed.Message;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
@@ -41,6 +42,12 @@ public class FMDisplay {
     private boolean timerRunning = false;
     private ScheduledExecutorService executor;
 
+
+    private HBox pumpStuff;
+    private StackPane pump;
+    private Pane pumpCord;
+
+
     //Would an actual progress bar be helpful? If so, what is considered
     // being full/how would we know
 
@@ -50,6 +57,7 @@ public class FMDisplay {
      */
     public FMDisplay() {
         pane = new BorderPane();
+        pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
         FMUserInput = new FMUserInput(this);
 
@@ -61,14 +69,38 @@ public class FMDisplay {
         costInfo = new Label("Cost: $" + curCost);
         costInfo.setFont(new Font(20));
 
+
         volInfo = new Label("Gallons:  " + curVol);
         volInfo.setFont(new Font(20));
-        info = new VBox(costInfo, volInfo);
 
-        pane.setCenter(info);
-        pane.setRight(stopFuel);
-        BorderPane.setAlignment(stopFuel, Pos.CENTER);
-        info.setAlignment(Pos.CENTER);
+
+        info = new VBox(costInfo, volInfo);
+        info.setBorder(new Border(new BorderStroke(
+                Color.BLACK,
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                new BorderWidths(1)
+        )));
+        //info.setSpacing(1);
+        info.setMinWidth(140);
+        Pane paneHolder = new Pane(info);
+
+        pump = new StackPane();
+        pump.setStyle("-fx-background-color: lightblue; -fx-pref-width: 300; -fx-pref-height: 200;");
+        Label pumpText = new Label("Pump");
+        pump.getChildren().add(pumpText);
+
+        pumpCord = new Pane();
+        pumpCord.setStyle("-fx-background-color: red; -fx-pref-width: 300; -fx-pref-height: 50;");
+        pumpCord.setMaxHeight(50);
+        pumpStuff = new HBox(pump, pumpCord);
+        pumpStuff.setAlignment(Pos.CENTER);
+        pane.setTop(paneHolder);
+        pane.setCenter(pumpStuff);
+        //pane.setRight(pumpCord);
+        //pane.setRight(stopFuel);
+        //BorderPane.setAlignment(pumpCord, Pos.CENTER);
+        //info.setAlignment(Pos.CENTER);
     }
 
     /**

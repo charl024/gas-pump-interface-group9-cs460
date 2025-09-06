@@ -26,7 +26,7 @@ class Main {
 
         //TESTING CODE FOR FLOW METER:
 
-//        CommPort flowIOPort = new CommPort(2);
+        CommPort flowIOPort = new CommPort(2);
 //        //Message that we want to send to the Flow Meter
 //        Message flowMessage = new Message("FM-2.86-10-15");
 //        flowIOPort.send(flowMessage); //Idk if the flow should send a message
@@ -73,9 +73,9 @@ class Main {
         //TESTING CODE FOR CARD READER ENDING
 
         //TESTING CODE FOR BANK SERVER
-        CommPort bankIOPort = new CommPort(4);
-        Message bankMessage = new Message("BS-12312398");
-        bankIOPort.send(bankMessage);
+//        CommPort bankIOPort = new CommPort(4);
+//        Message bankMessage = new Message("BS-12312398");
+//        bankIOPort.send(bankMessage);
 
         //TESTING CODE FOR BANK SERVER ENDING
 
