@@ -26,17 +26,16 @@ package Screen;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -45,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ScreenDisplay{
+public class ScreenDisplay {
 
     // Shows the possible actions that a button can have
     public enum PossibleActionsForButton {
@@ -76,13 +75,104 @@ public class ScreenDisplay{
     private Map<String, Label> labelMap = new HashMap<>();
     private Map<Integer, StackPane> stackMap = new HashMap<>();
     private Node mergedNode;
+    private Color originalMidColor = Color.web("#111111");
 
+    public void showScreen(Stage primaryStage){
+        BorderPane root = createSideButtons();
+        root.setCenter(createMiddle());
+        addMidLabels();
 
+//        changeLabel(1, 2,0);
+//        writeText("This is a test question", 0);
+//        changeFont("i", 0);
+//        changeTextSize(30,0);
+//        resetLabels();
+
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setMaximized(true);
+        primaryStage.show();
+    }
+
+    // Method creates buttons 0-9 (placed on left and right side of screen)
+    // Occupies left and right side of BorderPane
+    private BorderPane createSideButtons() {
+        BorderPane root = new BorderPane();
+        VBox left = new VBox();
+        VBox right = new VBox();
+        //getVisualBounds means it excludes taskbars/docs
+        //for absolute full resolution, including areas covered by taskbar, use getBounds()
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+        for (int i = 0; i < 10; i++) {
+            Button b = new Button("" + i);
+            buttonMap.put(i, b);
+            b.setPrefSize(200, screenBounds.getHeight() / 5);
+            //Code for unbordered labels
+            changeButtonColorV2(Color.web("#1E1E1E"), i);
+            b.setStyle(
+                    "-fx-border-color: white;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 5;"
+            );
+            if (i % 2 == 0) {
+                left.getChildren().add(b);
+            } else {
+                right.getChildren().add(b);
+            }
+        }
+        root.setLeft(left);
+        root.setRight(right);
+
+        return root;
+    }
+
+    // Creates a 2x5 grid on GridPane.
+    // GridPane occupies entire center of BorderPane
+    private GridPane createMiddle() {
+        centerPane = new GridPane();
+
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(50);
+
+        centerPane.getColumnConstraints().addAll(col1, col2);
+
+        for (int i = 0; i < 5; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(20);
+            centerPane.getRowConstraints().add(row);
+        }
+        return centerPane;
+    }
+
+    // Previously known as addStackPanes
+    // Adds labels to each cell of the 2x5 grid
+    private void addMidLabels() {
+        int index = 0;
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 2; col++) {
+
+                Label l = new Label();
+                l.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                l.setBackground(new Background(new BackgroundFill(
+                        originalMidColor,
+                        CornerRadii.EMPTY,
+                        Insets.EMPTY)));
+
+                centerPane.add(l, col, row);
+
+                labelMap.put("" + index, l);
+                index++;
+            }
+        }
+    }
 
     public void showGasSelectionScreen(Stage primaryStage) {
         BorderPane root = createSideButtons(); // Keep side buttons
         root.setCenter(createMiddle());        // Same middle layout
         addMidLabels();
+
 
         // First label: instruction
         changeLabel(1, 2, 0);  // Span 1 row, 2 columns
@@ -179,46 +269,7 @@ public class ScreenDisplay{
         primaryStage.show();
     }
 
-    // Method creates buttons 0-9 (placed on left and right side of screen)
-    // Occupies left and right side of BorderPane
-    private BorderPane createSideButtons() {
-        BorderPane root = new BorderPane();
-        VBox left = new VBox();
-        VBox right = new VBox();
-        //getVisualBounds means it excludes taskbars/docs
-        //for absolute full resolution, including areas covered by taskbar, use getBounds()
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        for (int i = 0; i < 10; i++) {
-            Button b = new Button("" + i);
-            buttonMap.put(i, b);
-            b.setPrefSize(200, screenBounds.getHeight() / 5);
-            //Code for unbordered labels
-//            b.setStyle("-fx-alignment: bottom-right;");
-//            b.setStyle("-fx-background-color: #1E1E1E;");
-            b.setStyle(
-                    "-fx-background-color: #1E1E1E;" +
-                            "-fx-border-color: white;" +
-                            "-fx-border-width: 2;" +
-                            "-fx-border-radius: 5;"
-            );
-            if (i % 2 == 0) {
-                left.getChildren().add(b);
-            } else {
-                right.getChildren().add(b);
-            }
-        }
-        root.setLeft(left);
-        root.setRight(right);
-
-
-        // Assign first 3 buttons to gas options
-//        setupGasButton(0, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "Regular", "forestgreen");
-//        setupGasButton(1, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "Plus", "dodgerblue");
-//        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "Premium", "orangered");
-
-        return root;
-    }
     private void addGasButtonsToCenter() {
         String[] gasNames = { "Regular", "Plus", "Premium" };
         String[] gasColors = { "forestgreen", "dodgerblue", "orangered" };
@@ -248,51 +299,9 @@ public class ScreenDisplay{
         }
     }
 
-    // Creates a 2x5 grid on GridPane.
-    // GridPane occupies entire center of BorderPane
-    private GridPane createMiddle() {
-        centerPane = new GridPane();
 
-        ColumnConstraints col1 = new ColumnConstraints();
-        col1.setPercentWidth(50);
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setPercentWidth(50);
 
-        centerPane.getColumnConstraints().addAll(col1, col2);
 
-        for (int i = 0; i < 5; i++) {
-            RowConstraints row = new RowConstraints();
-            row.setPercentHeight(20);
-            centerPane.getRowConstraints().add(row);
-        }
-        return centerPane;
-    }
-
-    // Previously known as addStackPanes
-    // Adds labels to each cell of the 2x5 grid
-    private void addMidLabels() {
-        int index = 0;
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 2; col++) {
-
-                Label l = new Label();
-                l.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                l.setStyle("-fx-background-color: #111111;");
-                /////////////
-//                if(index % 2 == 0){
-//                    l.setStyle("-fx-border-color: black;");
-//                }else{
-//                    l.setStyle("-fx-border-color: orange;");
-//                }
-                /////////////
-
-                centerPane.add(l, col, row);
-
-                labelMap.put("" + index, l);
-                index++;
-            }
-        }
-    }
 
     // Previously known as createLabel(int height, int width, int section)
     // Changes the size of a specified label to a specified height and width
@@ -310,14 +319,16 @@ public class ScreenDisplay{
                 int index = (startRow + row) * 2 + (startCol + col);
                 if (index != section) {
                     Label below = labelMap.get("" + index);
-                    below.setStyle("-fx-background-color: transparent;"); // or transparent
+                    below.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
+                            CornerRadii.EMPTY, Insets.EMPTY))); // or transparent
                     System.out.println(index);
                 }
             }
         }
 
 
-        l.setStyle("-fx-background-color: white;");
+        l.setBackground(new Background(new BackgroundFill(Color.WHITE,
+                CornerRadii.EMPTY, Insets.EMPTY)));
         GridPane.setColumnSpan(l, width);
         GridPane.setRowSpan(l, height);
 
@@ -329,6 +340,17 @@ public class ScreenDisplay{
         l.setAlignment(Pos.CENTER);
     }
 
+    // Use this whenever you enlarge a label and want to revert back to original layout
+    public void resetLabels(){
+        for(int i = 0; i < 10; i++){
+            Label l = labelMap.get("" + i);
+            GridPane.setColumnSpan(l, 1);
+            GridPane.setRowSpan(l, 1);
+            l.setBackground(new Background(new BackgroundFill(originalMidColor,
+                    CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+    }
+
     //TODO: need to pass string value (for map) of which label to add text to
     //TODO: add label to map (perform same action in removeText())
 
@@ -336,40 +358,41 @@ public class ScreenDisplay{
     private void writeText(String text, int label) {
         Label l = labelMap.get("" + label);
         l.setText(text);
-        changeTextSize("40", 0);
-
-
-        // This is example code
-//        for (int row = 1; row < 5; row++) {
-//            for (int col = 0; col < 2; col++) {
-//                Button btn = new Button("R" + row + "C" + col);
-//                btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//                centerPane.add(btn, col, row);
-//            }
-//        }
     }
 
     //TODO: need to pass string value (for map) of which label to remove text from
-    private void removeText() {
-        GridPane.setColumnSpan(mergedNode, 1);
-        centerPane.getChildren().remove(mergedNode);
+    private void removeText(int label) {
+        Label l = labelMap.get("" + label);
+        l.setText("");
     }
 
     // Changes the font of specified label
     public void changeFont(String fontStyle, int numNode) {
+        Label l = labelMap.get("" + numNode);
+        Font current = l.getFont();
+        FontWeight weight = current.getStyle().contains("Bold") ? FontWeight.BOLD : FontWeight.NORMAL;
+        FontPosture posture = current.getStyle().contains("Italic") ? FontPosture.ITALIC : FontPosture.REGULAR;
+
         if (fontStyle.equals("i")) {
-            labelMap.get("" + numNode).setStyle("-fx-font-style: italic");
+            posture = FontPosture.ITALIC;
+            weight = FontWeight.NORMAL;
         } else if (fontStyle.equals("b")) {
-            labelMap.get("" + numNode).setStyle("-fx-font-style: normal");
-            labelMap.get("" + numNode).setStyle("-fx-font-weight: bold");
+            weight = FontWeight.BOLD;
+            posture = FontPosture.REGULAR;
         } else if (fontStyle.equals("n")) {
-            labelMap.get("" + numNode).setStyle("-fx-font-style: normal");
+            weight = FontWeight.NORMAL;
+            posture = FontPosture.REGULAR;
         }
+        l.setFont(Font.font(current.getFamily(), weight, posture, current.getSize()));
     }
 
     // Changes text size of specified label
-    public void changeTextSize(String num, int numNode) {
-        labelMap.get("" + numNode).setStyle("-fx-font-size: " + num + ";");
+    public void changeTextSize(int size, int numNode) {
+        Label l = labelMap.get("" + numNode);
+        Font current = l.getFont();
+        l.setFont(Font.font(current.getFamily(), current.getStyle().contains("Bold") ? FontWeight.BOLD : FontWeight.NORMAL,
+                current.getStyle().contains("Italic") ? FontPosture.ITALIC : FontPosture.REGULAR,
+                size));
     }
 
     // Changes button color of specified number
@@ -405,6 +428,38 @@ public class ScreenDisplay{
                 return "ghostwhite";
         }
     }
+
+    public Color convertColorV2(String color) {
+        if (color == null) {
+            return Color.TRANSPARENT;
+        }
+        switch (color) {
+            case "re":
+                return Color.CRIMSON;
+            case "gr":
+                return Color.FORESTGREEN;
+            case "bl":
+                return Color.DEEPSKYBLUE;
+            case "ye":
+                return Color.YELLOW;
+            case "or":
+                return Color.ORANGERED;
+            case "pu":
+                return Color.DARKSLATEBLUE;
+            case "go":
+                return Color.GOLDENROD;
+            case "pi":
+                return Color.THISTLE;
+            case "cy":
+                return Color.AQUAMARINE;
+            default:
+                return Color.GHOSTWHITE;
+        }
+    }
+    public void changeButtonColorV2(Color color, int buttonNum) {
+        buttonMap.get(buttonNum).setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
 
     //TODO: Finish this
     public void giveButtonAction(int action, int button) {

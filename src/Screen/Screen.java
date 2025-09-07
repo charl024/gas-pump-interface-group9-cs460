@@ -27,13 +27,14 @@ public class Screen  extends Application {
     private ScreenDisplay screenDisplay;
 
 
-    public Screen(ScreenDisplay screenDisplay) {
-        this.screenDisplay = screenDisplay;
-
+    public Screen(){
     }
 
     private void handleMessage(Message msg) {
         String messageStr = msg.getDescription();
+
+        messageStr = "SC-i.4-12.4-re.9-3.6";
+
         String[] parts = messageStr.split("-");
 
         String deviceType = parts[0];
@@ -48,7 +49,7 @@ public class Screen  extends Application {
             }
             if (!parts[2].equals("*")) {
                 String[] s = parts[2].split("\\.");
-                screenDisplay.changeTextSize(s[0], Integer.parseInt(s[1]));
+                screenDisplay.changeTextSize(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
             }
             if (!parts[3].equals("*")) {
                 String[] s = parts[3].split("\\.");
@@ -56,6 +57,12 @@ public class Screen  extends Application {
                         screenDisplay.convertColor(s[0]),
                         Integer.parseInt(s[1])
                 );
+                //TODO
+                screenDisplay.changeButtonColorV2(
+                        screenDisplay.convertColorV2(s[0]),
+                        Integer.parseInt(s[1])
+                );
+                //TODO
             }
             if (!parts[4].equals("*")) {
                 String[] s = parts[4].split("\\.");
@@ -70,8 +77,8 @@ public class Screen  extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        screenDisplay.showGasSelectionScreen(primaryStage);
-
+        screenDisplay = new ScreenDisplay();
+        screenDisplay.showScreen(primaryStage);
 
         //TODO FOR CHARLES: PUT THREAD CODE BELOW HERE
 
