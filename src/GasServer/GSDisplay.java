@@ -1,3 +1,6 @@
+/**
+ * Gas Station Server Display, handles the GUI for Gas Station
+ */
 package GasServer;
 
 import javafx.geometry.Insets;
@@ -7,7 +10,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-
+/**
+ * Gas Station Display
+ */
 public class GSDisplay {
     private final BorderPane pane;
 
@@ -23,6 +28,9 @@ public class GSDisplay {
     private final Label premiumCostLabel;
     private double premiumCost;
 
+    /**
+     * Gas Station Display Constructor, creates all the panes and texts
+     */
     public GSDisplay() {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,
@@ -93,64 +101,124 @@ public class GSDisplay {
         pane.setCenter(gasInfo);
     }
 
+    /**
+     * Update the total that the gas station has made
+     */
     public void updateTotal() {
         String format = String.format("Total Money: $%.2f", total);
         totalMoney.setText(format);
     }
 
+    /**
+     * Update the price for regular gas
+     */
     private void updateRegular() {
         String format = String.format("$%.2f", regularCost);
         regularCostLabel.setText(format);
     }
 
+    /**
+     * Update the price for plus gas
+     */
     private void updatePlus() {
         String format = String.format("$%.2f", plusCost);
         plusCostLabel.setText(format);
     }
 
+    /**
+     * Update the price for premium gas
+     */
     private void updatePremium() {
         String format = String.format("$%.2f", premiumCost);
         premiumCostLabel.setText(format);
     }
 
+    /**
+     * Update the gas prices for all three types
+     */
     public void updateGasPrices() {
         updateRegular();
         updatePlus();
         updatePremium();
     }
 
+    /**
+     * Return main Pane that holds everything
+     *
+     * @return Main Pane
+     */
     public BorderPane getPane() {
         return pane;
     }
 
+    /**
+     * Get the current amount of money that the gas station has made
+     *
+     * @return Money made by the gas station
+     */
     public double getTotal() {
         return total;
     }
 
+    /**
+     * Set the new total that the gas station has made
+     *
+     * @param total New total
+     */
     public void setTotal(double total) {
         this.total = total;
     }
 
+    /**
+     * Get the current cost of regular gas
+     *
+     * @return Regular gas cost
+     */
     public double getRegularCost() {
         return regularCost;
     }
 
+    /**
+     * Set the new price for regular gas
+     *
+     * @param regularCost New regular gas cost
+     */
     public void setRegularCost(double regularCost) {
         this.regularCost = regularCost;
     }
 
+    /**
+     * Get the current cost of plus gas
+     *
+     * @return Plus gas cost
+     */
     public double getPlusCost() {
         return plusCost;
     }
 
+    /**
+     * Set the new price for plus gas
+     *
+     * @param plusCost New plug gas cost
+     */
     public void setPlusCost(double plusCost) {
         this.plusCost = plusCost;
     }
 
+    /**
+     * Get the current cost of premium gas
+     *
+     * @return Premium gas cost
+     */
     public double getPremiumCost() {
         return premiumCost;
     }
 
+    /**
+     * Set the new price for premium gas
+     *
+     * @param premiumCost New premium gas cost
+     */
     public void setPremiumCost(double premiumCost) {
         this.premiumCost = premiumCost;
     }

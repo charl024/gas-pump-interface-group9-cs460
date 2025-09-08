@@ -1,3 +1,6 @@
+/**
+ * Main for Bank Server, creates the Bank Server and the IOPort to connect to
+ */
 package BankServer;
 
 import IOPort.CommPort;
@@ -8,7 +11,19 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+/**
+ * Main
+ */
 public class BSMain extends Application {
+    /**
+     * Creates Bank server and connected IOPort
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     *                     the application scene can be set.
+     *                     Applications may create other stages, if needed, but they will not be
+     *                     primary stages.
+     * @throws Exception Errors
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         CommPort port = new CommPort(4);
@@ -44,6 +59,11 @@ public class BSMain extends Application {
         }).start();
     }
 
+    /**
+     * Main
+     *
+     * @param args Arguments (None)
+     */
     public static void main(String[] args) {
         launch(args);
     }

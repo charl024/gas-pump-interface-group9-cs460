@@ -1,3 +1,8 @@
+/**
+ * Main for Flow Meter/Pump
+ * <p>
+ * Creates the Devices and the IOPort to connect to
+ */
 package FlowMeterPump;
 
 import IOPort.CommPort;
@@ -8,8 +13,19 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Main
+ */
 public class FMMain extends Application {
-
+    /**
+     * Flow Meter/Pump Main, creates the Flow Meter/Pump and the IOPort to
+     * connect to
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage primaryStage) {
         //Create IO port first, then create the device
@@ -53,6 +69,10 @@ public class FMMain extends Application {
 
     }
 
+    /**
+     * Main
+     * @param args (None)
+     */
     public static void main(String[] args) {
         launch(args);
     }

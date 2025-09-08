@@ -1,3 +1,6 @@
+/**
+ * Main for Gas Station Server
+ */
 package GasServer;
 
 import IOPort.CommPort;
@@ -8,7 +11,19 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Gas Station Main
+ */
 public class GSMain extends Application {
+    /**
+     * Creates the IOPort to connect to and the Gas Station Server
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws Exception Errors
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         CommPort port = new CommPort(5);
@@ -41,5 +56,13 @@ public class GSMain extends Application {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    /**
+     * Main
+     * @param args (None)
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 }

@@ -1,18 +1,34 @@
+/**
+ * Bank Server IOPort Client, handles messages received and messages that need
+ * to be sent
+ */
 package BankServer;
 
 import IOPort.CommPort;
 import MessagePassed.Message;
 import javafx.application.Platform;
 
+/**
+ * Bank Server IOPort Client
+ */
 public class BSIOClient {
     private final BSDisplay display;
     private final CommPort port;
 
+    /**
+     * Constructor for Bank Server Client
+     * @param display Display that creates the GUI
+     * @param port Connected IOPort
+     */
     public BSIOClient(BSDisplay display, CommPort port) {
         this.display = display;
         this.port = port;
     }
 
+    /**
+     * Handle messages received from the connected IOPort
+     * @param message Message received
+     */
     public void handleMessage(Message message) {
         String receivedMessage = message.getDescription();
         String[] parts = receivedMessage.split("-");
@@ -53,6 +69,10 @@ public class BSIOClient {
         }
     }
 
+    /**
+     * Called to send a message back to the connected IOPort
+     * @param message Message being sent back
+     */
     private void sendMessage(Message message) {
         port.send(message);
     }

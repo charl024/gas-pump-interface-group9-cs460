@@ -9,7 +9,7 @@ import MessagePassed.Message;
  * Card Reader Input Handler
  */
 public class CRInput {
-    private CRIOClient client;
+    private final CRIOClient client;
     private CRDisplay display;
 
     /**

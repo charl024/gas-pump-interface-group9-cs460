@@ -1,3 +1,6 @@
+/**
+ * Bank server display, handles showing information for the bank server
+ */
 package BankServer;
 
 import MessagePassed.Message;
@@ -10,6 +13,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
+/**
+ * Bank Server Display
+ */
 public class BSDisplay {
     private final BorderPane pane;
     private VBox vbox;
@@ -19,7 +25,9 @@ public class BSDisplay {
     private final Text accountNum;
     private final Text status;
 
-
+    /**
+     * Bank Server Display constructor, creates all the needed panes and text
+     */
     public BSDisplay() {
         pane = new BorderPane();
         vbox = new VBox();
@@ -45,11 +53,19 @@ public class BSDisplay {
         pane.setMinSize(250, 250);
     }
 
+    /**
+     * Reset Card information, removes the current card number and status of it
+     */
     private void resetCardInfo() {
         cardInfo.setGraphic(accountNum);
         cardValidation.setGraphic(status);
     }
 
+    /**
+     * Update graphic to indicate that the given card is valid
+     *
+     * @param message Message containing the account information
+     */
     public void updateValidCard(Message message) {
         delay.playFromStart(); //If we update the info, reset timer
         String description = message.getDescription();
@@ -65,6 +81,11 @@ public class BSDisplay {
         cardValidation.setGraphic(validation);
     }
 
+    /**
+     * Update graphic to indicate that the given card is invalid
+     *
+     * @param message Message containing the account information
+     */
     public void updateInvalidCard(Message message) {
         delay.playFromStart(); //If we update the info, reset timer
         String description = message.getDescription();
@@ -80,6 +101,11 @@ public class BSDisplay {
         cardValidation.setGraphic(validation);
     }
 
+    /**
+     * Get BorderPane that combines all the other panes
+     *
+     * @return Main Pane
+     */
     public BorderPane getPane() {
         return pane;
     }

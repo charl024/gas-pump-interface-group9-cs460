@@ -45,9 +45,6 @@ public class FMDisplay {
             " -fx-pref-height: 50;";
 
 
-    //Would an actual progress bar be helpful? If so, what is considered
-    // being full/how would we know
-
     /**
      * Flow meter constructor, will create the text boxes and button needed
      * to simulate the flow meter
