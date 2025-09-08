@@ -1,33 +1,17 @@
 package Screen;
 
-import java.net.Socket;
-
 import IOPort.CommPort;
 import MessagePassed.Message;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-
-//Program for screen should start here
-
-public class Screen  extends Application {
-    private Socket socket;
-    private String hostName;
+public class Screen extends Application {
     private CommPort port;
-
-
-    //Use Object streams if we plan on passing objects around
-    //private ObjectInputStream in;
-    //private ObjectOutputStream out;
-
-    //Use buffered reader/writer if just sending strings
-    //private BufferedReader in;
-    //private PrintWriter out;
 
     private ScreenDisplay screenDisplay;
 
-
     public Screen(){
+
     }
 
     private void handleMessage(Message msg) {
@@ -80,26 +64,26 @@ public class Screen  extends Application {
         screenDisplay = new ScreenDisplay();
         screenDisplay.showScreen(primaryStage);
 
-        //TODO FOR CHARLES: PUT THREAD CODE BELOW HERE
+        this.port = new CommPort(1);
 
-        ////////////////////////////////////////
-    }
-
-
-
-
-    public void messageReceived(Message msg) {
-        handleMessage(msg);
+        // thread that polls port for a message
+        new Thread(() -> {
+            try {
+                while (true) {
+                    Thread.sleep(10); // wait 10ms
+                    Message message = port.get();
+                    if (message != null) {
+                        handleMessage(message);
+                    }
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     public void sendMessage(Message msg) {
         port.send(msg);
 
     }
-
-    public void setPort(CommPort port) {
-        this.port = port;
-    }
-
-
 }

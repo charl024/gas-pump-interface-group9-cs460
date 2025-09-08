@@ -39,7 +39,7 @@ public class FMMain extends Application {
             try {
                 while (true) {
                     Thread.sleep(10); // wait 10ms
-                    Message message = port.get();         // blocking call
+                    Message message = port.get();
                     if (message != null) {
                         flowMeter.getClient().handleMessage(message);
                     }

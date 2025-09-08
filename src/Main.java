@@ -10,9 +10,9 @@ class Main {
 
         //Have to comment this out to test flow meter sorry
         // its okay - Charles
-//        CommPort screenPort1 = new CommPort(1);
+        CommPort screenPort1 = new CommPort(1);
 //
-//        Message message = new Message("What's up from Main");
+        Message message = new Message("What's up from Main");
 //        screenPort1.send(message);
 //
 //        try {
