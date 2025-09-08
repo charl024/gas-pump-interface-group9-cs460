@@ -13,6 +13,31 @@ public class Hose extends Application {
         stage.setScene(scene);
         stage.setTitle("Hose");
         stage.setResizable(false);
+
+        System.out.println("Hose Internals setup");
+        HoseInternal hoseInternal = new HoseInternal();
+
+        System.out.println("Launching message sending thread.");
+
+        new Thread(() -> {
+            while (true) {
+                boolean connectionStatus = hoseDisplay.isConnected();
+                if (connectionStatus) {
+                    hoseInternal.onConnect();
+                } else {
+                    hoseInternal.onDisconnect();
+                }
+
+                System.out.println("Hose Connection Status: " + connectionStatus);
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+
         stage.show();
     }
 
