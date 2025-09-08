@@ -1,4 +1,5 @@
 import IOPort.CommPort;
+import IOPort.StatusPort;
 import MessagePassed.Message;
 
 import java.util.Random;
@@ -6,13 +7,9 @@ import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) {
-        // main from Main
-
-        //Have to comment this out to test flow meter sorry
-        // its okay - Charles
-        CommPort screenPort1 = new CommPort(1);
+//        CommPort screenPort1 = new CommPort(1);
 //
-        Message message = new Message("What's up from Main");
+//        Message message = new Message("What's up from Main");
 //        screenPort1.send(message);
 //
 //        try {
@@ -26,10 +23,10 @@ class Main {
 
         //TESTING CODE FOR FLOW METER:
 
-        CommPort flowIOPort = new CommPort(2);
+//        CommPort flowIOPort = new CommPort(2);
 //        //Message that we want to send to the Flow Meter
-        Message flowMessage = new Message("FM-START-2.86-10-15");
-        flowIOPort.send(flowMessage); //Idk if the flow should send a message
+//        Message flowMessage = new Message("FM-START-2.86-10-15");
+//        flowIOPort.send(flowMessage); //Idk if the flow should send a message
         //System.out.println("testing here");
 //        // back saying indicating that it received the message correctly
 //
@@ -79,18 +76,19 @@ class Main {
 
         //TESTING CODE FOR BANK SERVER ENDING
 
-//        // main from Screen
-//
-//        CommPort screenPort2 = new CommPort(1);
-//
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        Message message = screenPort2.get();
-//        System.out.println("Screen received: " + message.getDescription());
-//        screenPort2.send(new Message("Hello from Screen"));
+        // TESTING CODE FOR HOSE
+        System.out.println("Creating hosePort");
+        StatusPort hosePort = new StatusPort(6);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Message hoseMessage = hosePort.read();
+        System.out.println("Received from Hose: " + hoseMessage.getDescription());
+
+        // TESTING CODE FOR HOSE ENDING
     }
 }
