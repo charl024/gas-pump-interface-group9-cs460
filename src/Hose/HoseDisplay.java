@@ -25,7 +25,11 @@ public class HoseDisplay extends BorderPane {
 
     private boolean connected = false;
 
-    public HoseDisplay() {
+    private HoseInternal internal;
+
+    public HoseDisplay(HoseInternal hoseInternal) {
+        this.internal = hoseInternal;
+
         this.setPrefSize(displayWidth, displayHeight);
         this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
@@ -59,7 +63,7 @@ public class HoseDisplay extends BorderPane {
 
 
     private void hoseStartRectangleSetup() {
-        hoseStart = new Rectangle(15, displayHeight);
+        hoseStart = new Rectangle(30, displayHeight);
         hoseStart.setFill(Color.BLACK);
         hoseStart.setX(0);
     }
@@ -117,10 +121,15 @@ public class HoseDisplay extends BorderPane {
            hoseHose.setWidth(connectorNewX - 10);
 
             connected = connectorNewX == (displayWidth - connectorWidth - ((double) displayWidth / 4));
-        });
-    }
 
-    public boolean isConnected() {
-        return connected;
+            if (connected) {
+                internal.onConnect();
+                System.out.println("Connected to car!");
+            } else {
+                internal.onDisconnect();
+            }
+
+
+        });
     }
 }
