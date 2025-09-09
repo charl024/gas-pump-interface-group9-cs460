@@ -4,6 +4,7 @@
 package CardReader;
 
 import IOPort.CommPort;
+import MessagePassed.Message;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -36,6 +37,22 @@ public class CRMain extends Application {
         });
 
         primaryStage.show();
+
+        new Thread(() -> {
+            try {
+                while (true) {
+                    Thread.sleep(10); // wait 10ms
+                    Message message = port.get();         // blocking call
+                    if (message != null) {
+                        cardReader.getClient().handleMessage(message);
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
     }
 

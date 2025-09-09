@@ -27,7 +27,7 @@ public class CRIOClient {
      *
      * @param message Message received
      */
-    private void handleMessage(Message message) {
+    public void handleMessage(Message message) {
         //Two possible values that can happen: card is valid, or card isn't
         String receivedMessage = message.getDescription();
         String[] parts = receivedMessage.split("-");
@@ -37,10 +37,9 @@ public class CRIOClient {
         } else {
             String decision = parts[1];
             if (decision.equals("VALID")) {
-                display.validCard();
-            } else if (decision.equals("INVALID")) {
-                display.invalidCard();
-            } else if (decision.equals("FINISHED)")) { //Make it empty for next customer
+                display.updateStatusBox();
+                //TODO NOT SURE IF WE SHOULD BE RECEIVING A FINISHED MESSAGE OR JUST SIMPLY HAVE A TIMER TO RESET THE SQUARES
+            }  else if (decision.equals("FINISHED)")) { //Make it empty for next customer,
                 display.finishCard();
             }
         }

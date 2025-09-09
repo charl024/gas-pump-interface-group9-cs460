@@ -31,4 +31,11 @@ public class CardReader {
         return display;
     }
 
+    /**
+     * Retrive the client that handles IOPort messages
+     * @return Client
+     */
+    public CRIOClient getClient() {
+        return client;
+    }
 }
