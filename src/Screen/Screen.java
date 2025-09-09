@@ -14,10 +14,25 @@ public class Screen extends Application {
 
     }
 
+//        String message examples
+//        This message is used to change things like
+//the font style, font size, button color, given button an action, give label some text
+//        messageStr = "SC-i.4-12.4-re.9-3.6";
+//        This message initiates welcome screen
+//        messageStr = "SC-welcome";
+//        This message lets us know if card was accepted
+//        messageStr = "SC-accepted";
+//        This message lets us know if card was denied
+//        messageStr = "SC-denied";
+//        This message initiates gas option screen
+//        messageStr = "SC-gas";
+//        This message shows receipt screen
+//        messageStr = "SC-receipt";
+
     private void handleMessage(Message msg) {
         String messageStr = msg.getDescription();
 
-        messageStr = "SC-i.4-12.4-re.9-3.6";
+
 
         String[] parts = messageStr.split("-");
 
@@ -26,6 +41,25 @@ public class Screen extends Application {
             Message invalidMessage = new Message("SC-Invalid");
             sendMessage(invalidMessage);
         } else {
+
+            if(parts.length == 2){
+                if(parts[1].equals("welcome")){
+                    screenDisplay.showWelcomeScreen();
+                }else if(parts[1].equals("accepted")){
+                    screenDisplay.resetLabels();
+//                    screenDisplay.showCardAcceptedScreen();
+                }else if(parts[1].equals("denied")){
+                    screenDisplay.resetLabels();
+//                    screenDisplay.showCardDeniedScreen();
+                }else if(parts[1].equals("gas")){
+                    screenDisplay.resetLabels();
+                    screenDisplay.showGasSelectionScreen();
+                }else if(parts[1].equals("receipt")){
+                    screenDisplay.resetLabels();
+                    screenDisplay.showReceiptScreen();
+                }
+                return;
+            }
 
             if (!parts[1].equals("*")) {
                 String[] s = parts[1].split("\\.");
@@ -36,17 +70,18 @@ public class Screen extends Application {
                 screenDisplay.changeTextSize(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
             }
             if (!parts[3].equals("*")) {
+                // may remove this block of code
+                //Start
                 String[] s = parts[3].split("\\.");
                 screenDisplay.changeButtonColor(
                         screenDisplay.convertColor(s[0]),
                         Integer.parseInt(s[1])
                 );
-                //TODO
+                //End
                 screenDisplay.changeButtonColorV2(
                         screenDisplay.convertColorV2(s[0]),
                         Integer.parseInt(s[1])
                 );
-                //TODO
             }
             if (!parts[4].equals("*")) {
                 String[] s = parts[4].split("\\.");

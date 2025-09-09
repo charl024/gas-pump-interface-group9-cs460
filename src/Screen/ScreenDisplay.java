@@ -82,11 +82,11 @@ public class ScreenDisplay {
         root.setCenter(createMiddle());
         addMidLabels();
 
-//        changeLabel(1, 2,0);
-//        writeText("This is a test question", 0);
-//        changeFont("i", 0);
-//        changeTextSize(30,0);
-//        resetLabels();
+
+
+        showWelcomeScreen();
+
+
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
@@ -167,64 +167,73 @@ public class ScreenDisplay {
             }
         }
     }
+    public void showWelcomeScreen(){
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label main = labelMap.get("0");
+        writeText("Welcome to _______!\nPlease tap your card", 0);
+        main.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        main.setAlignment(Pos.CENTER);
+        main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-    public void showGasSelectionScreen(Stage primaryStage) {
-        BorderPane root = createSideButtons(); // Keep side buttons
-        root.setCenter(createMiddle());        // Same middle layout
-        addMidLabels();
+    }
 
+    public void showGasSelectionScreen(){
+        // Code clean up
 
         // First label: instruction
         changeLabel(1, 2, 0);  // Span 1 row, 2 columns
         Label titleLabel = labelMap.get("0");
-        titleLabel.setText("SELECT GAS:");
+        writeText("SELECT GAS:", 0);
         titleLabel.setTextFill(Color.WHITE);
-        titleLabel.setFont(Font.font("Verdana", 40));
+        changeTextSize(40, 0);
         titleLabel.setAlignment(Pos.CENTER);
-        titleLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        titleLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        titleLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         // Gas option labels stacked vertically
-        changeLabel(1, 2, 2);  // REGULAR
+        changeLabel(1, 2, 2);  // Span 1 row, 2 columns
         Label regLabel = labelMap.get("2");
-        regLabel.setText("REGULAR");
+        writeText("REGULAR", 2);
         regLabel.setTextFill(Color.WHITE);
-        regLabel.setFont(Font.font("Verdana", 40));
+        changeTextSize(40, 2);
         regLabel.setAlignment(Pos.CENTER);
-        regLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        regLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        regLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-        changeLabel(1, 2, 4);  // PLUS (next row down)
+
+        changeLabel(1, 2, 4);  // Span 1 row, 2 columns
         Label plusLabel = labelMap.get("4");
-        plusLabel.setText("PLUS");
+        writeText("PLUS", 4);
         plusLabel.setTextFill(Color.WHITE);
-        plusLabel.setFont(Font.font("Verdana", 40));
+        changeTextSize(40, 4);
         plusLabel.setAlignment(Pos.CENTER);
-        plusLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        plusLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        plusLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-        changeLabel(1, 2, 6);  // PREMIUM (next row down)
+        changeLabel(1, 2, 6);  // Span 1 row, 2 columns
         Label premLabel = labelMap.get("6");
-        premLabel.setText("PREMIUM");
+        writeText("PREMIUM", 6);
         premLabel.setTextFill(Color.WHITE);
-        premLabel.setFont(Font.font("Verdana", 40));
+        changeTextSize(40, 6);
         premLabel.setAlignment(Pos.CENTER);
-        premLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        premLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        premLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         // Assign side buttons to gas options
-        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "REGULAR", "forestgreen", primaryStage);
-        setupGasButton(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "PLUS", "dodgerblue", primaryStage);
-        setupGasButton(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "PREMIUM", "orangered", primaryStage);
-
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setMaximized(true);
-        primaryStage.show();
+        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "REGULAR", "gr");
+        setupGasButton(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "PLUS", "bl");
+        setupGasButton(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "PREMIUM", "or");
     }
-    
     // TODO: need to finish/work on message sending from buttons and test
     // Modified to go to receipt after selecting gas
-    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color, Stage primaryStage) {
+    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color) {
         Button btn = buttonMap.get(buttonNum);
         if (btn == null) return;
 
-        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
+        changeButtonColorV2(convertColorV2(color), buttonNum);
+        btn.setTextFill(Color.WHITE);
+        btn.setFont(Font.font("Verdana", 16));
 
         btn.setOnAction(e -> {
             // Keep your original message functionality
@@ -235,38 +244,34 @@ public class ScreenDisplay {
             }
 
             // After selecting gas type → go to receipt screen
-            showReceiptScreen(primaryStage);
+            // May need to first receive a message in order to progress to receipt screen
+            showReceiptScreen();
         });
     }
-
-    private void showReceiptScreen(Stage primaryStage) {
-        BorderPane root = createSideButtons();
-        root.setCenter(createMiddle());
-        addMidLabels();
+    public void showReceiptScreen() {
 
         changeLabel(1, 2, 0);
         writeText("Would you like a receipt?", 0);
 
         Label yes = labelMap.get("2");
-        yes.setText("YES");
+        writeText("YES", 2);
         yes.setTextFill(Color.WHITE);
-        yes.setFont(Font.font("Verdana", 40));
+        changeTextSize(40, 2);
         yes.setAlignment(Pos.CENTER_LEFT);
-        yes.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        yes.setBackground(new Background(new BackgroundFill(Color.web("#111111"),CornerRadii.EMPTY, Insets.EMPTY)));
+        yes.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
 
         Label no = labelMap.get("3");
-        no.setText("NO");
+        writeText("NO", 3);
         no.setTextFill(Color.WHITE);
-        no.setFont(Font.font("Verdana", 40));
-        no.setAlignment(Pos.CENTER_RIGHT);
-        no.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        changeTextSize(40, 2);
+        no.setAlignment(Pos.CENTER_LEFT);
+        no.setBackground(new Background(new BackgroundFill(Color.web("#111111"),CornerRadii.EMPTY, Insets.EMPTY)));
+        no.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
 
         changeButtonColor("green", 2);
         changeButtonColor("red", 3);
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setMaximized(true);
-        primaryStage.show();
     }
 
 
@@ -300,8 +305,134 @@ public class ScreenDisplay {
     }
 
 
-
-
+//    public void showGasSelectionScreen(Stage primaryStage) {
+//        BorderPane root = createSideButtons(); // Keep side buttons
+//        root.setCenter(createMiddle());        // Same middle layout
+//        addMidLabels();
+//
+//
+//        // First label: instruction
+//        changeLabel(1, 2, 0);  // Span 1 row, 2 columns
+//        Label titleLabel = labelMap.get("0");
+//        titleLabel.setText("SELECT GAS:");
+//        titleLabel.setTextFill(Color.WHITE);
+//        titleLabel.setFont(Font.font("Verdana", 40));
+//        titleLabel.setAlignment(Pos.CENTER);
+//        titleLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+//
+//        // Gas option labels stacked vertically
+//        changeLabel(1, 2, 2);  // REGULAR
+//        Label regLabel = labelMap.get("2");
+//        regLabel.setText("REGULAR");
+//        regLabel.setTextFill(Color.WHITE);
+//        regLabel.setFont(Font.font("Verdana", 40));
+//        regLabel.setAlignment(Pos.CENTER);
+//        regLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+//
+//        changeLabel(1, 2, 4);  // PLUS (next row down)
+//        Label plusLabel = labelMap.get("4");
+//        plusLabel.setText("PLUS");
+//        plusLabel.setTextFill(Color.WHITE);
+//        plusLabel.setFont(Font.font("Verdana", 40));
+//        plusLabel.setAlignment(Pos.CENTER);
+//        plusLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+//
+//        changeLabel(1, 2, 6);  // PREMIUM (next row down)
+//        Label premLabel = labelMap.get("6");
+//        premLabel.setText("PREMIUM");
+//        premLabel.setTextFill(Color.WHITE);
+//        premLabel.setFont(Font.font("Verdana", 40));
+//        premLabel.setAlignment(Pos.CENTER);
+//        premLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+//
+//        // Assign side buttons to gas options
+//        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "REGULAR", "forestgreen", primaryStage);
+//        setupGasButton(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "PLUS", "dodgerblue", primaryStage);
+//        setupGasButton(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "PREMIUM", "orangered", primaryStage);
+//
+//        primaryStage.setScene(new Scene(root));
+//        primaryStage.setMaximized(true);
+//        primaryStage.show();
+//    }
+//    // TODO: need to finish/work on message sending from buttons and test
+//    // Modified to go to receipt after selecting gas
+//    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color, Stage primaryStage) {
+//        Button btn = buttonMap.get(buttonNum);
+//        if (btn == null) return;
+//
+//        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
+//
+//        btn.setOnAction(e -> {
+//            // Keep your original message functionality
+//            System.out.println("Button " + buttonNum + " pressed: " + action.name());
+//            if (screenHandler != null) {
+//                // Example:
+//                // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
+//            }
+//
+//            // After selecting gas type → go to receipt screen
+//            showReceiptScreen(primaryStage);
+//        });
+//    }
+//    private void showReceiptScreen(Stage primaryStage) {
+//        BorderPane root = createSideButtons();
+//        root.setCenter(createMiddle());
+//        addMidLabels();
+//
+//        changeLabel(1, 2, 0);
+//        writeText("Would you like a receipt?", 0);
+//
+//        Label yes = labelMap.get("2");
+//        yes.setText("YES");
+//        yes.setTextFill(Color.WHITE);
+//        yes.setFont(Font.font("Verdana", 40));
+//        yes.setAlignment(Pos.CENTER_LEFT);
+//        yes.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+//
+//        Label no = labelMap.get("3");
+//        no.setText("NO");
+//        no.setTextFill(Color.WHITE);
+//        no.setFont(Font.font("Verdana", 40));
+//        no.setAlignment(Pos.CENTER_RIGHT);
+//        no.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+//
+//        changeButtonColor("green", 2);
+//        changeButtonColor("red", 3);
+//
+//        primaryStage.setScene(new Scene(root));
+//        primaryStage.setMaximized(true);
+//        primaryStage.show();
+//    }
+//
+//
+//    private void addGasButtonsToCenter() {
+//        String[] gasNames = { "Regular", "Plus", "Premium" };
+//        String[] gasColors = { "forestgreen", "dodgerblue", "orangered" };
+//        PossibleActionsForButton[] actions = {
+//                PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE,
+//                PossibleActionsForButton.CHOSE_GAS_TYPE_TWO,
+//                PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE
+//        };
+//        for (int i = 0; i < 3; i++) {
+//            Button gasBtn = new Button(gasNames[i]);
+//            gasBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//            gasBtn.setStyle(
+//                    "-fx-background-color: " + gasColors[i] + ";" +
+//                            "-fx-text-fill: white; -fx-font-size: 20px;"
+//            );
+//
+//            int buttonIndex = i; // for lambda
+//            gasBtn.setOnAction(e -> {
+//                System.out.println("Gas button pressed: " + actions[buttonIndex]);
+//                if (screenHandler != null) {
+//                    // screenHandler.sendMessage(new Message(...));
+//                }
+//            });
+//
+//            // Row 1, 2, 3 in column 0
+//            centerPane.add(gasBtn, 0, i + 1);
+//        }
+//    }
 
     // Previously known as createLabel(int height, int width, int section)
     // Changes the size of a specified label to a specified height and width
@@ -327,8 +458,8 @@ public class ScreenDisplay {
         }
 
 
-        l.setBackground(new Background(new BackgroundFill(Color.WHITE,
-                CornerRadii.EMPTY, Insets.EMPTY)));
+//        l.setBackground(new Background(new BackgroundFill(Color.WHITE,
+//                CornerRadii.EMPTY, Insets.EMPTY)));
         GridPane.setColumnSpan(l, width);
         GridPane.setRowSpan(l, height);
 
