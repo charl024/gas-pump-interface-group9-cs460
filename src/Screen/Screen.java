@@ -9,6 +9,7 @@ public class Screen extends Application {
     private CommPort port;
 
     private ScreenDisplay screenDisplay;
+    private ScreenDisplay.PossibleActionsForButton possibleActions;
 
     public Screen(){
 
@@ -18,6 +19,8 @@ public class Screen extends Application {
 //        This message is used to change things like
 //the font style, font size, button color, given button an action, give label some text
 //        messageStr = "SC-i.4-12.4-re.9-3.6";
+//        This message is used to add text to a desired label (0)
+//        messageStr = "SC-Here is some example text.0";
 //        This message initiates welcome screen
 //        messageStr = "SC-welcome";
 //        This message lets us know if card was accepted
@@ -47,17 +50,45 @@ public class Screen extends Application {
                     screenDisplay.showWelcomeScreen();
                 }else if(parts[1].equals("accepted")){
                     screenDisplay.resetLabels();
-//                    screenDisplay.showCardAcceptedScreen();
+                    screenDisplay.showCardAcceptedScreen();
                 }else if(parts[1].equals("denied")){
                     screenDisplay.resetLabels();
-//                    screenDisplay.showCardDeniedScreen();
+                    screenDisplay.showCardDeniedScreen();
                 }else if(parts[1].equals("gas")){
                     screenDisplay.resetLabels();
                     screenDisplay.showGasSelectionScreen();
+                    Message message = new Message();
+                    screenDisplay.setOnAction( code -> {
+
+                        if(code == 0){
+                            message.addToDescription("Regular");
+                        }else if(code == 1){
+                            message.addToDescription("Plus");
+                        }else if(code == 2){
+                            message.addToDescription("Premium");
+                        }
+                    });
+                    sendMessage(message);
+
+
                 }else if(parts[1].equals("receipt")){
                     screenDisplay.resetLabels();
                     screenDisplay.showReceiptScreen();
+                    Message message = new Message();
+                    screenDisplay.setOnAction( code -> {
+
+                        if(code == 3){
+                            message.addToDescription("Accepted");
+                        }else if(code == 4){
+                            message.addToDescription("Denied");
+                        }
+                    });
+                    sendMessage(message);
                 }
+                return;
+            }
+            if(parts.length == 3){
+                screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
                 return;
             }
 
@@ -87,6 +118,7 @@ public class Screen extends Application {
                 String[] s = parts[4].split("\\.");
                 screenDisplay.giveButtonAction(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
             }
+
         }
     }
 

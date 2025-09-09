@@ -42,6 +42,7 @@ import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 
 public class ScreenDisplay {
@@ -77,14 +78,14 @@ public class ScreenDisplay {
     private Node mergedNode;
     private Color originalMidColor = Color.web("#111111");
 
+    private Consumer<Integer> onAction;
+
     public void showScreen(Stage primaryStage){
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
         addMidLabels();
 
 
-
-        showWelcomeScreen();
 
 
 
@@ -175,7 +176,35 @@ public class ScreenDisplay {
         changeTextSize(80, 0);
         main.setAlignment(Pos.CENTER);
         main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+    }
+    public void showCardAcceptedScreen(){
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label accept = labelMap.get("0");
+        writeText("Your payment was successful!", 0);
+        accept.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        accept.setAlignment(Pos.CENTER);
+        accept.setBackground(new Background(new BackgroundFill(Color.GREEN,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
+        for(int i = 0; i < 10; i++){
+            changeButtonColorV2(Color.GREEN, i);
+        }
+    }
+    public void showCardDeniedScreen(){
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label accept = labelMap.get("0");
+        writeText("Warning: Card has been denied", 0);
+        accept.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        accept.setAlignment(Pos.CENTER);
+        accept.setBackground(new Background(new BackgroundFill(Color.DARKRED,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+
+        for(int i = 0; i < 10; i++){
+            changeButtonColorV2(Color.DARKRED, i);
+        }
     }
 
     public void showGasSelectionScreen(){
@@ -221,33 +250,15 @@ public class ScreenDisplay {
         premLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         // Assign side buttons to gas options
-        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "REGULAR", "gr");
-        setupGasButton(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "PLUS", "bl");
-        setupGasButton(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "PREMIUM", "or");
+        setUpButtonPress(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, Color.FORESTGREEN);
+        setUpButtonPress(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
+        setUpButtonPress(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
     }
-    // TODO: need to finish/work on message sending from buttons and test
-    // Modified to go to receipt after selecting gas
-    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color) {
-        Button btn = buttonMap.get(buttonNum);
-        if (btn == null) return;
 
-        changeButtonColorV2(convertColorV2(color), buttonNum);
-        btn.setTextFill(Color.WHITE);
-        btn.setFont(Font.font("Verdana", 16));
-
-        btn.setOnAction(e -> {
-            // Keep your original message functionality
-            System.out.println("Button " + buttonNum + " pressed: " + action.name());
-            if (screenHandler != null) {
-                // Example:
-                // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
-            }
-
-            // After selecting gas type → go to receipt screen
-            // May need to first receive a message in order to progress to receipt screen
-            showReceiptScreen();
-        });
+    public void setOnAction(Consumer<Integer> handler) {
+        this.onAction = handler;
     }
+
     public void showReceiptScreen() {
 
         changeLabel(1, 2, 0);
@@ -269,11 +280,36 @@ public class ScreenDisplay {
         no.setBackground(new Background(new BackgroundFill(Color.web("#111111"),CornerRadii.EMPTY, Insets.EMPTY)));
         no.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
 
-        changeButtonColor("green", 2);
-        changeButtonColor("red", 3);
-
+//        changeButtonColor("green", 2);
+        setUpButtonPress(2, PossibleActionsForButton.ACCEPT_RECEIPT, Color.FORESTGREEN);
+//        changeButtonColor("red", 3);
+        setUpButtonPress(3, PossibleActionsForButton.DENY_RECEIPT, Color.CRIMSON);
     }
 
+    // TODO: need to finish/work on message sending from buttons and test
+    // Modified to go to receipt after selecting gas
+    private void setUpButtonPress(int buttonNum, PossibleActionsForButton action /*, String label*/,Color color) {
+        Button btn = buttonMap.get(buttonNum);
+        if (btn == null) return;
+
+        changeButtonColorV2(color, buttonNum);
+        btn.setTextFill(Color.WHITE);
+        btn.setFont(Font.font("Verdana", 16));
+
+        btn.setOnAction(e -> {
+            // Keep your original message functionality
+            System.out.println("Button " + buttonNum + " pressed: " + action.name());
+            if (screenHandler != null) {
+                // Example:
+                // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
+                onAction.accept(action.actionNum);
+            }
+
+            // After selecting gas type → go to receipt screen
+            // May need to first receive a message in order to progress to receipt screen
+//            showReceiptScreen();
+        });
+    }
 
     private void addGasButtonsToCenter() {
         String[] gasNames = { "Regular", "Plus", "Premium" };
@@ -486,7 +522,7 @@ public class ScreenDisplay {
     //TODO: add label to map (perform same action in removeText())
 
     //TODO: change this method
-    private void writeText(String text, int label) {
+    public void writeText(String text, int label) {
         Label l = labelMap.get("" + label);
         l.setText(text);
     }
