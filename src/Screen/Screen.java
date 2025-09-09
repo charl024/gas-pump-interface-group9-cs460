@@ -147,6 +147,12 @@ public class Screen extends Application {
                 throw new RuntimeException(e);
             }
         }).start();
+
+        primaryStage.setOnCloseRequest(e -> {
+            port.close();
+        }); 
+
+        primaryStage.show();
     }
 
     public void sendMessage(Message msg) {

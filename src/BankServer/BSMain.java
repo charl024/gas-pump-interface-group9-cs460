@@ -36,6 +36,7 @@ public class BSMain extends Application {
         primaryStage.setTitle("Bank Server");
 
         primaryStage.setOnCloseRequest(event -> {
+            port.close();
             Platform.exit();
         });
 

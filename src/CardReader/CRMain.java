@@ -33,6 +33,7 @@ public class CRMain extends Application {
         primaryStage.setScene(new Scene(pane));
 
         primaryStage.setOnCloseRequest(event -> {
+            port.close();
             Platform.exit();
         });
 

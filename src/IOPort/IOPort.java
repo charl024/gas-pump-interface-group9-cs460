@@ -141,8 +141,8 @@ public class IOPort {
      * </ul>
      * </p>
      */
-    private void close() {
-        System.err.println("Connection closed!");
+    public void close() {
+        System.out.println("Connection closed!");
         try {
             if (socket != null) {
                 socket.close();

@@ -45,6 +45,7 @@ public class FMMain extends Application {
 
         //If GUI is exited, turn program off
         primaryStage.setOnCloseRequest(event -> {
+            port.close();
             Platform.exit();
         });
 
@@ -66,7 +67,6 @@ public class FMMain extends Application {
                 e.printStackTrace();
             }
         }).start();
-
     }
 
     /**

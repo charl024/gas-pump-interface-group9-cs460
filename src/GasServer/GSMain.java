@@ -37,6 +37,7 @@ public class GSMain extends Application {
 
 
         primaryStage.setOnCloseRequest(event -> {
+            port.close();
             Platform.exit();
         });
 
