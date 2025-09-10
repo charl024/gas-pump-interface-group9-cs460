@@ -23,6 +23,7 @@
 package Screen;
 
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,6 +40,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -259,6 +261,33 @@ public class ScreenDisplay {
         this.onAction = handler;
     }
 
+    public void showFuelFinishedScreen(double totalGallons, double totalPrice) {
+        // Fill the entire middle with one big label
+        changeLabel(5, 2, 0); // Span 5 rows, 2 columns
+        Label main = labelMap.get("0");
+
+        // Main message
+        writeText(
+                String.format(
+                        "Pumping Complete\nTotal Gallons: %.2f\nTotal Price: $%.2f",
+                        totalGallons, totalPrice
+                ), 0
+        );
+
+        main.setTextFill(Color.WHITE);
+        changeTextSize(60, 0);
+        main.setAlignment(Pos.CENTER);
+        main.setBackground(new Background(new BackgroundFill(
+                Color.DARKBLUE, CornerRadii.EMPTY, Insets.EMPTY
+        )));
+        main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        // Change all side buttons to a consistent color
+        for (int i = 0; i < 10; i++) {
+            changeButtonColorV2(Color.DARKBLUE, i);
+        }
+    }
+
     public void showReceiptScreen() {
 
         changeLabel(1, 2, 0);
@@ -339,136 +368,6 @@ public class ScreenDisplay {
             centerPane.add(gasBtn, 0, i + 1);
         }
     }
-
-
-//    public void showGasSelectionScreen(Stage primaryStage) {
-//        BorderPane root = createSideButtons(); // Keep side buttons
-//        root.setCenter(createMiddle());        // Same middle layout
-//        addMidLabels();
-//
-//
-//        // First label: instruction
-//        changeLabel(1, 2, 0);  // Span 1 row, 2 columns
-//        Label titleLabel = labelMap.get("0");
-//        titleLabel.setText("SELECT GAS:");
-//        titleLabel.setTextFill(Color.WHITE);
-//        titleLabel.setFont(Font.font("Verdana", 40));
-//        titleLabel.setAlignment(Pos.CENTER);
-//        titleLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        // Gas option labels stacked vertically
-//        changeLabel(1, 2, 2);  // REGULAR
-//        Label regLabel = labelMap.get("2");
-//        regLabel.setText("REGULAR");
-//        regLabel.setTextFill(Color.WHITE);
-//        regLabel.setFont(Font.font("Verdana", 40));
-//        regLabel.setAlignment(Pos.CENTER);
-//        regLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        changeLabel(1, 2, 4);  // PLUS (next row down)
-//        Label plusLabel = labelMap.get("4");
-//        plusLabel.setText("PLUS");
-//        plusLabel.setTextFill(Color.WHITE);
-//        plusLabel.setFont(Font.font("Verdana", 40));
-//        plusLabel.setAlignment(Pos.CENTER);
-//        plusLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        changeLabel(1, 2, 6);  // PREMIUM (next row down)
-//        Label premLabel = labelMap.get("6");
-//        premLabel.setText("PREMIUM");
-//        premLabel.setTextFill(Color.WHITE);
-//        premLabel.setFont(Font.font("Verdana", 40));
-//        premLabel.setAlignment(Pos.CENTER);
-//        premLabel.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        // Assign side buttons to gas options
-//        setupGasButton(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, "REGULAR", "forestgreen", primaryStage);
-//        setupGasButton(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, "PLUS", "dodgerblue", primaryStage);
-//        setupGasButton(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, "PREMIUM", "orangered", primaryStage);
-//
-//        primaryStage.setScene(new Scene(root));
-//        primaryStage.setMaximized(true);
-//        primaryStage.show();
-//    }
-//    // TODO: need to finish/work on message sending from buttons and test
-//    // Modified to go to receipt after selecting gas
-//    private void setupGasButton(int buttonNum, PossibleActionsForButton action, String label, String color, Stage primaryStage) {
-//        Button btn = buttonMap.get(buttonNum);
-//        if (btn == null) return;
-//
-//        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px;");
-//
-//        btn.setOnAction(e -> {
-//            // Keep your original message functionality
-//            System.out.println("Button " + buttonNum + " pressed: " + action.name());
-//            if (screenHandler != null) {
-//                // Example:
-//                // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
-//            }
-//
-//            // After selecting gas type → go to receipt screen
-//            showReceiptScreen(primaryStage);
-//        });
-//    }
-//    private void showReceiptScreen(Stage primaryStage) {
-//        BorderPane root = createSideButtons();
-//        root.setCenter(createMiddle());
-//        addMidLabels();
-//
-//        changeLabel(1, 2, 0);
-//        writeText("Would you like a receipt?", 0);
-//
-//        Label yes = labelMap.get("2");
-//        yes.setText("YES");
-//        yes.setTextFill(Color.WHITE);
-//        yes.setFont(Font.font("Verdana", 40));
-//        yes.setAlignment(Pos.CENTER_LEFT);
-//        yes.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        Label no = labelMap.get("3");
-//        no.setText("NO");
-//        no.setTextFill(Color.WHITE);
-//        no.setFont(Font.font("Verdana", 40));
-//        no.setAlignment(Pos.CENTER_RIGHT);
-//        no.setStyle("-fx-background-color: #111111; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        changeButtonColor("green", 2);
-//        changeButtonColor("red", 3);
-//
-//        primaryStage.setScene(new Scene(root));
-//        primaryStage.setMaximized(true);
-//        primaryStage.show();
-//    }
-//
-//
-//    private void addGasButtonsToCenter() {
-//        String[] gasNames = { "Regular", "Plus", "Premium" };
-//        String[] gasColors = { "forestgreen", "dodgerblue", "orangered" };
-//        PossibleActionsForButton[] actions = {
-//                PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE,
-//                PossibleActionsForButton.CHOSE_GAS_TYPE_TWO,
-//                PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE
-//        };
-//        for (int i = 0; i < 3; i++) {
-//            Button gasBtn = new Button(gasNames[i]);
-//            gasBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//            gasBtn.setStyle(
-//                    "-fx-background-color: " + gasColors[i] + ";" +
-//                            "-fx-text-fill: white; -fx-font-size: 20px;"
-//            );
-//
-//            int buttonIndex = i; // for lambda
-//            gasBtn.setOnAction(e -> {
-//                System.out.println("Gas button pressed: " + actions[buttonIndex]);
-//                if (screenHandler != null) {
-//                    // screenHandler.sendMessage(new Message(...));
-//                }
-//            });
-//
-//            // Row 1, 2, 3 in column 0
-//            centerPane.add(gasBtn, 0, i + 1);
-//        }
-//    }
 
     // Previously known as createLabel(int height, int width, int section)
     // Changes the size of a specified label to a specified height and width
@@ -627,6 +526,12 @@ public class ScreenDisplay {
         buttonMap.get(buttonNum).setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
+    private void fadeIn(Node node) {
+        FadeTransition ft = new FadeTransition(Duration.millis(500), node);
+        ft.setFromValue(0.0);
+        ft.setToValue(1.0);
+        ft.play();
+    }
 
     //TODO: Finish this
     public void giveButtonAction(int action, int button) {

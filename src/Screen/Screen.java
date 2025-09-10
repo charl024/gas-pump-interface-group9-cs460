@@ -69,7 +69,15 @@ public class Screen extends Application {
                         }
                     });
                     sendMessage(message);
+                }else if(parts[1].equals("fuelFinished")){
+                    screenDisplay.resetLabels();
 
+                    // Example values, replace with actual pumping results
+                    // Needs to get this number from a message somewhere
+                    double totalGallons = 10.23;
+                    double totalPrice = 35.87;
+
+                    screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
 
                 }else if(parts[1].equals("receipt")){
                     screenDisplay.resetLabels();
