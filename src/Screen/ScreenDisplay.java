@@ -93,7 +93,6 @@ public class ScreenDisplay {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
-        primaryStage.show();
     }
 
     // Method creates buttons 0-9 (placed on left and right side of screen)
