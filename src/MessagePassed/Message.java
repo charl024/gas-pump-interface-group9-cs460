@@ -25,4 +25,8 @@ public class Message implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void changeDevice(String newDevice) {
+        description = newDevice.substring(0, 2) + description.substring(2);
+    }
 }
