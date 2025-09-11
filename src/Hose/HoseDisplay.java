@@ -23,7 +23,7 @@ public class HoseDisplay extends BorderPane {
 
     private double connectorX;
 
-    private boolean connected = false;
+    private boolean connectedToCar = false;
 
     private HoseInternal internal;
 
@@ -120,11 +120,10 @@ public class HoseDisplay extends BorderPane {
            hoseHose.setX(10);
            hoseHose.setWidth(connectorNewX - 10);
 
-            connected = connectorNewX == (displayWidth - connectorWidth - ((double) displayWidth / 4));
+            connectedToCar = connectorNewX == (displayWidth - connectorWidth - ((double) displayWidth / 4));
 
-            if (connected) {
+            if (connectedToCar) {
                 internal.onConnect();
-                System.out.println("Connected to car!");
             } else {
                 internal.onDisconnect();
             }
