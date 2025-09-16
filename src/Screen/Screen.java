@@ -79,7 +79,12 @@ public class Screen extends Application {
 
                     screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
 
-                }else if(parts[1].equals("receipt")){
+                }else if(parts[1].equals("PumpUnavailable")){
+                    screenDisplay.resetLabels();
+
+                    screenDisplay.showPumpUnavailableScreen();
+                }
+                else if(parts[1].equals("receipt")){
                     screenDisplay.resetLabels();
                     screenDisplay.showReceiptScreen();
                     Message message = new Message();
