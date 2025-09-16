@@ -314,6 +314,22 @@ public class ScreenDisplay {
         setUpButtonPress(3, PossibleActionsForButton.DENY_RECEIPT, Color.CRIMSON);
     }
 
+    public void showPumpUnavailableScreen() {
+        changeLabel(5, 2, 0);  // Span all rows, 2 columns
+        Label unavailable = labelMap.get("0");
+        writeText("Pump Unavailable\nPlease see cashier", 0);
+        unavailable.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        unavailable.setAlignment(Pos.CENTER);
+        unavailable.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        // Change all side buttons to gray
+        for (int i = 0; i < 10; i++) {
+            changeButtonColorV2(Color.DARKGRAY, i);
+        }
+    }
+
     // TODO: need to finish/work on message sending from buttons and test
     // Modified to go to receipt after selecting gas
     private void setUpButtonPress(int buttonNum, PossibleActionsForButton action /*, String label*/,Color color) {
