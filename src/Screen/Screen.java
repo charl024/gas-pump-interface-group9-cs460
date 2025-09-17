@@ -32,7 +32,7 @@ public class Screen extends Application {
 //        This message shows receipt screen
 //        messageStr = "SC-receipt";
 
-    private void handleMessage(Message msg) {
+    public void handleMessage(Message msg) {
         String messageStr = msg.getDescription();
 
 
@@ -46,8 +46,11 @@ public class Screen extends Application {
         } else {
 
             if(parts.length == 2){
-                if(parts[1].equals("welcome")){
+                if(parts[1].equals("welcome")) {
                     screenDisplay.showWelcomeScreen();
+                }else if(parts[1].equals("authorizing")){
+                    screenDisplay.resetLabels();
+                    screenDisplay.showAuthorizationScreen();
                 }else if(parts[1].equals("accepted")){
                     screenDisplay.resetLabels();
                     screenDisplay.showCardAcceptedScreen();
@@ -69,6 +72,12 @@ public class Screen extends Application {
                         }
                     });
                     sendMessage(message);
+                }else if(parts[1].equals("connectHose")){
+                    screenDisplay.resetLabels();
+                    screenDisplay.showConnectHoseScreen();
+                }else if(parts[1].equals("hosePaused")){
+                    screenDisplay.resetLabels();
+                    screenDisplay.showHosePausedScreen();
                 }else if(parts[1].equals("fuelFinished")){
                     screenDisplay.resetLabels();
 
@@ -79,9 +88,8 @@ public class Screen extends Application {
 
                     screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
 
-                }else if(parts[1].equals("PumpUnavailable")){
+                }else if(parts[1].equals("pumpUnavailable")){
                     screenDisplay.resetLabels();
-
                     screenDisplay.showPumpUnavailableScreen();
                 }
                 else if(parts[1].equals("receipt")){
@@ -104,7 +112,6 @@ public class Screen extends Application {
                 screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
                 return;
             }
-
             if (!parts[1].equals("*")) {
                 String[] s = parts[1].split("\\.");
                 screenDisplay.changeFont(s[0], Integer.parseInt(s[1]));
@@ -144,26 +151,26 @@ public class Screen extends Application {
         screenDisplay = new ScreenDisplay();
         screenDisplay.showScreen(primaryStage);
 
-        this.port = new CommPort(1);
+//        this.port = new CommPort(1);
 
         // thread that polls port for a message
-        new Thread(() -> {
-            try {
-                while (true) {
-                    Thread.sleep(10); // wait 10ms
-                    Message message = port.get();
-                    if (message != null) {
-                        handleMessage(message);
-                    }
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
-
-        primaryStage.setOnCloseRequest(e -> {
-            port.close();
-        }); 
+//        new Thread(() -> {
+//            try {
+//                while (true) {
+//                    Thread.sleep(10); // wait 10ms
+//                    Message message = port.get();
+//                    if (message != null) {
+//                        handleMessage(message);
+//                    }
+//                }
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }).start();
+//
+//        primaryStage.setOnCloseRequest(e -> {
+//            port.close();
+//        });
 
         primaryStage.show();
     }

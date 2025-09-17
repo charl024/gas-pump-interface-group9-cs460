@@ -1,25 +1,3 @@
-//package Screen;
-//import javafx.scene.layout.*;
-//
-//import java.io.BufferedReader;
-//import java.io.ObjectInputStream;
-//import java.io.ObjectOutputStream;
-//import java.io.PrintWriter;
-//import java.net.Socket;
-//
-//public class ScreenDisplay {
-//
-//
-//    private final Pane screenPane;
-//    public ScreenDisplay() {
-//        screenPane =  new Pane();
-//
-//    }
-//
-//    public Pane getScreenPane() {
-//        return screenPane;
-//    }
-//}
 package Screen;
 
 
@@ -79,6 +57,7 @@ public class ScreenDisplay {
     private Map<Integer, StackPane> stackMap = new HashMap<>();
     private Node mergedNode;
     private Color originalMidColor = Color.web("#111111");
+    private Color originalButtonColor = Color.web("#1E1E1E");
 
     private Consumer<Integer> onAction;
 
@@ -87,8 +66,28 @@ public class ScreenDisplay {
         root.setCenter(createMiddle());
         addMidLabels();
 
-
-
+        // Method calls used to display certain screens
+        // and to test out resetDisplay method (seems to work well now)
+//        showWelcomeScreen();
+//        resetLabels();
+//        showAuthorizationScreen();
+//        resetLabels();
+//        showCardDeniedScreen();
+//        resetLabels();
+//        showCardAcceptedScreen();
+//        resetLabels();
+//        showGasSelectionScreen();
+//        resetLabels();
+//        showConnectHoseScreen();
+//        resetLabels();
+//        showHosePausedScreen();
+//        resetLabels();
+//        showFuelFinishedScreen(48.9, 100.3);
+//        resetLabels();
+//        showReceiptScreen();
+//        resetLabels();
+//        showPumpUnavailableScreen();
+//        resetLabels();
 
 
         primaryStage.setScene(new Scene(root));
@@ -109,8 +108,10 @@ public class ScreenDisplay {
             Button b = new Button("" + i);
             buttonMap.put(i, b);
             b.setPrefSize(200, screenBounds.getHeight() / 5);
+            b.setTextFill(Color.WHITE);
+            b.setFont(Font.font("Verdana", 16));
             //Code for unbordered labels
-            changeButtonColorV2(Color.web("#1E1E1E"), i);
+            changeButtonColorV2(originalButtonColor, i);
             b.setStyle(
                     "-fx-border-color: white;" +
                             "-fx-border-width: 2;" +
@@ -169,6 +170,10 @@ public class ScreenDisplay {
             }
         }
     }
+
+    /**
+     * Shows the welcome screen
+     */
     public void showWelcomeScreen(){
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label main = labelMap.get("0");
@@ -178,6 +183,30 @@ public class ScreenDisplay {
         main.setAlignment(Pos.CENTER);
         main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
     }
+    /**
+     *
+     */
+    public void showAuthorizationScreen(){
+        // Maybe Color.POWDERBLUE
+        Color colorForScreen = Color.SKYBLUE;
+
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label accept = labelMap.get("0");
+        writeText("Authorizing...", 0);
+        accept.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        accept.setAlignment(Pos.CENTER);
+        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        for(int i = 0; i < 10; i++){
+            changeButtonColorV2(colorForScreen, i);
+        }
+    }
+
+    /**
+     * Shows card accepted screen
+     */
     public void showCardAcceptedScreen(){
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label accept = labelMap.get("0");
@@ -192,6 +221,9 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.GREEN, i);
         }
     }
+    /**
+     * Shows card denied screen
+     */
     public void showCardDeniedScreen(){
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label accept = labelMap.get("0");
@@ -207,7 +239,9 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKRED, i);
         }
     }
-
+    /**
+     * Shows gas selection screen
+     */
     public void showGasSelectionScreen(){
         // Code clean up
 
@@ -256,10 +290,50 @@ public class ScreenDisplay {
         setUpButtonPress(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
     }
 
+    /**
+     *
+     */
+    public void showConnectHoseScreen(){
+        // Maybe Color.POWDERBLUE
+        Color colorForScreen = Color.SKYBLUE;
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label accept = labelMap.get("0");
+        writeText("Connect Hose", 0);
+        accept.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        accept.setAlignment(Pos.CENTER);
+//        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+//        for(int i = 0; i < 10; i++){
+//            changeButtonColorV2(colorForScreen, i);
+//        }
+    }
+    public void showHosePausedScreen(){
+        // Maybe Color.POWDERBLUE
+        Color colorForScreen = Color.SKYBLUE;
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label accept = labelMap.get("0");
+        writeText("Hose Paused", 0);
+        accept.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        accept.setAlignment(Pos.CENTER);
+        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        for(int i = 0; i < 10; i++){
+            changeButtonColorV2(colorForScreen, i);
+        }
+    }
+
     public void setOnAction(Consumer<Integer> handler) {
         this.onAction = handler;
     }
-
+    /**
+     * Shows fuel finished screen
+     * @param totalGallons
+     * @param totalPrice
+     */
     public void showFuelFinishedScreen(double totalGallons, double totalPrice) {
         // Fill the entire middle with one big label
         changeLabel(5, 2, 0); // Span 5 rows, 2 columns
@@ -286,7 +360,9 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKBLUE, i);
         }
     }
-
+    /**
+     * Shows receipt screen
+     */
     public void showReceiptScreen() {
 
         changeLabel(1, 2, 0);
@@ -314,6 +390,9 @@ public class ScreenDisplay {
         setUpButtonPress(3, PossibleActionsForButton.DENY_RECEIPT, Color.CRIMSON);
     }
 
+    /**
+     * Shows pump unavailable screen
+     */
     public void showPumpUnavailableScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
@@ -337,8 +416,6 @@ public class ScreenDisplay {
         if (btn == null) return;
 
         changeButtonColorV2(color, buttonNum);
-        btn.setTextFill(Color.WHITE);
-        btn.setFont(Font.font("Verdana", 16));
 
         btn.setOnAction(e -> {
             // Keep your original message functionality
@@ -427,9 +504,17 @@ public class ScreenDisplay {
             Label l = labelMap.get("" + i);
             GridPane.setColumnSpan(l, 1);
             GridPane.setRowSpan(l, 1);
+            writeText("", i);
             l.setBackground(new Background(new BackgroundFill(originalMidColor,
                     CornerRadii.EMPTY, Insets.EMPTY)));
+            l.setStyle("");
+
         }
+        for (int i = 0; i < 10; i++) {
+            changeButtonColorV2(originalButtonColor, i);
+            buttonMap.get(i).setTextFill(Color.WHITE);
+        }
+
     }
 
     //TODO: need to pass string value (for map) of which label to add text to
