@@ -11,7 +11,7 @@ public class Screen extends Application {
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
 
-    public Screen(){
+    public Screen() {
 
     }
 
@@ -36,7 +36,6 @@ public class Screen extends Application {
         String messageStr = msg.getDescription();
 
 
-
         String[] parts = messageStr.split("-");
 
         String deviceType = parts[0];
@@ -45,40 +44,40 @@ public class Screen extends Application {
             sendMessage(invalidMessage);
         } else {
 
-            if(parts.length == 2){
-                if(parts[1].equals("welcome")) {
+            if (parts.length == 2) {
+                if (parts[1].equals("welcome")) {
                     screenDisplay.showWelcomeScreen();
-                }else if(parts[1].equals("authorizing")){
+                } else if (parts[1].equals("authorizing")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showAuthorizationScreen();
-                }else if(parts[1].equals("accepted")){
+                } else if (parts[1].equals("accepted")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showCardAcceptedScreen();
-                }else if(parts[1].equals("denied")){
+                } else if (parts[1].equals("denied")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showCardDeniedScreen();
-                }else if(parts[1].equals("gas")){
+                } else if (parts[1].equals("gas")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showGasSelectionScreen();
                     Message message = new Message();
-                    screenDisplay.setOnAction( code -> {
+                    screenDisplay.setOnAction(code -> {
 
-                        if(code == 0){
+                        if (code == 0) {
                             message.addToDescription("Regular");
-                        }else if(code == 1){
+                        } else if (code == 1) {
                             message.addToDescription("Plus");
-                        }else if(code == 2){
+                        } else if (code == 2) {
                             message.addToDescription("Premium");
                         }
                     });
                     sendMessage(message);
-                }else if(parts[1].equals("connectHose")){
+                } else if (parts[1].equals("connectHose")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showConnectHoseScreen();
-                }else if(parts[1].equals("hosePaused")){
+                } else if (parts[1].equals("hosePaused")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showHosePausedScreen();
-                }else if(parts[1].equals("fuelFinished")){
+                } else if (parts[1].equals("fuelFinished")) {
                     screenDisplay.resetLabels();
 
                     // Example values, replace with actual pumping results
@@ -88,19 +87,18 @@ public class Screen extends Application {
 
                     screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
 
-                }else if(parts[1].equals("pumpUnavailable")){
+                } else if (parts[1].equals("pumpUnavailable")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showPumpUnavailableScreen();
-                }
-                else if(parts[1].equals("receipt")){
+                } else if (parts[1].equals("receipt")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showReceiptScreen();
                     Message message = new Message();
-                    screenDisplay.setOnAction( code -> {
+                    screenDisplay.setOnAction(code -> {
 
-                        if(code == 3){
+                        if (code == 3) {
                             message.addToDescription("Accepted");
-                        }else if(code == 4){
+                        } else if (code == 4) {
                             message.addToDescription("Denied");
                         }
                     });
@@ -108,7 +106,7 @@ public class Screen extends Application {
                 }
                 return;
             }
-            if(parts.length == 3){
+            if (parts.length == 3) {
                 screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
                 return;
             }

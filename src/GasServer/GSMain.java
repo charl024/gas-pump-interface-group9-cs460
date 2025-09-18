@@ -69,6 +69,12 @@ public class GSMain extends Application {
         }
     }
 
+    /**
+     * Create pane that holds the whole GUI
+     *
+     * @param primaryStage Stage
+     * @param gasStation   Gas Station
+     */
     private void createPane(Stage primaryStage, GasStation gasStation) {
         Pane root = new Pane();
         root.getChildren().add(gasStation.getDisplay().getPane());

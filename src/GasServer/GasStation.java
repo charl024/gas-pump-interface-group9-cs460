@@ -12,11 +12,16 @@ public class GasStation {
     private final GSDisplay display;
     private GSIOClient client;
 
+    /**
+     * Base constructor used for demoing the Gas Station
+     */
     public GasStation() {
         display = new GSDisplay();
     }
+
     /**
      * Constructor for Gas Station Server, creates the display and client
+     *
      * @param port Connected port
      */
     public GasStation(CommPort port) {
@@ -26,6 +31,7 @@ public class GasStation {
 
     /**
      * Get the display
+     *
      * @return Display
      */
     public GSDisplay getDisplay() {
@@ -34,6 +40,7 @@ public class GasStation {
 
     /**
      * Get the client
+     *
      * @return Client
      */
     public GSIOClient getClient() {

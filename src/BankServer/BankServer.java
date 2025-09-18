@@ -31,6 +31,7 @@ public class BankServer {
 
     /**
      * Get display that shows the GUI
+     *
      * @return Display
      */
     public BSDisplay getDisplay() {
@@ -40,6 +41,7 @@ public class BankServer {
     /**
      * Return the client that handles messages between IOPort and the bank
      * server
+     *
      * @return IOPort client
      */
     public BSIOClient getClient() {

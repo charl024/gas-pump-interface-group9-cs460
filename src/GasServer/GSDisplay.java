@@ -133,6 +133,9 @@ public class GSDisplay {
         premiumCostLabel.setText(format);
     }
 
+    /**
+     * Set gas prices and total that the gas station has made for the demo
+     */
     public void setDemoPrices() {
         total = 133.20;
         regularCost = 2.89;

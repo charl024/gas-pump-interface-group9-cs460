@@ -76,8 +76,9 @@ public class FMMain extends Application {
 
     /**
      * Create the pane that holds the GUI
+     *
      * @param primaryStage Stage
-     * @param flowMeter Flow Meter
+     * @param flowMeter    Flow Meter
      */
     private void createPane(Stage primaryStage, FlowMeter flowMeter) {
         Pane root = new Pane();

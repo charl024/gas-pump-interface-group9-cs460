@@ -34,7 +34,6 @@ class Main {
 //
 
 
-
         //TESTING CODE FOR CARD READER:
 //        CommPort cardIOPort = new CommPort(3);
 //        Message cardMessage = new Message("CR");

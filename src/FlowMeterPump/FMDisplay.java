@@ -56,7 +56,6 @@ public class FMDisplay {
     private Button stopPump;
 
 
-
     /**
      * Flow meter constructor, will create the text boxes and button needed
      * to simulate the flow meter
@@ -90,7 +89,7 @@ public class FMDisplay {
 
 
         createPumpPanes();
-        if(demo) {
+        if (demo) {
             createButtons();
         }
 
@@ -233,6 +232,7 @@ public class FMDisplay {
         pumpCord.getChildren().addAll(pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive);
         pumpCord.setAlignment(Pos.CENTER);
     }
+
     private void createButtons() {
         startPump = new Button("Start");
         stopPump = new Button("Stop");
