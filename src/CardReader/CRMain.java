@@ -22,7 +22,6 @@ import java.util.List;
 public class CRMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("Error");
         List<String> arguments = getParameters().getRaw();
         //If we receive an argument then we should start the program without
         // connecting to anything

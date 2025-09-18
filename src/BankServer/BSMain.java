@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 /**
  * Main
  */
@@ -26,38 +28,55 @@ public class BSMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CommPort port = new CommPort(4);
-        BankServer bankServer = new BankServer(port);
+        List<String> arguments = getParameters().getRaw();
+        if (arguments.size() == 1) {
+            BankServer bankServer = new BankServer();
+            createPane(primaryStage, bankServer);
+            primaryStage.show();
+        } else {
+            CommPort port = new CommPort(4);
+            BankServer bankServer = new BankServer(port);
 
+            createPane(primaryStage, bankServer);
+
+            primaryStage.setOnCloseRequest(event -> {
+                port.close();
+                Platform.exit();
+            });
+
+            primaryStage.show();
+            //Have a thread that just watches to see if there are any messages
+            // from the connected IOPort
+            new Thread(() -> {
+                try {
+                    while (true) {
+                        Thread.sleep(10); // wait 10ms
+                        Message message = port.get();         // blocking call
+                        if (message != null) {
+                            bankServer.getClient().handleMessage(message);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+    /**
+     * Create pane holding the GUI
+     *
+     * @param primaryStage Stage
+     * @param bankServer   Bank Server
+     */
+    private void createPane(Stage primaryStage, BankServer bankServer) {
         StackPane pane = new StackPane();
         pane.getChildren().add(bankServer.getDisplay().getPane());
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Bank Server");
-
-        primaryStage.setOnCloseRequest(event -> {
-            port.close();
-            Platform.exit();
-        });
-
-        primaryStage.show();
-        //Have a thread that just watches to see if there are any messages
-        // from the connected IOPort
-        new Thread(() -> {
-            try {
-                while (true) {
-                    Thread.sleep(10); // wait 10ms
-                    Message message = port.get();         // blocking call
-                    if (message != null) {
-                        bankServer.getClient().handleMessage(message);
-                    }
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
     /**
