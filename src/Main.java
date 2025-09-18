@@ -23,24 +23,16 @@ class Main {
 
         //TESTING CODE FOR FLOW METER:
 
-//        CommPort flowIOPort = new CommPort(2);
-//        //Message that we want to send to the Flow Meter
-//        Message flowMessage = new Message("FM-START-2.86-10-15");
-//        flowIOPort.send(flowMessage); //Idk if the flow should send a message
+        CommPort flowIOPort = new CommPort(2);
+        //Message that we want to send to the Flow Meter
+        Message flowMessage = new Message("FM-START-2.86-10-15");
+        flowIOPort.send(flowMessage); //Idk if the flow should send a message
         //System.out.println("testing here");
 //        // back saying indicating that it received the message correctly
 //
 //        //TESTING CODE FOR FLOW METER ENDING
 //
-//        Scanner scan = new Scanner(System.in);
-//        System.out.println("Is Flow Meter finished? Enter YES to move on to next device");
-//        boolean move = false;
-//        while (!move) {
-//            String input = scan.nextLine();
-//            if (input.toUpperCase().equals("YES")) {
-//                move = true;
-//            }
-//        }
+
 
 
         //TESTING CODE FOR CARD READER:
@@ -77,18 +69,36 @@ class Main {
         //TESTING CODE FOR BANK SERVER ENDING
 
         // TESTING CODE FOR HOSE
-        System.out.println("Creating hosePort");
-        StatusPort hosePort = new StatusPort(6);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        Message hoseMessage = hosePort.read();
-        System.out.println("Received from Hose: " + hoseMessage.getDescription());
+//        System.out.println("Creating hosePort");
+//        StatusPort hosePort = new StatusPort(6);
+//
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        Message hoseMessage = hosePort.read();
+//        System.out.println("Received from Hose: " + hoseMessage.getDescription());
 
         // TESTING CODE FOR HOSE ENDING
+
+        //Setting up code for hooking things up
+
+
+        //Create all the IOport's for each device
+//        CommPort screenPort = new CommPort(1);
+//        CommPort flowPumpPort = new CommPort(2);
+//        CommPort cardReaderPort = new CommPort(3);
+//        CommPort bankServerPort = new CommPort(4);
+//        CommPort hosePort = new CommPort(5);
+//
+//        boolean running = true;
+//
+//        while (running) {
+//            //handle receiving messages from each device here
+//            //idea is read the messages -> handle messages -> repeat
+//        }
+
     }
 }
