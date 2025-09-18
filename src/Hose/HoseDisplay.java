@@ -25,9 +25,9 @@ public class HoseDisplay extends BorderPane {
 
     private boolean connectedToCar = false;
 
-    private HoseInternal internal;
+    private HoseIOClient internal;
 
-    public HoseDisplay(HoseInternal hoseInternal) {
+    public HoseDisplay(HoseIOClient hoseInternal) {
         this.internal = hoseInternal;
 
         this.setPrefSize(displayWidth, displayHeight);

@@ -3,12 +3,12 @@ package Hose;
 import IOPort.ControlPort;
 import MessagePassed.Message;
 
-public class HoseInternal {
+public class HoseIOClient {
     private final int hoseConnector = 6;
     private ControlPort controlPort;
     private boolean portConnected;
 
-    public HoseInternal() {
+    public HoseIOClient() {
         // Hose is connected to connector #6
         Thread waitConnection = new Thread(() -> {
             controlPort = new ControlPort(hoseConnector);
