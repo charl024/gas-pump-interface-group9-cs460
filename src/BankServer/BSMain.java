@@ -33,6 +33,9 @@ public class BSMain extends Application {
             BankServer bankServer = new BankServer();
             createPane(primaryStage, bankServer);
             primaryStage.show();
+            primaryStage.setOnCloseRequest(event -> {
+                Platform.exit();
+            });
         } else {
             CommPort port = new CommPort(4);
             BankServer bankServer = new BankServer(port);

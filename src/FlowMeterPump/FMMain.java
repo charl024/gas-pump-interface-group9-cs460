@@ -35,6 +35,9 @@ public class FMMain extends Application {
             FlowMeter flowMeter = new FlowMeter(true);
             createPane(primaryStage, flowMeter);
             primaryStage.show();
+            primaryStage.setOnCloseRequest(event -> {
+                Platform.exit();
+            });
         } else {
             //Create IO port first, then create the device
 

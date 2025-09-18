@@ -133,6 +133,15 @@ public class GSDisplay {
         premiumCostLabel.setText(format);
     }
 
+    public void setDemoPrices() {
+        total = 133.20;
+        regularCost = 2.89;
+        plusCost = 3.32;
+        premiumCost = 3.77;
+        updateGasPrices();
+        updateTotal();
+    }
+
     /**
      * Update the gas prices for all three types
      */

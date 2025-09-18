@@ -10,8 +10,11 @@ import IOPort.CommPort;
  */
 public class GasStation {
     private final GSDisplay display;
-    private final GSIOClient client;
+    private GSIOClient client;
 
+    public GasStation() {
+        display = new GSDisplay();
+    }
     /**
      * Constructor for Gas Station Server, creates the display and client
      * @param port Connected port
@@ -19,7 +22,6 @@ public class GasStation {
     public GasStation(CommPort port) {
         display = new GSDisplay();
         client = new GSIOClient(display, port);
-
     }
 
     /**
