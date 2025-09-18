@@ -7,6 +7,7 @@ import MessagePassed.Message;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -50,12 +51,17 @@ public class FMDisplay {
     private Pane pumpFour;
     private Pane pumpFive;
 
+    private VBox pumpButtons;
+    private Button startPump;
+    private Button stopPump;
+
+
 
     /**
      * Flow meter constructor, will create the text boxes and button needed
      * to simulate the flow meter
      */
-    public FMDisplay() {
+    public FMDisplay(boolean demo) {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
@@ -84,7 +90,9 @@ public class FMDisplay {
 
 
         createPumpPanes();
-
+        if(demo) {
+            createButtons();
+        }
 
         HBox pumpStuff = new HBox(pump, pumpCord);
         pumpStuff.setAlignment(Pos.CENTER);
@@ -158,6 +166,8 @@ public class FMDisplay {
         costInfo.setText("Cost: $" + format);
     }
 
+    //TODO MAYBE FIX BUG -> IF START IS CALLED WHILE STOP, OR VICE VERSA, IT
+    // WILL BREAK
 
     public void startPump() {
         //When the pump starts, create an animation like start for the pump
@@ -171,7 +181,6 @@ public class FMDisplay {
             if (index < pumps.length) {
                 pumps[index].setStyle(greenCord);
             } else {
-                // Optionally shut down the executor once done
                 executor.shutdown();
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
@@ -179,7 +188,7 @@ public class FMDisplay {
 
 
     public void stopPump() {
-        //When the pump starts, create an animation like start for the pump
+        //When the pump starts, create an animation like stop for the pump
         executor = Executors.newScheduledThreadPool(1);
         Pane[] pumps = {pumpFive, pumpFour, pumpThree, pumpTwo, pumpOne};
 
@@ -190,7 +199,6 @@ public class FMDisplay {
             if (index < pumps.length) {
                 pumps[index].setStyle(redCord);
             } else {
-                // Optionally shut down the executor once done
                 executor.shutdown();
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
@@ -224,6 +232,18 @@ public class FMDisplay {
 
         pumpCord.getChildren().addAll(pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive);
         pumpCord.setAlignment(Pos.CENTER);
+    }
+    private void createButtons() {
+        startPump = new Button("Start");
+        stopPump = new Button("Stop");
+        pumpButtons = new VBox();
+        pumpButtons.setAlignment(Pos.TOP_CENTER);
+        pumpButtons.getChildren().addAll(startPump, stopPump);
+        pumpButtons.setSpacing(10);
+        startPump.setOnAction(event -> startPump());
+        stopPump.setOnAction(event -> stopPump());
+
+        pane.setRight(pumpButtons);
     }
 
     /**

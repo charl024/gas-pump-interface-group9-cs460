@@ -84,7 +84,7 @@ public class CRMain extends Application {
         pane.getChildren().add(cardReader.getDisplay().getPane());
         pane.setAlignment(Pos.CENTER);
         primaryStage.setScene(new Scene(pane));
-        System.out.println("got here");
+        primaryStage.setTitle("Card Reader");
     }
 
     /**
