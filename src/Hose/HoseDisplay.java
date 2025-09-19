@@ -25,9 +25,9 @@ public class HoseDisplay extends BorderPane {
 
     private boolean connectedToCar = false;
 
-    private HoseInternal internal;
+    private HoseIOClient internal;
 
-    public HoseDisplay(HoseInternal hoseInternal) {
+    public HoseDisplay(HoseIOClient hoseInternal) {
         this.internal = hoseInternal;
 
         this.setPrefSize(displayWidth, displayHeight);
@@ -53,13 +53,12 @@ public class HoseDisplay extends BorderPane {
         hoseEndpoint = new Rectangle(20, 40);
         hoseEndpoint.setFill(Color.DARKGRAY);
         hoseEndpoint.setX(displayWidth - ((double) displayWidth / 4) + 10);
-        hoseEndpoint.setY((double) displayHeight /2 - 20);
+        hoseEndpoint.setY((double) displayHeight / 2 - 20);
 
         double centerX = hoseEndpoint.getX() + 10;
         double centerY = hoseEndpoint.getY() + hoseEndpoint.getHeight() / 2;
         endpointCircle = new Circle(centerX, centerY, 8, Color.BLACK);
     }
-
 
 
     private void hoseStartRectangleSetup() {
@@ -72,21 +71,21 @@ public class HoseDisplay extends BorderPane {
         hoseNozzle = new Rectangle(20, 5);
         hoseNozzle.setFill(Color.GRAY);
         hoseNozzle.setX(10 + connectorWidth);
-        hoseNozzle.setY((double) displayHeight /2 - 2.5);
+        hoseNozzle.setY((double) displayHeight / 2 - 2.5);
 
     }
 
     private void hoseEndRectangleSetup() {
-        hoseEnd = new Rectangle((double) displayWidth /4, displayHeight);
+        hoseEnd = new Rectangle((double) displayWidth / 4, displayHeight);
         hoseEnd.setFill(Color.YELLOW);
         hoseEnd.setX(displayWidth - (double) displayWidth / 4);
     }
 
     private void hoseHoseSetup() {
-        hoseHose = new Rectangle(0, (double) connectorHeight /2);
+        hoseHose = new Rectangle(0, (double) connectorHeight / 2);
         hoseHose.setFill(Color.DARKBLUE);
         hoseHose.setX(10);
-        hoseHose.setY((double) displayHeight /2 - (double) connectorHeight /4);
+        hoseHose.setY((double) displayHeight / 2 - (double) connectorHeight / 4);
     }
 
     private void hoseConnectorSetup() {
@@ -97,7 +96,7 @@ public class HoseDisplay extends BorderPane {
         draggableHoseConnector.setStroke(Color.BLACK);
         draggableHoseConnector.setFill(Color.LIGHTBLUE);
         draggableHoseConnector.setX(10);
-        draggableHoseConnector.setY((double) displayHeight /2 - (double) connectorHeight /2);
+        draggableHoseConnector.setY((double) displayHeight / 2 - (double) connectorHeight / 2);
 
         draggableHoseConnector.setOnMousePressed(e -> {
             connectorX = e.getSceneX() - draggableHoseConnector.getX();
@@ -111,14 +110,14 @@ public class HoseDisplay extends BorderPane {
         });
 
         draggableHoseConnector.setOnMouseDragged(e -> {
-           double connectorNewX = e.getSceneX() - connectorX;
-           connectorNewX = Math.max(10, Math.min(displayWidth - connectorWidth - ((double) displayWidth /4), connectorNewX));
-           draggableHoseConnector.setX(connectorNewX);
+            double connectorNewX = e.getSceneX() - connectorX;
+            connectorNewX = Math.max(10, Math.min(displayWidth - connectorWidth - ((double) displayWidth / 4), connectorNewX));
+            draggableHoseConnector.setX(connectorNewX);
 
-           hoseNozzle.setX(connectorNewX + 40);
+            hoseNozzle.setX(connectorNewX + 40);
 
-           hoseHose.setX(10);
-           hoseHose.setWidth(connectorNewX - 10);
+            hoseHose.setX(10);
+            hoseHose.setWidth(connectorNewX - 10);
 
             connectedToCar = connectorNewX == (displayWidth - connectorWidth - ((double) displayWidth / 4));
 

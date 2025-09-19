@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Flow Meter Display
@@ -40,16 +41,26 @@ public class FMDisplay {
     private ScheduledExecutorService executor;
 
 
-    private final Pane pumpCord;
-    private final String redCord = "-fx-background-color: red; -fx-pref-width: 300;" +
-            " -fx-pref-height: 50;";
+    //private final Pane pumpCord;
+    private final String redCord = "-fx-background-color: red; -fx-pref-width: 300;" + " -fx-pref-height: 50;";
+    private final String greenCord = "-fx-background-color: green; -fx-pref-width: " + "300; -fx-pref-height: 50;";
+    private HBox pumpCord;
+    private Pane pumpOne;
+    private Pane pumpTwo;
+    private Pane pumpThree;
+    private Pane pumpFour;
+    private Pane pumpFive;
+
+    private VBox pumpButtons;
+    private Button startPump;
+    private Button stopPump;
 
 
     /**
      * Flow meter constructor, will create the text boxes and button needed
      * to simulate the flow meter
      */
-    public FMDisplay() {
+    public FMDisplay(boolean demo) {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
@@ -65,12 +76,7 @@ public class FMDisplay {
 
         VBox info = new VBox(costInfo, volInfo);
 
-        info.setBorder(new Border(new BorderStroke(
-                Color.BLACK,
-                BorderStrokeStyle.SOLID,
-                CornerRadii.EMPTY,
-                new BorderWidths(1)
-        )));
+        info.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
         //info.setSpacing(1);
         info.setMinWidth(140);
         Pane paneHolder = new Pane(info);
@@ -81,10 +87,12 @@ public class FMDisplay {
         Label pumpText = new Label("Pump");
         pump.getChildren().add(pumpText);
 
-        //Creat the cord that will change color based on the status of the tank
-        pumpCord = new Pane();
-        pumpCord.setStyle(redCord);
-        pumpCord.setMaxHeight(50);
+
+        createPumpPanes();
+        if (demo) {
+            createButtons();
+        }
+
         HBox pumpStuff = new HBox(pump, pumpCord);
         pumpStuff.setAlignment(Pos.CENTER);
         pane.setTop(paneHolder);
@@ -108,7 +116,7 @@ public class FMDisplay {
                 return;
             }
 
-
+            System.out.println("Broken");
             long elapsedTime = System.currentTimeMillis() - start;
             double elapsedSeconds = elapsedTime / 1000.0; //convert milliseconds to seconds
 
@@ -119,7 +127,8 @@ public class FMDisplay {
 
             double cost = gallons * gasRate;
             curCost = cost;
-
+            System.out.println(gallons);
+            System.out.println(cost);
             Platform.runLater(() -> {
                 updateGas(gallons, cost);
             });
@@ -140,7 +149,7 @@ public class FMDisplay {
         executor.shutdown();
         Message stopMessage = new Message("FM-PUMPSTOP");
         client.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI ALONE
-        setRedCord();
+        stopPump();
         System.out.println("Timer off");
     }
 
@@ -157,16 +166,99 @@ public class FMDisplay {
         costInfo.setText("Cost: $" + format);
     }
 
-    public void setGreenCord() {
-        String greenCord = "-fx-background-color: green; -fx-pref-width: " +
-                "300; -fx-pref-height: 50;";
-        pumpCord.setStyle(greenCord);
+    //TODO MAYBE FIX BUG -> IF START IS CALLED WHILE STOP, OR VICE VERSA, IT
+    // WILL BREAK
+
+    public void startPump() {
+        //When the pump starts, create an animation like start for the pump
+        ScheduledExecutorService executorPump =
+                Executors.newScheduledThreadPool(1);
+        Pane[] pumps = {pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive};
+
+        AtomicInteger count = new AtomicInteger(0);
+
+        executorPump.scheduleAtFixedRate(() -> {
+            int index = count.getAndIncrement();
+            if (index < pumps.length) {
+                pumps[index].setStyle(greenCord);
+            } else {
+                executorPump.shutdown();
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
-    public void setRedCord() {
-        pumpCord.setStyle(redCord);
+
+    public void stopPump() {
+        //When the pump starts, create an animation like stop for the pump
+        ScheduledExecutorService executorPump = Executors.newScheduledThreadPool(1);
+        Pane[] pumps = {pumpFive, pumpFour, pumpThree, pumpTwo, pumpOne};
+
+        AtomicInteger count = new AtomicInteger(0);
+
+        executorPump.scheduleAtFixedRate(() -> {
+            int index = count.getAndIncrement();
+            if (index < pumps.length) {
+                pumps[index].setStyle(redCord);
+            } else {
+                executorPump.shutdown();
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
+    private void createPumpPanes() {
+        pumpCord = new HBox();
+        pumpOne = new Pane();
+        pumpTwo = new Pane();
+        pumpThree = new Pane();
+        pumpFour = new Pane();
+        pumpFive = new Pane();
+
+        pumpOne.setStyle(redCord);
+        pumpTwo.setStyle(redCord);
+        pumpThree.setStyle(redCord);
+        pumpFour.setStyle(redCord);
+        pumpFive.setStyle(redCord);
+
+        pumpOne.setMaxHeight(50);
+        pumpTwo.setMaxHeight(50);
+        pumpThree.setMaxHeight(50);
+        pumpFour.setMaxHeight(50);
+        pumpFive.setMaxHeight(50);
+
+        pumpOne.setMaxWidth(40);
+        pumpTwo.setMaxWidth(40);
+        pumpThree.setMaxWidth(40);
+        pumpFour.setMaxWidth(40);
+        pumpFive.setMaxWidth(40);
+
+        pumpCord.getChildren().addAll(pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive);
+        pumpCord.setAlignment(Pos.CENTER);
+    }
+
+    private void createButtons() {
+        startPump = new Button("Start");
+        stopPump = new Button("Stop");
+        pumpButtons = new VBox();
+        pumpButtons.setAlignment(Pos.TOP_CENTER);
+        pumpButtons.getChildren().addAll(startPump, stopPump);
+        pumpButtons.setSpacing(10);
+        startPump.setOnAction(event -> startDemoPump());
+        stopPump.setOnAction(event -> stopDemoPump());
+
+        pane.setRight(pumpButtons);
+    }
+
+    private void startDemoPump() {
+        timerRunning = true;
+        startPump();
+        startGasTimer();
+    }
+
+    private void stopDemoPump() {
+        timerRunning = false;
+        executor.shutdown();
+        stopPump();
+    }
     /**
      * Get client class that is connected to the IOport
      *

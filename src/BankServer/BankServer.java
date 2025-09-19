@@ -10,10 +10,18 @@ import IOPort.CommPort;
  */
 public class BankServer {
     private final BSDisplay display;
-    private final BSIOClient client;
+    private BSIOClient client;
+
+    /**
+     * Base constructor used for demoing the Bank Server
+     */
+    public BankServer() {
+        display = new BSDisplay();
+    }
 
     /**
      * Constructor for Bank Server
+     *
      * @param port Port connected to Bank Server
      */
     public BankServer(CommPort port) {
@@ -21,10 +29,21 @@ public class BankServer {
         client = new BSIOClient(display, port);
     }
 
+    /**
+     * Get display that shows the GUI
+     *
+     * @return Display
+     */
     public BSDisplay getDisplay() {
         return display;
     }
 
+    /**
+     * Return the client that handles messages between IOPort and the bank
+     * server
+     *
+     * @return IOPort client
+     */
     public BSIOClient getClient() {
         return client;
     }

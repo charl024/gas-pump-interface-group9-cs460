@@ -19,14 +19,25 @@ import java.io.File;
  */
 public class CRDisplay {
     private final CRInput input;
-    private final BorderPane pane;
-    private final StackPane imagePane;
+    private BorderPane pane;
+    private StackPane imagePane;
     private Image tapToPay;
     private ImageView imageView;
     private Pane boxTwo;
     private Pane boxThree;
     private Pane boxFour;
 
+    private final boolean handleDemo;
+
+    /**
+     * Base constructor used for demoing the GUI
+     */
+    public CRDisplay() {
+        createBasePane();
+        input = new CRInput(this);
+        handleDemo = true;
+        createDisplay();
+    }
 
     /**
      * Card Reader Display constructor
@@ -34,15 +45,10 @@ public class CRDisplay {
      * @param client Client that handles IOPort messages
      */
     public CRDisplay(CRIOClient client) {
-        pane = new BorderPane();
-        pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        pane.setMinSize(350, 250);
-        pane.setMaxSize(350, 250);
-        imagePane = new StackPane();
-
-
+        createBasePane();
 
         input = new CRInput(client, this);
+        handleDemo = false;
         createDisplay();
     }
 
@@ -81,8 +87,23 @@ public class CRDisplay {
 
         BorderPane.setAlignment(imagePane, Pos.CENTER);
         pane.setOnMouseClicked(event -> {
-            input.handleTap();
+            if (handleDemo) {
+                input.handleTapDemo();
+            } else {
+                input.handleTap();
+            }
         });
+    }
+
+    /**
+     * Creates the base pane holding all the needed components
+     */
+    private void createBasePane() {
+        pane = new BorderPane();
+        pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        pane.setMinSize(350, 250);
+        pane.setMaxSize(350, 250);
+        imagePane = new StackPane();
     }
 
     /**

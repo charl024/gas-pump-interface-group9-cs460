@@ -17,8 +17,8 @@ public class FlowMeter {
      * Main constructor that should be called when Flow meter needs to be
      * created
      */
-    public FlowMeter() {
-        display = new FMDisplay();
+    public FlowMeter(boolean demo) {
+        display = new FMDisplay(demo);
         client = new FMIOClient(display);
         display.setClient(client);
     }

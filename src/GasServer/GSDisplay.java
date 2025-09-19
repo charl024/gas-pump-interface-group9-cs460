@@ -134,6 +134,18 @@ public class GSDisplay {
     }
 
     /**
+     * Set gas prices and total that the gas station has made for the demo
+     */
+    public void setDemoPrices() {
+        total = 133.20;
+        regularCost = 2.89;
+        plusCost = 3.32;
+        premiumCost = 3.77;
+        updateGasPrices();
+        updateTotal();
+    }
+
+    /**
      * Update the gas prices for all three types
      */
     public void updateGasPrices() {

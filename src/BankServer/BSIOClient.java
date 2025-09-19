@@ -17,8 +17,9 @@ public class BSIOClient {
 
     /**
      * Constructor for Bank Server Client
+     *
      * @param display Display that creates the GUI
-     * @param port Connected IOPort
+     * @param port    Connected IOPort
      */
     public BSIOClient(BSDisplay display, CommPort port) {
         this.display = display;
@@ -27,6 +28,7 @@ public class BSIOClient {
 
     /**
      * Handle messages received from the connected IOPort
+     *
      * @param message Message received
      */
     public void handleMessage(Message message) {
@@ -71,6 +73,7 @@ public class BSIOClient {
 
     /**
      * Called to send a message back to the connected IOPort
+     *
      * @param message Message being sent back
      */
     private void sendMessage(Message message) {

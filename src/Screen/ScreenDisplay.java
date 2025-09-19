@@ -61,7 +61,7 @@ public class ScreenDisplay {
 
     private Consumer<Integer> onAction;
 
-    public void showScreen(Stage primaryStage){
+    public void showScreen(Stage primaryStage) {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
         addMidLabels();
@@ -176,7 +176,7 @@ public class ScreenDisplay {
     /**
      * Shows the welcome screen
      */
-    public void showWelcomeScreen(){
+    public void showWelcomeScreen() {
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label main = labelMap.get("0");
         writeText("Welcome to _______!\nPlease tap your card", 0);
@@ -185,10 +185,11 @@ public class ScreenDisplay {
         main.setAlignment(Pos.CENTER);
         main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
     }
+
     /**
      *
      */
-    public void showAuthorizationScreen(){
+    public void showAuthorizationScreen() {
         // Maybe Color.POWDERBLUE
         Color colorForScreen = Color.SKYBLUE;
 
@@ -198,10 +199,10 @@ public class ScreenDisplay {
         accept.setTextFill(Color.WHITE);
         changeTextSize(80, 0);
         accept.setAlignment(Pos.CENTER);
-        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setBackground(new Background(new BackgroundFill(colorForScreen, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             changeButtonColorV2(colorForScreen, i);
         }
     }
@@ -209,42 +210,44 @@ public class ScreenDisplay {
     /**
      * Shows card accepted screen
      */
-    public void showCardAcceptedScreen(){
+    public void showCardAcceptedScreen() {
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label accept = labelMap.get("0");
         writeText("Your payment was successful!", 0);
         accept.setTextFill(Color.WHITE);
         changeTextSize(80, 0);
         accept.setAlignment(Pos.CENTER);
-        accept.setBackground(new Background(new BackgroundFill(Color.GREEN,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             changeButtonColorV2(Color.GREEN, i);
         }
     }
+
     /**
      * Shows card denied screen
      */
-    public void showCardDeniedScreen(){
+    public void showCardDeniedScreen() {
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label accept = labelMap.get("0");
         writeText("Warning: Card has been denied", 0);
         accept.setTextFill(Color.WHITE);
         changeTextSize(80, 0);
         accept.setAlignment(Pos.CENTER);
-        accept.setBackground(new Background(new BackgroundFill(Color.DARKRED,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setBackground(new Background(new BackgroundFill(Color.DARKRED, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
 
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             changeButtonColorV2(Color.DARKRED, i);
         }
     }
+
     /**
      * Shows gas selection screen
      */
-    public void showGasSelectionScreen(){
+    public void showGasSelectionScreen() {
         // Code clean up
 
         // First label: instruction
@@ -254,7 +257,7 @@ public class ScreenDisplay {
         titleLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 0);
         titleLabel.setAlignment(Pos.CENTER);
-        titleLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        titleLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         titleLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         // Gas option labels stacked vertically
@@ -264,7 +267,7 @@ public class ScreenDisplay {
         regLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 2);
         regLabel.setAlignment(Pos.CENTER);
-        regLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        regLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         regLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
 
@@ -274,7 +277,7 @@ public class ScreenDisplay {
         plusLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 4);
         plusLabel.setAlignment(Pos.CENTER);
-        plusLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        plusLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         plusLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         changeLabel(1, 2, 6);  // Span 1 row, 2 columns
@@ -283,7 +286,7 @@ public class ScreenDisplay {
         premLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 6);
         premLabel.setAlignment(Pos.CENTER);
-        premLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"),  CornerRadii.EMPTY, Insets.EMPTY)));
+        premLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         premLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         // Assign side buttons to gas options
@@ -295,7 +298,7 @@ public class ScreenDisplay {
     /**
      *
      */
-    public void showConnectHoseScreen(){
+    public void showConnectHoseScreen() {
         // Maybe Color.POWDERBLUE
         Color colorForScreen = Color.SKYBLUE;
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
@@ -327,7 +330,9 @@ public class ScreenDisplay {
         }
     }
 
-    public void showHosePausedScreen(){
+
+
+    public void showHosePausedScreen() {
         // Maybe Color.POWDERBLUE
         Color colorForScreen = Color.SKYBLUE;
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
@@ -336,10 +341,10 @@ public class ScreenDisplay {
         accept.setTextFill(Color.WHITE);
         changeTextSize(80, 0);
         accept.setAlignment(Pos.CENTER);
-        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setBackground(new Background(new BackgroundFill(colorForScreen, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             changeButtonColorV2(colorForScreen, i);
         }
     }
@@ -347,8 +352,10 @@ public class ScreenDisplay {
     public void setOnAction(Consumer<Integer> handler) {
         this.onAction = handler;
     }
+
     /**
      * Shows fuel finished screen
+     *
      * @param totalGallons
      * @param totalPrice
      */
@@ -378,6 +385,7 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKBLUE, i);
         }
     }
+
     /**
      * Shows receipt screen
      */
@@ -391,7 +399,7 @@ public class ScreenDisplay {
         yes.setTextFill(Color.WHITE);
         changeTextSize(40, 2);
         yes.setAlignment(Pos.CENTER_LEFT);
-        yes.setBackground(new Background(new BackgroundFill(Color.web("#111111"),CornerRadii.EMPTY, Insets.EMPTY)));
+        yes.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         yes.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
 
         Label no = labelMap.get("3");
@@ -399,7 +407,7 @@ public class ScreenDisplay {
         no.setTextFill(Color.WHITE);
         changeTextSize(40, 2);
         no.setAlignment(Pos.CENTER_LEFT);
-        no.setBackground(new Background(new BackgroundFill(Color.web("#111111"),CornerRadii.EMPTY, Insets.EMPTY)));
+        no.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         no.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
 
 //        changeButtonColor("green", 2);
@@ -429,7 +437,7 @@ public class ScreenDisplay {
 
     // TODO: need to finish/work on message sending from buttons and test
     // Modified to go to receipt after selecting gas
-    private void setUpButtonPress(int buttonNum, PossibleActionsForButton action /*, String label*/,Color color) {
+    private void setUpButtonPress(int buttonNum, PossibleActionsForButton action /*, String label*/, Color color) {
         Button btn = buttonMap.get(buttonNum);
         if (btn == null) return;
 
@@ -451,8 +459,8 @@ public class ScreenDisplay {
     }
 
     private void addGasButtonsToCenter() {
-        String[] gasNames = { "Regular", "Plus", "Premium" };
-        String[] gasColors = { "forestgreen", "dodgerblue", "orangered" };
+        String[] gasNames = {"Regular", "Plus", "Premium"};
+        String[] gasColors = {"forestgreen", "dodgerblue", "orangered"};
         PossibleActionsForButton[] actions = {
                 PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE,
                 PossibleActionsForButton.CHOSE_GAS_TYPE_TWO,
@@ -517,8 +525,8 @@ public class ScreenDisplay {
     }
 
     // Use this whenever you enlarge a label and want to revert back to original layout
-    public void resetLabels(){
-        for(int i = 0; i < 10; i++){
+    public void resetLabels() {
+        for (int i = 0; i < 10; i++) {
             Label l = labelMap.get("" + i);
             GridPane.setColumnSpan(l, 1);
             GridPane.setRowSpan(l, 1);
@@ -640,6 +648,7 @@ public class ScreenDisplay {
                 return Color.GHOSTWHITE;
         }
     }
+
     public void changeButtonColorV2(Color color, int buttonNum) {
         buttonMap.get(buttonNum).setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }

@@ -80,7 +80,8 @@ public class FMIOClient {
                 //After all rates are set, we can now start the timer
                 display.setTimerRunning(true);
                 display.startGasTimer();
-                display.setGreenCord();
+                display.startPump();
+                //display.setGreenCord();
 
             } else if (parts[1].equals("STOP")) {
                 display.handleStop(); //stop flow meter and change color

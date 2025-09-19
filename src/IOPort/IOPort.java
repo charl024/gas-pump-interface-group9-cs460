@@ -11,13 +11,13 @@ import java.net.Socket;
  * using a single TCP port.
  *
  * <p>
- *     Once established, both endpoints can exchange {@link Message} objects using
- *     object streams. Incoming messages are stored in a single variable, which can
- *     be accessed using {@link #get()} or {@link #read()}.
+ * Once established, both endpoints can exchange {@link Message} objects using
+ * object streams. Incoming messages are stored in a single variable, which can
+ * be accessed using {@link #get()} or {@link #read()}.
  * </p>
  *
  * <p>
- *     Example usage:
+ * Example usage:
  * </p>
  * <pre>{@code
  *      // On both Program A and Program B
@@ -35,9 +35,9 @@ import java.net.Socket;
  * </pre>
  *
  * <p>
- *     Each IOPort runs two internal threads:
- *     One to establish the connection (as client or server).<
- *     One to continuously listen for incoming messages and stores them.
+ * Each IOPort runs two internal threads:
+ * One to establish the connection (as client or server).<
+ * One to continuously listen for incoming messages and stores them.
  * </p>
  */
 public class IOPort {
@@ -156,7 +156,8 @@ public class IOPort {
             if (in != null) {
                 in.close();
             }
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     /**

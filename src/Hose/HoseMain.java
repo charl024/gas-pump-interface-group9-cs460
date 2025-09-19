@@ -5,19 +5,20 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Hose extends Application {
+public class HoseMain extends Application {
 
     @Override
     public void start(Stage stage) {
-        HoseInternal hoseInternal = new HoseInternal();
-        HoseDisplay hoseDisplay = new HoseDisplay(hoseInternal);
+        HoseIOServer hoseServer = new HoseIOServer();
+        HoseIOClient hoseClient = new HoseIOClient();
+        HoseDisplay hoseDisplay = new HoseDisplay(hoseClient);
         Scene scene = new Scene(hoseDisplay);
         stage.setScene(scene);
         stage.setTitle("Hose");
         stage.setResizable(false);
 
         stage.setOnCloseRequest(e -> {
-            hoseInternal.close();
+            hoseClient.close();
             Platform.exit();
         });
 

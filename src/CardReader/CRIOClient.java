@@ -39,7 +39,7 @@ public class CRIOClient {
             if (decision.equals("VALID")) {
                 display.updateStatusBox();
                 //TODO NOT SURE IF WE SHOULD BE RECEIVING A FINISHED MESSAGE OR JUST SIMPLY HAVE A TIMER TO RESET THE SQUARES
-            }  else if (decision.equals("FINISHED)")) { //Make it empty for next customer,
+            } else if (decision.equals("FINISHED)")) { //Make it empty for next customer,
                 display.finishCard();
             }
         }

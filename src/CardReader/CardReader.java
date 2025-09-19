@@ -14,7 +14,15 @@ public class CardReader {
     private CRIOClient client;
 
     /**
+     * Base constructor used for demoing the GUI
+     */
+    public CardReader() {
+        display = new CRDisplay();
+    }
+
+    /**
      * Card Reader constructor
+     *
      * @param port Port that will be connected to the device
      */
     public CardReader(CommPort port) {
@@ -25,6 +33,7 @@ public class CardReader {
 
     /**
      * Get the display that shows the user interface
+     *
      * @return Display
      */
     public CRDisplay getDisplay() {
@@ -33,6 +42,7 @@ public class CardReader {
 
     /**
      * Retrive the client that handles IOPort messages
+     *
      * @return Client
      */
     public CRIOClient getClient() {
