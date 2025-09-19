@@ -33,11 +33,15 @@ public class FMMain extends Application {
         List<String> arguments = getParameters().getRaw();
         if (arguments.size() == 1) {
             FlowMeter flowMeter = new FlowMeter(true);
+            flowMeter.getDisplay().setVolRate(15);
+            flowMeter.getDisplay().setGasRate(3.34);
+            flowMeter.getDisplay().setTotalVolume(15);
             createPane(primaryStage, flowMeter);
             primaryStage.show();
             primaryStage.setOnCloseRequest(event -> {
                 Platform.exit();
             });
+
         } else {
             //Create IO port first, then create the device
 

@@ -116,7 +116,7 @@ public class FMDisplay {
                 return;
             }
 
-
+            System.out.println("Broken");
             long elapsedTime = System.currentTimeMillis() - start;
             double elapsedSeconds = elapsedTime / 1000.0; //convert milliseconds to seconds
 
@@ -127,7 +127,8 @@ public class FMDisplay {
 
             double cost = gallons * gasRate;
             curCost = cost;
-
+            System.out.println(gallons);
+            System.out.println(cost);
             Platform.runLater(() -> {
                 updateGas(gallons, cost);
             });
@@ -170,17 +171,18 @@ public class FMDisplay {
 
     public void startPump() {
         //When the pump starts, create an animation like start for the pump
-        executor = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorPump =
+                Executors.newScheduledThreadPool(1);
         Pane[] pumps = {pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive};
 
         AtomicInteger count = new AtomicInteger(0);
 
-        executor.scheduleAtFixedRate(() -> {
+        executorPump.scheduleAtFixedRate(() -> {
             int index = count.getAndIncrement();
             if (index < pumps.length) {
                 pumps[index].setStyle(greenCord);
             } else {
-                executor.shutdown();
+                executorPump.shutdown();
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
@@ -188,17 +190,17 @@ public class FMDisplay {
 
     public void stopPump() {
         //When the pump starts, create an animation like stop for the pump
-        executor = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorPump = Executors.newScheduledThreadPool(1);
         Pane[] pumps = {pumpFive, pumpFour, pumpThree, pumpTwo, pumpOne};
 
         AtomicInteger count = new AtomicInteger(0);
 
-        executor.scheduleAtFixedRate(() -> {
+        executorPump.scheduleAtFixedRate(() -> {
             int index = count.getAndIncrement();
             if (index < pumps.length) {
                 pumps[index].setStyle(redCord);
             } else {
-                executor.shutdown();
+                executorPump.shutdown();
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
@@ -240,12 +242,23 @@ public class FMDisplay {
         pumpButtons.setAlignment(Pos.TOP_CENTER);
         pumpButtons.getChildren().addAll(startPump, stopPump);
         pumpButtons.setSpacing(10);
-        startPump.setOnAction(event -> startPump());
-        stopPump.setOnAction(event -> stopPump());
+        startPump.setOnAction(event -> startDemoPump());
+        stopPump.setOnAction(event -> stopDemoPump());
 
         pane.setRight(pumpButtons);
     }
 
+    private void startDemoPump() {
+        timerRunning = true;
+        startPump();
+        startGasTimer();
+    }
+
+    private void stopDemoPump() {
+        timerRunning = false;
+        executor.shutdown();
+        stopPump();
+    }
     /**
      * Get client class that is connected to the IOport
      *
