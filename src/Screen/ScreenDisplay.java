@@ -80,6 +80,8 @@ public class ScreenDisplay {
 //        resetLabels();
 //        showConnectHoseScreen();
 //        resetLabels();
+        showPumpingProgress();
+//        resetLabels();
 //        showHosePausedScreen();
 //        resetLabels();
 //        showFuelFinishedScreen(48.9, 100.3);
@@ -312,6 +314,23 @@ public class ScreenDisplay {
 //            changeButtonColorV2(colorForScreen, i);
 //        }
     }
+    public void showPumpingProgress(){
+        Color colorForScreen = Color.SKYBLUE;
+        changeLabel(5, 2, 0);  // Span 1 row, 2 columns
+        Label accept = labelMap.get("0");
+        writeText("Pumping in Progress...\nPlease wait.", 0);
+        accept.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        accept.setAlignment(Pos.CENTER);
+        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
+        accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        for(int i = 0; i < 10; i++){
+            changeButtonColorV2(colorForScreen, i);
+        }
+    }
+
+
 
     public void showHosePausedScreen() {
         // Maybe Color.POWDERBLUE
