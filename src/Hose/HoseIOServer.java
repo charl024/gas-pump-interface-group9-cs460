@@ -13,9 +13,6 @@ public class HoseIOServer {
     private ServerSocket serverSocket;
     private Socket hoseSocket;
 
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-
     public HoseIOServer() {
         int port = PortLookupMap.PortMap(6);
         try {
@@ -24,8 +21,8 @@ public class HoseIOServer {
             connectionThread = new Thread(() -> {
                 try {
                     hoseSocket = serverSocket.accept();
-                    out = new ObjectOutputStream(hoseSocket.getOutputStream());
-                    in = new ObjectInputStream(hoseSocket.getInputStream());
+                    ObjectOutputStream out = new ObjectOutputStream(hoseSocket.getOutputStream());
+                    ObjectInputStream in = new ObjectInputStream(hoseSocket.getInputStream());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

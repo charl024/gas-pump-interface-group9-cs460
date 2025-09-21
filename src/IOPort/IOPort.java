@@ -8,7 +8,7 @@ import java.net.Socket;
 
 /**
  * The {@code IOPort} class provides a communication channel between two endpoints
- * using a single TCP port.
+ * using a single TCP port. Acts as a client.
  *
  * <p>
  * Once established, both endpoints can exchange {@link Message} objects using
@@ -17,36 +17,15 @@ import java.net.Socket;
  * </p>
  *
  * <p>
- * Example usage:
- * </p>
- * <pre>{@code
- *      // On both Program A and Program B
- *      IOPort port = new IOPort(1);   // Both use the same port number
- *
- *       // Sending a message
- *      port.send(new Message("Hello"));
- *
- *      // Receiving and consuming a message
- *      Message msg = port.get();
- *
- *       // Peeking at the next message without removing it
- *       Message peek = port.read();
- * }
- * </pre>
- *
- * <p>
- * Each IOPort runs two internal threads:
- * One to establish the connection (as client or server).<
- * One to continuously listen for incoming messages and stores them.
+ * Each IOPort runs an internal thread to continuously listen for incoming messages and store them.
  * </p>
  */
 public class IOPort {
-    private final int port;
-    private ServerSocket serverSocket;
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private Message currentMessage;
+    private Thread listener;
 
     /*
         A component that connects two endpoints together by passing in a single port number.
@@ -55,32 +34,29 @@ public class IOPort {
 
     /**
      * Constructor for IOPort.
-     * Sets up the connection (as client or server) and starts a listening thread
+     * Sets up the connection (as client) and starts a listening thread
      * to continuously receive messages from the other endpoint.
      *
      * @param connector The port number this IOPort instance binds to.
      */
     protected IOPort(int connector) {
         // port is obtained from mapping connector to a port #, where port directly corresponds to a device
-        this.port = PortLookupMap.PortMap(connector);
+        int port = PortLookupMap.PortMap(connector);
         this.currentMessage = null;
 
-        // Start a thread to establish a connection (client if possible, otherwise server).
-        Thread establishConnection = getThread();
-
         try {
-            // Wait until connection is established before proceeding.
-            establishConnection.join();
+            // create a socket on port #
+            socket = new Socket("localhost", port);
 
             // Set up object streams for sending and receiving Message objects.
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             close();
         }
 
         // Start a thread to continuously listen for incoming messages and place them into a variable.
-        Thread listen = new Thread(() -> {
+        listener = new Thread(() -> {
             try {
                 Message message;
                 while ((message = (Message) in.readObject()) != null) {
@@ -91,35 +67,8 @@ public class IOPort {
             }
         });
 
-        listen.start();
-    }
-
-    /**
-     * Starts a connection thread.
-     * Tries to connect as a client first. If that fails, creates a server socket
-     * and waits for a client to connect.
-     *
-     * @return A thread that handles the connection establishment.
-     */
-    private Thread getThread() {
-        Thread establishConnection = new Thread(() -> {
-            try {
-                try {
-                    // Attempt to connect as client to an existing server on localhost.
-                    socket = new Socket("localhost", port);
-                } catch (IOException e) {
-                    // If client connection fails, act as server and wait for client.
-                    serverSocket = new ServerSocket(port);
-                    socket = serverSocket.accept();
-                }
-
-            } catch (IOException e) {
-                close();
-            }
-        });
-
-        establishConnection.start();
-        return establishConnection;
+        listener.setDaemon(true);
+        listener.start();
     }
 
     /**
@@ -144,11 +93,11 @@ public class IOPort {
     public void close() {
         System.out.println("Connection closed!");
         try {
+            if (listener != null) {
+                listener.interrupt();
+            }
             if (socket != null) {
                 socket.close();
-            }
-            if (serverSocket != null) {
-                serverSocket.close();
             }
             if (out != null) {
                 out.close();
