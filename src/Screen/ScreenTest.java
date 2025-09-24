@@ -19,6 +19,7 @@ public class ScreenTest extends Application {
                 new Message("SC-gas"),
                 new Message("SC-fuelFinished"),
                 new Message("SC-PumpUnavailable"),
+                new Message ("SC-Disconnected"), // test
                 new Message("SC-receipt"),
                 new Message("SC-Here is some example text.0") // test writing text
         };

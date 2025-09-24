@@ -90,9 +90,12 @@ public class Screen extends Application {
                 } else if (parts[1].equals("pumpUnavailable")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showPumpUnavailableScreen();
-                } else if (parts[1].equals("receipt")) {
+                } else if (parts[1].equals("Disconnected")) {
                     screenDisplay.resetLabels();
-                    screenDisplay.showReceiptScreen();
+                    screenDisplay.showDisconnectScreen();
+                }else if (parts[1].equals("receipt")) {
+                    screenDisplay.resetLabels();
+                    //screenDisplay.showReceiptScreen();
                     Message message = new Message();
                     screenDisplay.setOnAction(code -> {
 
