@@ -56,9 +56,14 @@ public class BSDisplay {
     /**
      * Reset Card information, removes the current card number and status of it
      */
-    private void resetCardInfo() {
+    public void resetCardInfo() {
         cardInfo.setGraphic(accountNum);
         cardValidation.setGraphic(status);
+    }
+
+    public void waitingConnection() {
+        cardInfo.setText("Waiting for IOConnect");
+        cardValidation.setText("Waiting for IOConnect");
     }
 
     /**

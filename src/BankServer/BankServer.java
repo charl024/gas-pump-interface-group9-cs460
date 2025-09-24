@@ -5,28 +5,27 @@ package BankServer;
 
 import IOPort.CommPort;
 
+import java.io.IOException;
+
 /**
  * Bank Server
  */
 public class BankServer {
     private final BSDisplay display;
-    private BSIOClient client;
+    private final BSIOClient client;
 
-    /**
-     * Base constructor used for demoing the Bank Server
-     */
-    public BankServer() {
-        display = new BSDisplay();
-    }
 
     /**
      * Constructor for Bank Server
      *
-     * @param port Port connected to Bank Server
      */
-    public BankServer(CommPort port) {
+    public BankServer() throws IOException {
         display = new BSDisplay();
-        client = new BSIOClient(display, port);
+        client = new BSIOClient(display);
+        BSServer server = new BSServer(0, this);
+
+        //Start the server up
+        new Thread(server).start();
     }
 
     /**

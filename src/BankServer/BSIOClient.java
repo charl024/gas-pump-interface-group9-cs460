@@ -13,17 +13,14 @@ import javafx.application.Platform;
  */
 public class BSIOClient {
     private final BSDisplay display;
-    private final CommPort port;
 
     /**
      * Constructor for Bank Server Client
      *
      * @param display Display that creates the GUI
-     * @param port    Connected IOPort
      */
-    public BSIOClient(BSDisplay display, CommPort port) {
+    public BSIOClient(BSDisplay display) {
         this.display = display;
-        this.port = port;
     }
 
     /**
@@ -31,13 +28,13 @@ public class BSIOClient {
      *
      * @param message Message received
      */
-    public void handleMessage(Message message) {
+    public Message handleMessage(Message message) {
         String receivedMessage = message.getDescription();
         String[] parts = receivedMessage.split("-");
 
         if (!(parts[0].equals("BS"))) {
             Message invalidMessage = new Message("BS-Invalid");
-            sendMessage(invalidMessage);
+            return invalidMessage;
         } else {
             String numValue = parts[1];
             //Just going to assume that the length of the number is 8 numbers
@@ -67,16 +64,8 @@ public class BSIOClient {
                 });
 
             }
-            sendMessage(message);
-        }
-    }
+            return message;
 
-    /**
-     * Called to send a message back to the connected IOPort
-     *
-     * @param message Message being sent back
-     */
-    private void sendMessage(Message message) {
-        port.send(message);
+        }
     }
 }
