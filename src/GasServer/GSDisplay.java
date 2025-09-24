@@ -145,6 +145,13 @@ public class GSDisplay {
         updateTotal();
     }
 
+    public void updatePriceInput(double regular, double plus, double premium) {
+        regularCost = regular;
+        plusCost = plus;
+        premiumCost = premium;
+        updateGasPrices();
+    }
+
     /**
      * Update the gas prices for all three types
      */

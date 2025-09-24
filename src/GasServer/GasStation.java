@@ -5,6 +5,8 @@ package GasServer;
 
 import IOPort.CommPort;
 
+import java.io.IOException;
+
 /**
  * Gas Station
  */
@@ -13,20 +15,16 @@ public class GasStation {
     private GSIOClient client;
 
     /**
-     * Base constructor used for demoing the Gas Station
-     */
-    public GasStation() {
-        display = new GSDisplay();
-    }
-
-    /**
      * Constructor for Gas Station Server, creates the display and client
      *
-     * @param port Connected port
      */
-    public GasStation(CommPort port) {
+    public GasStation(double reg, double plus, double prem) throws IOException {
+        GSServer server = new GSServer(2,this);
         display = new GSDisplay();
-        client = new GSIOClient(display, port);
+        client = new GSIOClient(display, server);
+
+        display.updatePriceInput(reg, plus, prem);
+        new Thread(server).start();
     }
 
     /**

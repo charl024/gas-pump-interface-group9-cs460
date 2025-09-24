@@ -33,8 +33,8 @@ public class FMMain extends Application {
     public void start(Stage primaryStage) throws IOException {
         FlowMeter flowMeter = new FlowMeter();
         createPane(primaryStage, flowMeter);
-        primaryStage.setTitle("FlowMeter-Pump");
 
+        primaryStage.setTitle("FlowMeter-Pump");
         primaryStage.setOnCloseRequest(event -> {
             Platform.exit();
             System.exit(0);

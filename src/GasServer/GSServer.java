@@ -1,0 +1,62 @@
+package GasServer;
+
+import MessagePassed.Message;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class GSServer implements Runnable {
+    private final int portNumber;
+    private final GasStation gasStation;
+    private final ServerSocket serverSocket;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+
+
+    public GSServer(int portNumber, GasStation gasStation) throws IOException {
+        this.portNumber = portNumber;
+        this.gasStation = gasStation;
+        serverSocket = new ServerSocket(portNumber);
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Gas Server is running on port " + portNumber);
+        try {
+            Socket socket = serverSocket.accept();
+            System.out.println("Client connected");
+            //TODO should probably immediately send a with price list stuff
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+
+            while(true) {
+                try {
+                    Message message = (Message) in.readObject();
+                    gasStation.getClient().handleMessage(message);
+
+                    System.out.println("Message received");
+                } catch (EOFException e) {
+                    System.out.println("Client disconnected");
+                    break;
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMessage(Message message) {
+        try {
+            out.writeObject(message);
+            out.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
