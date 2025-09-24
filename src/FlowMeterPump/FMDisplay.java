@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Flow Meter Display
  */
 public class FMDisplay {
-    private FMIOClient client;
+    private final FMLServer server;
 
     private final BorderPane pane; //Where all images/text will be placed on
     private final Label costInfo;
@@ -60,7 +60,8 @@ public class FMDisplay {
      * Flow meter constructor, will create the text boxes and button needed
      * to simulate the flow meter
      */
-    public FMDisplay(boolean demo) {
+    public FMDisplay(FMLServer server) {
+        this.server = server;
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
@@ -89,10 +90,6 @@ public class FMDisplay {
 
 
         createPumpPanes();
-        if (demo) {
-            createButtons();
-        }
-
         HBox pumpStuff = new HBox(pump, pumpCord);
         pumpStuff.setAlignment(Pos.CENTER);
         pane.setTop(paneHolder);
@@ -148,7 +145,7 @@ public class FMDisplay {
         timerRunning = false;
         executor.shutdown();
         Message stopMessage = new Message("FM-PUMPSTOP");
-        client.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI ALONE
+        server.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI ALONE
         stopPump();
         System.out.println("Timer off");
     }
@@ -171,8 +168,7 @@ public class FMDisplay {
 
     public void startPump() {
         //When the pump starts, create an animation like start for the pump
-        ScheduledExecutorService executorPump =
-                Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorPump = Executors.newScheduledThreadPool(1);
         Pane[] pumps = {pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive};
 
         AtomicInteger count = new AtomicInteger(0);
@@ -235,6 +231,7 @@ public class FMDisplay {
         pumpCord.setAlignment(Pos.CENTER);
     }
 
+    //TODO I have no idea if I want to keep this
     private void createButtons() {
         startPump = new Button("Start");
         stopPump = new Button("Stop");
@@ -259,14 +256,7 @@ public class FMDisplay {
         executor.shutdown();
         stopPump();
     }
-    /**
-     * Get client class that is connected to the IOport
-     *
-     * @param client FMIO Client
-     */
-    public void setClient(FMIOClient client) {
-        this.client = client;
-    }
+
 
     /**
      * Get the main pane that the display uses

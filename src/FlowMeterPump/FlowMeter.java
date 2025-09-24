@@ -5,6 +5,8 @@
 package FlowMeterPump;
 
 
+import java.io.IOException;
+
 /**
  * FlowMeter
  */
@@ -12,15 +14,17 @@ public class FlowMeter {
 
     private final FMDisplay display;
     private final FMIOClient client;
-
+    private FMLServer server;
     /**
      * Main constructor that should be called when Flow meter needs to be
      * created
      */
-    public FlowMeter(boolean demo) {
-        display = new FMDisplay(demo);
-        client = new FMIOClient(display);
-        display.setClient(client);
+    public FlowMeter() throws IOException {
+        server = new FMLServer(4, this);
+        display = new FMDisplay(server);
+        client = new FMIOClient(display, server);
+
+        new Thread(server).start();
     }
 
     /**
