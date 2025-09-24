@@ -4,31 +4,24 @@
  */
 package CardReader;
 
-import IOPort.CommPort;
+import java.io.IOException;
 
 /**
  * Card Reader
  */
 public class CardReader {
     private final CRDisplay display;
-    private CRIOClient client;
-
-    /**
-     * Base constructor used for demoing the GUI
-     */
-    public CardReader() {
-        display = new CRDisplay();
-    }
+    private CRServer server;
 
     /**
      * Card Reader constructor
      *
-     * @param port Port that will be connected to the device
      */
-    public CardReader(CommPort port) {
-        client = new CRIOClient(port);
-        display = new CRDisplay(client);
-        client.setDisplay(display);
+    public CardReader( ) throws IOException {
+        server = new CRServer(3,this);
+        display = new CRDisplay(server);
+
+        new Thread(server).start();
     }
 
     /**
@@ -40,12 +33,5 @@ public class CardReader {
         return display;
     }
 
-    /**
-     * Retrive the client that handles IOPort messages
-     *
-     * @return Client
-     */
-    public CRIOClient getClient() {
-        return client;
-    }
+
 }

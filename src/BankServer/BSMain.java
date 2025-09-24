@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 /**
  * Main
@@ -25,7 +27,7 @@ public class BSMain extends Application {
      * @throws Exception Errors
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         BankServer bankServer = new BankServer();
         createPane(primaryStage, bankServer);
 

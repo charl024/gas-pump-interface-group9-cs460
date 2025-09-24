@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Card Reader display
@@ -23,34 +24,22 @@ public class CRDisplay {
     private StackPane imagePane;
     private Image tapToPay;
     private ImageView imageView;
+    private Label info;
     private Pane boxTwo;
     private Pane boxThree;
     private Pane boxFour;
 
-    private final boolean handleDemo;
+    //private final boolean handleDemo;
 
     /**
      * Base constructor used for demoing the GUI
      */
-    public CRDisplay() {
+    public CRDisplay(CRServer server) {
         createBasePane();
-        input = new CRInput(this);
-        handleDemo = true;
+        input = new CRInput(server, this);
         createDisplay();
     }
 
-    /**
-     * Card Reader Display constructor
-     *
-     * @param client Client that handles IOPort messages
-     */
-    public CRDisplay(CRIOClient client) {
-        createBasePane();
-
-        input = new CRInput(client, this);
-        handleDemo = false;
-        createDisplay();
-    }
 
     /**
      * Creates the components of the main display
@@ -60,7 +49,7 @@ public class CRDisplay {
         imagePane.getChildren().add(imageView);
         imagePane.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         Font customFont = new Font(18);
-        Label info = new Label("Tap to Pay!");
+        info = new Label("Waiting for IOConnection");
         info.setFont(customFont);
 
         Pane boxOne = new Pane();
@@ -86,11 +75,12 @@ public class CRDisplay {
         BorderPane.setAlignment(info, Pos.BASELINE_CENTER);
 
         BorderPane.setAlignment(imagePane, Pos.CENTER);
+
         pane.setOnMouseClicked(event -> {
-            if (handleDemo) {
-                input.handleTapDemo();
-            } else {
+            try {
                 input.handleTap();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -130,7 +120,7 @@ public class CRDisplay {
     }
 
     /**
-     * Turns all boxes to be green, indicating that the card was valid
+     * Turns all boxes to be green, indicating the card reader was clicked on
      */
     public void updateStatusBox() {
         boxTwo.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -155,5 +145,12 @@ public class CRDisplay {
      */
     public BorderPane getPane() {
         return pane;
+    }
+
+    public CRInput getInput() {
+        return input;
+    }
+    public void updateInfo() {
+        info.setText("Tap to Pay!");
     }
 }

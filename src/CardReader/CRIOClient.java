@@ -6,6 +6,9 @@ package CardReader;
 import IOPort.CommPort;
 import MessagePassed.Message;
 
+//TODO LIKELY GOING TO DELETE THIS, NO POINT OF HAVING IT SINCE THE CARD
+// READER SHOULDN'T BE RECEIVING ANYTHING
+
 /**
  * Card Reader Client class
  */

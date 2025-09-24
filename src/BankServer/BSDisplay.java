@@ -62,8 +62,8 @@ public class BSDisplay {
     }
 
     public void waitingConnection() {
-        cardInfo.setText("Waiting for IOConnect");
-        cardValidation.setText("Waiting for IOConnect");
+        cardInfo.setText("Waiting for IOConnection");
+        cardValidation.setText("Waiting for IOConnection");
     }
 
     /**
