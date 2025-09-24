@@ -13,17 +13,17 @@ import MessagePassed.Message;
  */
 public class FMIOClient {
 
-
     private final FMDisplay display;
-    private CommPort port;
+    private FMLServer server;
 
     /**
      * Constructor for Flow Meter client
      *
      * @param display Display class that shows the GUI
      */
-    public FMIOClient(FMDisplay display) {
+    public FMIOClient(FMDisplay display,FMLServer server) {
         this.display = display;
+        this.server = server;
     }
 
 
@@ -47,7 +47,7 @@ public class FMIOClient {
         if (!(deviceType.equals("FM"))) {
             //Wrong messaged received if we get here
             Message invalidMessage = new Message("FM-Invalid");
-            sendMessage(invalidMessage);
+            server.sendMessage(invalidMessage);
         } else {
             //Start the flow meter and change the color of the cord to be green
             if (parts[1].equals("START")) {
@@ -90,22 +90,4 @@ public class FMIOClient {
         }
     }
 
-
-    /**
-     * Send a message back to the connected IOport
-     *
-     * @param message Message being sent
-     */
-    public void sendMessage(Message message) {
-        port.send(message);
-    }
-
-    /**
-     * Set IOPort for Device
-     *
-     * @param port Connected device
-     */
-    public void setPort(CommPort port) {
-        this.port = port;
-    }
 }
