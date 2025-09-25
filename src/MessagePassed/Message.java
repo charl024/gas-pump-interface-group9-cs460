@@ -29,4 +29,9 @@ public class Message implements Serializable {
     public void changeDevice(String newDevice) {
         description = newDevice.substring(0, 2) + description.substring(2);
     }
+
+    @Override
+    public String toString() {
+        return description;
+    }
 }
