@@ -6,11 +6,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class HoseMain extends Application {
+    private final int hoseConnector = 6;
 
     @Override
     public void start(Stage stage) {
-        HoseIOServer hoseServer = new HoseIOServer();
-        HoseIOClient hoseClient = new HoseIOClient();
+        HoseIOServer hoseServer = new HoseIOServer(hoseConnector);
+        hoseServer.start();
+
+        HoseIOClient hoseClient = new HoseIOClient(hoseConnector);
         HoseDisplay hoseDisplay = new HoseDisplay(hoseClient);
         Scene scene = new Scene(hoseDisplay);
         stage.setScene(scene);
@@ -25,9 +28,5 @@ public class HoseMain extends Application {
         stage.show();
 
 
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

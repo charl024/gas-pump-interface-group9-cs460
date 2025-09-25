@@ -4,16 +4,15 @@ import IOPort.ControlPort;
 import MessagePassed.Message;
 
 public class HoseIOClient {
-    private final int hoseConnector = 6;
     private ControlPort controlPort;
     private boolean portConnected;
 
-    public HoseIOClient() {
+    public HoseIOClient(int connector) {
         // Hose is connected to connector #6
         Thread waitConnection = new Thread(() -> {
-            controlPort = new ControlPort(hoseConnector);
+            controlPort = new ControlPort(connector);
             portConnected = true;
-            System.out.println("You have connected to Main");
+            System.out.println("You have connected.");
         });
         System.out.println("Launching wait thread.");
         waitConnection.start();
