@@ -38,6 +38,7 @@ public class BSMain extends Application {
         });
         primaryStage.show();
 
+        //TODO DELETE WHEN WE TEST MANAGER
 //        List<String> arguments = getParameters().getRaw();
 //        if (arguments.size() == 1) {
 //            BankServer bankServer = new BankServer();

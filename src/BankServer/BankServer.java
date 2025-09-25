@@ -17,7 +17,6 @@ public class BankServer {
 
     /**
      * Constructor for Bank Server
-     *
      */
     public BankServer() throws IOException {
         display = new BSDisplay();

@@ -145,6 +145,12 @@ public class GSDisplay {
         updateTotal();
     }
 
+    /**
+     * Update the gas prices based on given inputs
+     * @param regular Regular price
+     * @param plus Plus price
+     * @param premium Premium price
+     */
     public void updatePriceInput(double regular, double plus, double premium) {
         regularCost = regular;
         plusCost = plus;

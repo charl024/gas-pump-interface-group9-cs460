@@ -4,7 +4,6 @@
  */
 package BankServer;
 
-import IOPort.CommPort;
 import MessagePassed.Message;
 import javafx.application.Platform;
 

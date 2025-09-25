@@ -33,7 +33,7 @@ public class GSServer implements Runnable {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
 
-            while(true) {
+            while (true) {
                 try {
                     Message message = (Message) in.readObject();
                     gasStation.getClient().handleMessage(message);

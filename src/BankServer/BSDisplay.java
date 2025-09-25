@@ -61,6 +61,10 @@ public class BSDisplay {
         cardValidation.setGraphic(status);
     }
 
+    /**
+     * Called to indicate that the Bank server is waiting for a IOPort
+     * connection
+     */
     public void waitingConnection() {
         cardInfo.setText("Waiting for IOConnection");
         cardValidation.setText("Waiting for IOConnection");

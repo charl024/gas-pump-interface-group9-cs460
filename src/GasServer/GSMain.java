@@ -28,7 +28,7 @@ public class GSMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         List<String> arguments = getParameters().getRaw();
-        if(arguments.size() != 3) {
+        if (arguments.size() != 3) {
             System.out.println("Invalid input received, please give three arguments");
             System.exit(1);
         }

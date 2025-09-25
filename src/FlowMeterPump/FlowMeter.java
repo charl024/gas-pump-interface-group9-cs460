@@ -15,6 +15,7 @@ public class FlowMeter {
     private final FMDisplay display;
     private final FMIOClient client;
     private FMLServer server;
+
     /**
      * Main constructor that should be called when Flow meter needs to be
      * created

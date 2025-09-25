@@ -166,6 +166,9 @@ public class FMDisplay {
     //TODO MAYBE FIX BUG -> IF START IS CALLED WHILE STOP, OR VICE VERSA, IT
     // WILL BREAK
 
+    /**
+     * Start animation that makes it look like the pump is turning on
+     */
     public void startPump() {
         //When the pump starts, create an animation like start for the pump
         ScheduledExecutorService executorPump = Executors.newScheduledThreadPool(1);
@@ -183,7 +186,9 @@ public class FMDisplay {
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
-
+    /**
+     * Start animation that makes it look like the pump is turning off
+     */
     public void stopPump() {
         //When the pump starts, create an animation like stop for the pump
         ScheduledExecutorService executorPump = Executors.newScheduledThreadPool(1);
@@ -201,6 +206,9 @@ public class FMDisplay {
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Create panes needed for the animation
+     */
     private void createPumpPanes() {
         pumpCord = new HBox();
         pumpOne = new Pane();
@@ -245,12 +253,18 @@ public class FMDisplay {
         pane.setRight(pumpButtons);
     }
 
+    /**
+     * Start animation that makes pump look like its turning on
+     */
     private void startDemoPump() {
         timerRunning = true;
         startPump();
         startGasTimer();
     }
 
+    /**
+     * Starts animation that makes pump look like its turning off
+     */
     private void stopDemoPump() {
         timerRunning = false;
         executor.shutdown();

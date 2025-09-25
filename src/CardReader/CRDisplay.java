@@ -29,8 +29,6 @@ public class CRDisplay {
     private Pane boxThree;
     private Pane boxFour;
 
-    //private final boolean handleDemo;
-
     /**
      * Base constructor used for demoing the GUI
      */
@@ -139,6 +137,13 @@ public class CRDisplay {
     }
 
     /**
+     * Update text box for info
+     */
+    public void updateInfo() {
+        info.setText("Tap to Pay!");
+    }
+
+    /**
      * Get the main borderPane that holds all components
      *
      * @return BorderPane
@@ -147,10 +152,13 @@ public class CRDisplay {
         return pane;
     }
 
+    /**
+     * Return class that handles user input
+     *
+     * @return Card reader input
+     */
     public CRInput getInput() {
         return input;
     }
-    public void updateInfo() {
-        info.setText("Tap to Pay!");
-    }
+
 }

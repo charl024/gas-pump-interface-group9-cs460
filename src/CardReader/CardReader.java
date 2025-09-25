@@ -15,10 +15,9 @@ public class CardReader {
 
     /**
      * Card Reader constructor
-     *
      */
-    public CardReader( ) throws IOException {
-        server = new CRServer(3,this);
+    public CardReader() throws IOException {
+        server = new CRServer(3, this);
         display = new CRDisplay(server);
 
         new Thread(server).start();
