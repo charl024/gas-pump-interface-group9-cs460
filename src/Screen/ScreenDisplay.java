@@ -59,32 +59,6 @@ public class ScreenDisplay {
         root.setCenter(createMiddle());
         addMidLabels();
 
-        // Method calls used to display certain screens
-        // and to test out resetDisplay method (seems to work well now)
-//        showWelcomeScreen();
-//        resetLabels();
-//        showAuthorizationScreen();
-//        resetLabels();
-//        showCardDeniedScreen();
-//        resetLabels();
-//        showCardAcceptedScreen();
-//        resetLabels();
-//        showGasSelectionScreen();
-//        resetLabels();
-//        showConnectHoseScreen();
-//        resetLabels();
-        showPumpingProgress();
-//        resetLabels();
-//        showHosePausedScreen();
-//        resetLabels();
-//        showFuelFinishedScreen(48.9, 100.3);
-//        resetLabels();
-//        showReceiptScreen();
-//        resetLabels();
-//        showPumpUnavailableScreen();
-//        resetLabels();
-
-
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
         primaryStage.setTitle("🚀 Futuristic Pump Interface");
@@ -381,37 +355,6 @@ public class ScreenDisplay {
         }
     }
 
-    //TODO: DONT NEED THIS ANYMORE, CAN DELETE
-//    /**
-//     * Shows receipt screen
-//     */
-//    public void showReceiptScreen() {
-//
-//        changeLabel(1, 2, 0);
-//        writeText("Would you like a receipt?", 0);
-//
-//        Label yes = labelMap.get("2");
-//        writeText("YES", 2);
-//        yes.setTextFill(Color.WHITE);
-//        changeTextSize(40, 2);
-//        yes.setAlignment(Pos.CENTER_LEFT);
-//        yes.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
-//        yes.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
-//
-//        Label no = labelMap.get("3");
-//        writeText("NO", 3);
-//        no.setTextFill(Color.WHITE);
-//        changeTextSize(40, 2);
-//        no.setAlignment(Pos.CENTER_LEFT);
-//        no.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
-//        no.setStyle("-fx-border-width: 2; -fx-border-radius: 5;");
-//
-////        changeButtonColor("green", 2);
-//        setUpButtonPress(2, PossibleActionsForButton.ACCEPT_RECEIPT, Color.FORESTGREEN);
-////        changeButtonColor("red", 3);
-//        setUpButtonPress(3, PossibleActionsForButton.DENY_RECEIPT, Color.CRIMSON);
-//    }
-
     /**
      * Shows screen that indicates that the pump is currently unavailable
      */
@@ -470,28 +413,6 @@ public class ScreenDisplay {
             // May need to first receive a message in order to progress to receipt screen
 //            showReceiptScreen();
         });
-    }
-
-    private void addGasButtonsToCenter() {
-        String[] gasNames = {"Regular", "Plus", "Premium"};
-        String[] gasColors = {"forestgreen", "dodgerblue", "orangered"};
-        PossibleActionsForButton[] actions = {PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE};
-        for (int i = 0; i < 3; i++) {
-            Button gasBtn = new Button(gasNames[i]);
-            gasBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            gasBtn.setStyle("-fx-background-color: " + gasColors[i] + ";" + "-fx-text-fill: white; -fx-font-size: 20px;");
-
-            int buttonIndex = i; // for lambda
-            gasBtn.setOnAction(e -> {
-                System.out.println("Gas button pressed: " + actions[buttonIndex]);
-                if (screenHandler != null) {
-                    // screenHandler.sendMessage(new Message(...));
-                }
-            });
-
-            // Row 1, 2, 3 in column 0
-            centerPane.add(gasBtn, 0, i + 1);
-        }
     }
 
     // Previously known as createLabel(int height, int width, int section)
