@@ -61,7 +61,7 @@ public class ScreenDisplay {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
-        primaryStage.setTitle("🚀 Futuristic Pump Interface");
+        primaryStage.setTitle("Futuristic Pump Interface");
     }
 
     ///////////////////////////////////////////////////////////////////////////

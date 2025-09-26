@@ -2,17 +2,15 @@ package Screen;
 
 import IOPort.CommPort;
 import MessagePassed.Message;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
-public class Screen extends Application {
+public class HandleMessage {
     private CommPort port;
 
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
 
-    public Screen() {
-
+    public HandleMessage(ScreenDisplay screenDisplay) {
+        this.screenDisplay = screenDisplay;
     }
 
 //        String message examples
@@ -69,6 +67,7 @@ public class Screen extends Application {
                         } else if (code == 2) {
                             message.addToDescription("Premium");
                         }
+                        System.out.println("code being sent for gas " + code);
                     });
                     sendMessage(message);
                 } else if (parts[1].equals("connectHose")) {
@@ -93,7 +92,9 @@ public class Screen extends Application {
                 } else if (parts[1].equals("Disconnected")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showDisconnectScreen();
-                }else if (parts[1].equals("receipt")) {
+                }
+                // THIS NEEDS TO BE DELETED
+                else if (parts[1].equals("receipt")) {
                     screenDisplay.resetLabels();
                     //screenDisplay.showReceiptScreen();
                     Message message = new Message();
@@ -104,6 +105,7 @@ public class Screen extends Application {
                         } else if (code == 4) {
                             message.addToDescription("Denied");
                         }
+                        System.out.println("code being sent for gas " + code);
                     });
                     sendMessage(message);
                 }
@@ -141,39 +143,6 @@ public class Screen extends Application {
             }
 
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        screenDisplay = new ScreenDisplay();
-        screenDisplay.showScreen(primaryStage);
-
-//        this.port = new CommPort(1);
-
-        // thread that polls port for a message
-//        new Thread(() -> {
-//            try {
-//                while (true) {
-//                    Thread.sleep(10); // wait 10ms
-//                    Message message = port.get();
-//                    if (message != null) {
-//                        handleMessage(message);
-//                    }
-//                }
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }).start();
-//
-//        primaryStage.setOnCloseRequest(e -> {
-//            port.close();
-//        });
-
-        primaryStage.show();
     }
 
     public void sendMessage(Message msg) {
