@@ -42,7 +42,7 @@ public class CRInput {
             randomNums.append(random.nextInt(10));
         }
 
-        Message cardTap = new Message("BS-" + randomNums);
+        Message cardTap = new Message("CR-" + randomNums);
         //Should only be able to tap the card if we have a client that can
         // handle the output from card reader
         if (connected) {

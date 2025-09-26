@@ -4,6 +4,7 @@
 package BankServer;
 
 import IOPort.CommPort;
+import IOPort.PortLookupMap;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class BankServer {
     public BankServer() throws IOException {
         display = new BSDisplay();
         client = new BSIOClient(display);
-        BSServer server = new BSServer(0, this);
+        BSServer server = new BSServer(PortLookupMap.PortMap(1), this);
 
         //Start the server up
         new Thread(server).start();

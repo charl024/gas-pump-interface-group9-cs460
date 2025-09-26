@@ -5,6 +5,8 @@
 package FlowMeterPump;
 
 
+import IOPort.PortLookupMap;
+
 import java.io.IOException;
 
 /**
@@ -21,7 +23,7 @@ public class FlowMeter {
      * created
      */
     public FlowMeter() throws IOException {
-        server = new FMLServer(4, this);
+        server = new FMLServer(PortLookupMap.PortMap(4), this);
         display = new FMDisplay(server);
         client = new FMIOClient(display, server);
 

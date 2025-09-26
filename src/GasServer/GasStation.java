@@ -4,6 +4,7 @@
 package GasServer;
 
 import IOPort.CommPort;
+import IOPort.PortLookupMap;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class GasStation {
      * Constructor for Gas Station Server, creates the display and client
      */
     public GasStation(double reg, double plus, double prem) throws IOException {
-        GSServer server = new GSServer(2, this);
+        GSServer server = new GSServer(PortLookupMap.PortMap(2), this);
         display = new GSDisplay();
         client = new GSIOClient(display, server);
 

@@ -4,6 +4,8 @@
  */
 package CardReader;
 
+import IOPort.PortLookupMap;
+
 import java.io.IOException;
 
 /**
@@ -17,7 +19,7 @@ public class CardReader {
      * Card Reader constructor
      */
     public CardReader() throws IOException {
-        server = new CRServer(3, this);
+        server = new CRServer(PortLookupMap.PortMap(3), this);
         display = new CRDisplay(server);
 
         new Thread(server).start();
