@@ -3,12 +3,12 @@ import MessagePassed.Message;
 public class MainController {
     private ServerManager serverManager;
     private ScreenManager screenManager;
-    private GasStationManager gasStationManager;
+    private PumpAssemblyManager pumpAssembly;
     public MainController() {
         serverManager = new ServerManager(this);
         screenManager = new ScreenManager(this);
+//        pumpAssembly = new PumpAssemblyManager();
 
-        //gasStationManager = new GasStationManager();
     }
 
     public void sendServerManagerMessage(Message message) {
@@ -22,5 +22,13 @@ public class MainController {
 
     public void sendGasStationManagerMessage(Message message) {
 
+    }
+
+    public void sendPumpAssemblyManagerMessage(Message message) {
+
+    }
+
+    public static void main(String[] args) {
+        MainController controller = new MainController();
     }
 }
