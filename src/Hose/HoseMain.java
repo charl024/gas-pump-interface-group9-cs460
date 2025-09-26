@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class HoseMain extends Application {
-    private final int hoseConnector = 6;
+    private final int hoseConnector = 5;
 
     @Override
     public void start(Stage stage) {

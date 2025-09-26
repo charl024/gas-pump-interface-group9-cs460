@@ -8,7 +8,6 @@ public class HoseIOClient {
     private boolean portConnected;
 
     public HoseIOClient(int connector) {
-        // Hose is connected to connector #6
         Thread waitConnection = new Thread(() -> {
             controlPort = new ControlPort(connector);
             portConnected = true;
