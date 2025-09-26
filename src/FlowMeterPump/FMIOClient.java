@@ -81,10 +81,17 @@ public class FMIOClient {
                 display.setTimerRunning(true);
                 display.startGasTimer();
                 display.startPump();
-                //display.setGreenCord();
 
-            } else if (parts[1].equals("STOP")) {
-                display.handleStop(); //stop flow meter and change color
+
+            } else if (parts[1].equals("PAUSE")) {
+                display.pauseTimer();
+            } else if (parts[1].equals("RESUME")) {
+                display.startTimer();
+            } else if (parts[1].equals("TOTAL")) {
+                //Total should only be requested if the pump has stopped
+                if (!display.isTimerRunning()) {
+                    display.sendGasTotals();
+                }
             }
 
         }

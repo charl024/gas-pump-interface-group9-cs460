@@ -29,6 +29,9 @@ public class FMDisplay {
     private final Label costInfo;
     private final Label volInfo;
 
+    private double timePassed = 0.0;
+    private long lastStartTime;
+
     private double curCost = 0;
     private double curVol = 0;
     private double totalVolume;
@@ -102,8 +105,7 @@ public class FMDisplay {
      * will be updated every second
      */
     public void startGasTimer() {
-
-        final long start = System.currentTimeMillis();
+        //final long start = System.currentTimeMillis();
 
         executor = Executors.newScheduledThreadPool(1);
 
@@ -113,9 +115,10 @@ public class FMDisplay {
                 return;
             }
 
-            System.out.println("Broken");
-            long elapsedTime = System.currentTimeMillis() - start;
-            double elapsedSeconds = elapsedTime / 1000.0; //convert milliseconds to seconds
+
+            long currentTime = System.currentTimeMillis();
+            double elapsedSeconds = timePassed + (currentTime - lastStartTime) / 1000.0;
+
 
             //initial delay, how often to repeat, time unit
             double gallons = elapsedSeconds * (volRate / 60);
@@ -124,18 +127,46 @@ public class FMDisplay {
 
             double cost = gallons * gasRate;
             curCost = cost;
-            System.out.println(gallons);
-            System.out.println(cost);
+
             Platform.runLater(() -> {
                 updateGas(gallons, cost);
             });
             //If current volume is greater than total volume, then we are done
             if (curVol > totalVolume) {
-                timerRunning = false;
+//                timerRunning = false;
+                handleStop();
+                sendGasTotals();
             }
 
         }, 0, 100, TimeUnit.MILLISECONDS); //100 ms
 
+    }
+
+    public void pauseTimer() {
+        if(timerRunning) {
+            long timeNow = System.currentTimeMillis();
+            timePassed += (timeNow - lastStartTime) / 1000.0;
+            timerRunning = false;
+        }
+        stopPump();
+    }
+
+    public void startTimer() {
+        if(!timerRunning) {
+            lastStartTime = System.currentTimeMillis();
+            timerRunning = true;
+        }
+        startPump();
+    }
+
+
+    public void sendGasTotals() {
+        //FM-TOTALS-TotalCost-TotalVolumes
+        Message gasTotal = new Message("FM");
+        double cost = curCost;
+        double gallons = curVol;
+        gasTotal.addToDescription("-TOTALS-" + cost + "-" + gallons);
+        server.sendMessage(gasTotal);
     }
 
     /**
@@ -144,10 +175,7 @@ public class FMDisplay {
     public void handleStop() {
         timerRunning = false;
         executor.shutdown();
-        Message stopMessage = new Message("FM-PUMPSTOP");
-        server.sendMessage(stopMessage); //COMMENT THIS OUT WHEN RUNNING GUI ALONE
         stopPump();
-        System.out.println("Timer off");
     }
 
     /**
@@ -163,8 +191,7 @@ public class FMDisplay {
         costInfo.setText("Cost: $" + format);
     }
 
-    //TODO MAYBE FIX BUG -> IF START IS CALLED WHILE STOP, OR VICE VERSA, IT
-    // WILL BREAK
+
 
     /**
      * Start animation that makes it look like the pump is turning on

@@ -1,5 +1,6 @@
 import IOPort.CommPort;
 
+import IOPort.IOPort;
 import MessagePassed.Message;
 
 
@@ -31,7 +32,7 @@ public class ServerManager {
 
         gasServerPort = new CommPort(2);
         bankServerPort = new CommPort(1);
-
+        //TODO CHANGE CARD READER PORT TYPE
         cardReaderPort = new CommPort(3);
         executor = Executors.newFixedThreadPool(3);
         start();
@@ -51,15 +52,18 @@ public class ServerManager {
         //Messages that are sent from the Card Reader:
         if (parts[0].equals("CR")) {
             message.changeDevice("BS");
-            sendMessage(bankServerPort, message);
+            bankServerPort.send(message);
         }
         //Messages that are sent from the BankServer:
         if(parts[0].equals("BS")) {
-            //TODO THEN NEED TO SEND A MESSAGE TO
+            //TODO THEN NEED TO SEND A MESSAGE TO SCREEN MANAGER NOW
             if(parts[2].equals("INVALIDCARD")) {
+                message.changeDevice("SC");
+                mainController.sendScreenManagerMessage(message);
                 //Inform the screen so that it can change to the correct display
             } else if(parts[2].equals("VALIDCARD")) {
-
+                message.changeDevice("SC");
+                mainController.sendScreenManagerMessage(message);
             }
         }
 
@@ -85,19 +89,21 @@ public class ServerManager {
             //New total: Value that needs to be added to the server
             //Update gas: New gas prices (i have no clue whos calling this
             //Gas info: Requests the current gas prices
-            sendMessage(gasServerPort, message);
+            gasServerPort.send(message);
         }
     }
 
-    private void sendMessage(CommPort port, Message message) {
-        port.send(message);
-    }
 
-    private void listenOnPort(CommPort port) {
+    private void listenOnPort(IOPort port) {
         while (!Thread.currentThread().isInterrupted()) {
-            Message msg = port.get();
-            if (msg != null) {
-                handleMessage(msg);
+            Message message = null;
+            if(port instanceof CommPort) {
+                message = ((CommPort) port).get();
+            }
+//            else if (port instanceof )
+
+            if (message != null) {
+                handleMessage(message);
             }
 
             try {

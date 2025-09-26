@@ -7,7 +7,7 @@ public class MainController {
     public MainController() {
         serverManager = new ServerManager(this);
         screenManager = new ScreenManager(this);
-//        pumpAssembly = new PumpAssemblyManager();
+        pumpAssembly = new PumpAssemblyManager(this);
 
     }
 
