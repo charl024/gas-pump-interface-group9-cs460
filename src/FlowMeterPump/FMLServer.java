@@ -1,3 +1,6 @@
+/**
+ * Flow Meter socket server handles connection and messages between IOPort
+ */
 package FlowMeterPump;
 
 import MessagePassed.Message;
@@ -9,19 +12,30 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Flow Meter Server Socket
+ */
 public class FMLServer implements Runnable {
-    private int portNumber;
-    private ServerSocket serverSocket;
+    private final int portNumber;
+    private final ServerSocket serverSocket;
     private ObjectOutputStream out;
-    private FlowMeter flowMeter;
+    private final FlowMeter flowMeter;
 
-
+    /**
+     * Flow Meter Server Constructor
+     * @param portNumber Port number socket runs on
+     * @param flowMeter Flow meter that connects with various needed parts
+     * @throws IOException
+     */
     public FMLServer(int portNumber, FlowMeter flowMeter) throws IOException {
         this.portNumber = portNumber;
         this.flowMeter = flowMeter;
         serverSocket = new ServerSocket(portNumber);
     }
 
+    /**
+     * Thread that is ran to handle connection and messages between client
+     */
     @Override
     public void run() {
         System.out.println("Flow meter pump is running on port " + portNumber);
@@ -55,6 +69,10 @@ public class FMLServer implements Runnable {
         }
     }
 
+    /**
+     * Send message to client
+     * @param message Message
+     */
     public void sendMessage(Message message) {
         try {
             out.writeObject(message);

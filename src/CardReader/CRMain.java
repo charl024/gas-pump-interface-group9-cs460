@@ -3,7 +3,6 @@
  */
 package CardReader;
 
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -29,50 +28,6 @@ public class CRMain extends Application {
             System.exit(0);
         });
         primaryStage.show();
-
-//        if (arguments.size() == 1) {
-//            CardReader cardReader = new CardReader();
-//
-//            createPane(primaryStage, cardReader);
-//
-//            primaryStage.setOnCloseRequest(event -> {
-//                Platform.exit();
-//            });
-//
-//            primaryStage.show();
-//        } else if (arguments.isEmpty()) {
-//
-//            CommPort port = new CommPort(3);
-//            CardReader cardReader = new CardReader(port);
-//
-//
-//            createPane(primaryStage, cardReader);
-//
-//            primaryStage.setOnCloseRequest(event -> {
-//                port.close();
-//                Platform.exit();
-//            });
-//
-//            primaryStage.show();
-//
-//            new Thread(() -> {
-//                try {
-//                    while (true) {
-//                        Thread.sleep(10); // wait 10ms
-//                        Message message = port.get();         // blocking call
-//                        if (message != null) {
-//                            cardReader.getClient().handleMessage(message);
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-//        } else {
-//            System.out.println("Invalid number of arguments");
-//        }
     }
 
     /**

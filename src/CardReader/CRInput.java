@@ -20,7 +20,8 @@ public class CRInput {
 
     /**
      * Constructor or Card reader input
-     * @param server Server that card reader runs on
+     *
+     * @param server  Server that card reader runs on
      * @param display Display that shows the Card Reader interface
      */
     public CRInput(CRServer server, CRDisplay display) {

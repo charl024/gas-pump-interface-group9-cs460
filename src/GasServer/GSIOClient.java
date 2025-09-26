@@ -3,7 +3,6 @@
  */
 package GasServer;
 
-import IOPort.CommPort;
 import MessagePassed.Message;
 
 /**
@@ -11,7 +10,7 @@ import MessagePassed.Message;
  */
 public class GSIOClient {
     private final GSDisplay display;
-    private GSServer server;
+    private final GSServer server;
 
     /**
      * Constructor for Gas Station IOPort client

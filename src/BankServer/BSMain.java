@@ -37,46 +37,6 @@ public class BSMain extends Application {
             System.exit(0);
         });
         primaryStage.show();
-
-        //TODO DELETE WHEN WE TEST MANAGER
-//        List<String> arguments = getParameters().getRaw();
-//        if (arguments.size() == 1) {
-//            BankServer bankServer = new BankServer();
-//            createPane(primaryStage, bankServer);
-//            primaryStage.show();
-//            primaryStage.setOnCloseRequest(event -> {
-//                Platform.exit();
-//            });
-//        } else {
-//            CommPort port = new CommPort(4);
-//            BankServer bankServer = new BankServer(port);
-//
-//            createPane(primaryStage, bankServer);
-//
-//            primaryStage.setOnCloseRequest(event -> {
-//                port.close();
-//                Platform.exit();
-//            });
-//
-//            primaryStage.show();
-//            //Have a thread that just watches to see if there are any messages
-//            // from the connected IOPort
-//            new Thread(() -> {
-//                try {
-//                    while (true) {
-//                        Thread.sleep(10); // wait 10ms
-//                        Message message = port.get();         // blocking call
-//                        if (message != null) {
-//                            bankServer.getClient().handleMessage(message);
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-//        }
     }
 
     /**

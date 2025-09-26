@@ -1,3 +1,6 @@
+/**
+ * Server that handles IOPort connections
+ */
 package BankServer;
 
 import MessagePassed.Message;
@@ -9,18 +12,30 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Bank server socket server
+ */
 public class BSServer implements Runnable {
     private final int portNumber;
     private final BankServer bankServer;
     private final ServerSocket serverSocket;
 
+    /**
+     * Constructor for Bank Server Socket
+     * @param portNumber Port number socket is being created on
+     * @param bankServer Main bank server that has most components
+     * @throws IOException
+     */
     public BSServer(int portNumber, BankServer bankServer) throws IOException {
         this.portNumber = portNumber;
         this.bankServer = bankServer;
         serverSocket = new ServerSocket(portNumber);
     }
 
-
+    /**
+     * Thread that is started, will continuously handle any messages received
+     * by its clients
+     */
     @Override
     public void run() {
         System.out.println("Bank Server is running on port " + portNumber);

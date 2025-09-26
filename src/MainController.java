@@ -1,9 +1,10 @@
 import MessagePassed.Message;
 
 public class MainController {
-    private ServerManager serverManager;
-    private ScreenManager screenManager;
-    private PumpAssemblyManager pumpAssembly;
+    private final ServerManager serverManager;
+    private final ScreenManager screenManager;
+    private final PumpAssemblyManager pumpAssembly;
+
     public MainController() {
         serverManager = new ServerManager(this);
         screenManager = new ScreenManager(this);
@@ -16,16 +17,11 @@ public class MainController {
     }
 
     public void sendScreenManagerMessage(Message message) {
-
-    }
-
-
-    public void sendGasStationManagerMessage(Message message) {
-
+        screenManager.messageRequest(message);
     }
 
     public void sendPumpAssemblyManagerMessage(Message message) {
-
+        serverManager.messageRequest(message);
     }
 
     public static void main(String[] args) {

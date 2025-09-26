@@ -40,53 +40,6 @@ public class FMMain extends Application {
             System.exit(0);
         });
         primaryStage.show();
-
-//        List<String> arguments = getParameters().getRaw();
-//        if (arguments.size() == 1) {
-//            FlowMeter flowMeter = new FlowMeter(true);
-//            flowMeter.getDisplay().setVolRate(15);
-//            flowMeter.getDisplay().setGasRate(3.34);
-//            flowMeter.getDisplay().setTotalVolume(15);
-//            createPane(primaryStage, flowMeter);
-//            primaryStage.show();
-//            primaryStage.setOnCloseRequest(event -> {
-//                Platform.exit();
-//            });
-//
-//        } else {
-//            //Create IO port first, then create the device
-//
-//            CommPort port = new CommPort(2);
-//            FlowMeter flowMeter = new FlowMeter(false);
-//            flowMeter.getClient().setPort(port); //Save port to client
-//
-//            createPane(primaryStage, flowMeter);
-//
-//            //If GUI is exited, turn program off
-//            primaryStage.setOnCloseRequest(event -> {
-//                port.close();
-//                Platform.exit();
-//            });
-//
-//            primaryStage.show();
-//
-//            //Use this to show the GUI, then get the message from ioPort
-//            new Thread(() -> {
-//                try {
-//                    while (true) {
-//                        Thread.sleep(10); // wait 10ms
-//                        Message message = port.get();
-//                        if (message != null) {
-//                            flowMeter.getClient().handleMessage(message);
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-//        }
     }
 
     /**

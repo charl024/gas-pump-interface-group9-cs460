@@ -7,7 +7,6 @@ import MessagePassed.Message;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -53,11 +52,6 @@ public class FMDisplay {
     private Pane pumpThree;
     private Pane pumpFour;
     private Pane pumpFive;
-
-    private VBox pumpButtons;
-    private Button startPump;
-    private Button stopPump;
-
 
     /**
      * Flow meter constructor, will create the text boxes and button needed
@@ -105,8 +99,6 @@ public class FMDisplay {
      * will be updated every second
      */
     public void startGasTimer() {
-        //final long start = System.currentTimeMillis();
-
         executor = Executors.newScheduledThreadPool(1);
 
         executor.scheduleAtFixedRate(() -> {
@@ -142,8 +134,11 @@ public class FMDisplay {
 
     }
 
+    /**
+     * Called when pump needs to be paused
+     */
     public void pauseTimer() {
-        if(timerRunning) {
+        if (timerRunning) {
             long timeNow = System.currentTimeMillis();
             timePassed += (timeNow - lastStartTime) / 1000.0;
             timerRunning = false;
@@ -151,15 +146,20 @@ public class FMDisplay {
         stopPump();
     }
 
+    /**
+     * Called when pump needs to be resumed
+     */
     public void startTimer() {
-        if(!timerRunning) {
+        if (!timerRunning) {
             lastStartTime = System.currentTimeMillis();
             timerRunning = true;
         }
         startPump();
     }
 
-
+    /**
+     * Called when the total cost and total volume needs to be sent to client
+     */
     public void sendGasTotals() {
         //FM-TOTALS-TotalCost-TotalVolumes
         Message gasTotal = new Message("FM");
@@ -190,7 +190,6 @@ public class FMDisplay {
         format = String.format("%.2f", cost);
         costInfo.setText("Cost: $" + format);
     }
-
 
 
     /**
@@ -264,38 +263,6 @@ public class FMDisplay {
 
         pumpCord.getChildren().addAll(pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive);
         pumpCord.setAlignment(Pos.CENTER);
-    }
-
-    //TODO I have no idea if I want to keep this
-    private void createButtons() {
-        startPump = new Button("Start");
-        stopPump = new Button("Stop");
-        pumpButtons = new VBox();
-        pumpButtons.setAlignment(Pos.TOP_CENTER);
-        pumpButtons.getChildren().addAll(startPump, stopPump);
-        pumpButtons.setSpacing(10);
-        startPump.setOnAction(event -> startDemoPump());
-        stopPump.setOnAction(event -> stopDemoPump());
-
-        pane.setRight(pumpButtons);
-    }
-
-    /**
-     * Start animation that makes pump look like its turning on
-     */
-    private void startDemoPump() {
-        timerRunning = true;
-        startPump();
-        startGasTimer();
-    }
-
-    /**
-     * Starts animation that makes pump look like its turning off
-     */
-    private void stopDemoPump() {
-        timerRunning = false;
-        executor.shutdown();
-        stopPump();
     }
 
 

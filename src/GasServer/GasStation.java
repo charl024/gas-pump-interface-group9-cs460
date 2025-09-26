@@ -3,7 +3,6 @@
  */
 package GasServer;
 
-import IOPort.CommPort;
 import IOPort.PortLookupMap;
 
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.io.IOException;
  */
 public class GasStation {
     private final GSDisplay display;
-    private GSIOClient client;
+    private final GSIOClient client;
 
     /**
      * Constructor for Gas Station Server, creates the display and client

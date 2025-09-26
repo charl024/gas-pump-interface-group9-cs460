@@ -8,11 +8,11 @@ import java.util.concurrent.Executors;
 
 
 public class PumpAssemblyManager {
-    private MainController mainController;
-    private StatusPort hosePort;
-    private CommPort flowMeterPumpPort;
+    private final MainController mainController;
+    private final StatusPort hosePort;
+    private final CommPort flowMeterPumpPort;
 
-    private ExecutorService executor;
+    private final ExecutorService executor;
 
     private boolean hoseConnected = false;
     private boolean pumping = false;
@@ -50,13 +50,13 @@ public class PumpAssemblyManager {
                 // we then need to send a message to the flow meter to also
                 // pause
 
-                if(pumping & !hoseConnected) {
+                if (pumping & !hoseConnected) {
                     pumping = false;
                     flowMeterPumpPort.send(new Message("FM-PAUSE"));
                 }
                 //if we get a message that hose is connected, and we already
                 // started pumping, then we should automatically start pumping
-                if(hoseConnected & !pumping & startedPumping) {
+                if (hoseConnected & !pumping & startedPumping) {
                     pumping = true;
                     flowMeterPumpPort.send(new Message("FM-RESUME"));
                 }
@@ -67,7 +67,7 @@ public class PumpAssemblyManager {
                 //Gas total information, how much the gas cost, and how many
                 // gallons was pumped total
                 String flowMeterInfo = parts[1];
-                if(flowMeterInfo.equals("TOTALS")) {
+                if (flowMeterInfo.equals("TOTALS")) {
                     startedPumping = false;
                     //Send the totals over to the screen so that it can
                     // display it
@@ -90,6 +90,19 @@ public class PumpAssemblyManager {
         pumping = true;
         startedPumping = true;
         flowMeterPumpPort.send(startPump);
+    }
+
+    /**
+     * Handles messages that need to be sent to Flow meter and pump
+     * (Should be called by outside managers)
+     * @param message (Message)
+     */
+    public void messageRequest(Message message) {
+        String description = message.getDescription();
+        String[] parts = description.split("-");
+        if (parts[0].equals("FM")) {
+            flowMeterPumpPort.send(message);
+        }
     }
 
 

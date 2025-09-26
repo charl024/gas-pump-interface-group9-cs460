@@ -4,7 +4,6 @@
  */
 package FlowMeterPump;
 
-import IOPort.CommPort;
 import MessagePassed.Message;
 
 
@@ -14,7 +13,7 @@ import MessagePassed.Message;
 public class FMIOClient {
 
     private final FMDisplay display;
-    private FMLServer server;
+    private final FMLServer server;
 
     /**
      * Constructor for Flow Meter client

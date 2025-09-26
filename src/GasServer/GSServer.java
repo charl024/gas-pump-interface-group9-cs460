@@ -1,3 +1,6 @@
+/**
+ * Gas station server socket, handles messages and connection between IOPort
+ */
 package GasServer;
 
 import MessagePassed.Message;
@@ -9,6 +12,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Gas Station Server Socket
+ */
 public class GSServer implements Runnable {
     private final int portNumber;
     private final GasStation gasStation;
@@ -16,13 +22,22 @@ public class GSServer implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-
+    /**
+     * Gas Station Server Socket
+     *
+     * @param portNumber Port number socket will run on
+     * @param gasStation Gas Station that holds other components
+     * @throws IOException
+     */
     public GSServer(int portNumber, GasStation gasStation) throws IOException {
         this.portNumber = portNumber;
         this.gasStation = gasStation;
         serverSocket = new ServerSocket(portNumber);
     }
 
+    /**
+     * Thread that is ran to handle connection and messages between IOPort
+     */
     @Override
     public void run() {
         System.out.println("Gas Server is running on port " + portNumber);
@@ -30,6 +45,7 @@ public class GSServer implements Runnable {
             Socket socket = serverSocket.accept();
             System.out.println("Client connected");
             //TODO should probably immediately send a with price list stuff
+            // or have gas station send a request on start up
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
 
@@ -51,6 +67,11 @@ public class GSServer implements Runnable {
         }
     }
 
+    /**
+     * Send message to client
+     *
+     * @param message Message
+     */
     public void sendMessage(Message message) {
         try {
             out.writeObject(message);

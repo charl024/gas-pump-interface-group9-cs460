@@ -54,45 +54,6 @@ public class GSMain extends Application {
             System.exit(0);
         });
         primaryStage.show();
-
-//        if (arguments.size() == 1) {
-//            GasStation gasStation = new GasStation();
-//            gasStation.getDisplay().setDemoPrices();
-//            createPane(primaryStage, gasStation);
-//
-//            primaryStage.setOnCloseRequest(event -> {
-//                Platform.exit();
-//            });
-//        } else {
-//            CommPort port = new CommPort(5);
-//            GasStation gasStation = new GasStation(port);
-//
-//
-//            createPane(primaryStage, gasStation);
-//
-//
-//            primaryStage.setOnCloseRequest(event -> {
-//                port.close();
-//                Platform.exit();
-//            });
-//
-//            primaryStage.show();
-//
-//            //Use this to show the GUI, then get the message from ioPort
-//            new Thread(() -> {
-//                try {
-//                    while (true) {
-//                        Thread.sleep(10); // wait 10ms
-//                        Message message = port.get();         // blocking call
-//                        if (message != null) {
-//                            gasStation.getClient().handleMessage(message);
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-//        }
     }
 
     /**

@@ -3,7 +3,6 @@
  */
 package BankServer;
 
-import IOPort.CommPort;
 import IOPort.PortLookupMap;
 
 import java.io.IOException;
