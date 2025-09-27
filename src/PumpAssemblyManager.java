@@ -67,12 +67,16 @@ public class PumpAssemblyManager {
                 //Gas total information, how much the gas cost, and how many
                 // gallons was pumped total
                 String flowMeterInfo = parts[1];
-                if (flowMeterInfo.equals("TOTALS")) {
+                if (flowMeterInfo.equals("NEWTOTAL")) {
                     startedPumping = false;
                     //Send the totals over to the screen so that it can
                     // display it
                     message.changeDevice("SC");
                     mainController.sendScreenManagerMessage(message);
+
+                    Message tempMessage = new Message(message.getDescription());
+                    tempMessage.changeDevice("GS");
+                    mainController.sendServerManagerMessage(tempMessage);
                 }
 
             }

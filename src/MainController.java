@@ -21,7 +21,7 @@ public class MainController {
     }
 
     public void sendPumpAssemblyManagerMessage(Message message) {
-        serverManager.messageRequest(message);
+        pumpAssembly.messageRequest(message);
     }
 
     public static void main(String[] args) {

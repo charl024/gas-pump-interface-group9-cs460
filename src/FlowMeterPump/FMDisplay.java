@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,9 +35,9 @@ public class FMDisplay {
     private double curCost = 0;
     private double curVol = 0;
     private double totalVolume;
-
+    private double[] randomVolumes;
     private double gasRate; //How much gas costs per gallon
-    private double volRate; //Rate gas is pumped into tank
+    private double volRate = 10.0; //Rate gas is pumped into tank
 
     //Using this to replicate gas being pumped out
     private boolean timerRunning = false;
@@ -59,6 +60,7 @@ public class FMDisplay {
      */
     public FMDisplay(FMLServer server) {
         this.server = server;
+        randomVolumes = new double[]{20, 15, 4, 6, 11, 8.75, 9.32, 7.44, 4.60, 13.20, 10.5, 13.8, 17.09,};
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
@@ -161,11 +163,11 @@ public class FMDisplay {
      * Called when the total cost and total volume needs to be sent to client
      */
     public void sendGasTotals() {
-        //FM-TOTALS-TotalCost-TotalVolumes
+        //FM-NEWTOTAL-TotalCost-TotalVolumes
         Message gasTotal = new Message("FM");
         double cost = curCost;
         double gallons = curVol;
-        gasTotal.addToDescription("-TOTALS-" + cost + "-" + gallons);
+        gasTotal.addToDescription("-NEWTOTAL-" + cost + "-" + gallons);
         server.sendMessage(gasTotal);
     }
 
@@ -263,6 +265,10 @@ public class FMDisplay {
 
         pumpCord.getChildren().addAll(pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive);
         pumpCord.setAlignment(Pos.CENTER);
+    }
+    public void pickRandomSize() {
+        Random rand = new Random();
+        totalVolume = randomVolumes[rand.nextInt(randomVolumes.length)];
     }
 
 

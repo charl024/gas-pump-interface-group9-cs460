@@ -48,45 +48,22 @@ public class FMIOClient {
             Message invalidMessage = new Message("FM-Invalid");
             server.sendMessage(invalidMessage);
         } else {
+            String event = parts[1];
             //Start the flow meter and change the color of the cord to be green
-            if (parts[1].equals("START")) {
-                double costPerGal = Double.parseDouble(parts[2]);
-
-                //Handle optional parts
-                int gasFlowRate = -1;
-                if (parts.length > 3) {
-                    gasFlowRate = Integer.parseInt(parts[3]);
-                }
-
-                int totalGas = -1;
-                if (parts.length > 4) {
-                    totalGas = Integer.parseInt(parts[4]);
-                }
-
-                //After getting the required information, start the timer to have the flow start
-                display.setGasRate(costPerGal);
-                if (!(gasFlowRate == -1)) {
-                    display.setVolRate(gasFlowRate);
-                } else {
-                    display.setVolRate(10); //default should just be 10 gallons be per minute
-                }
-                if (!(totalGas == -1)) {
-                    display.setTotalVolume(totalGas);
-                } else {
-                    display.setTotalVolume(15); //Not sure if there should even be a default volume size
-                }
-
-                //After all rates are set, we can now start the timer
+            if (event.equals("START")) {
+                display.pickRandomSize();
                 display.setTimerRunning(true);
                 display.startGasTimer();
                 display.startPump();
 
-
-            } else if (parts[1].equals("PAUSE")) {
+            } else if (event.equals("GASSELECTION")) {
+                double costPerGal = Double.parseDouble(parts[2]);
+                display.setGasRate(costPerGal);
+            } else if (event.equals("PAUSE")) {
                 display.pauseTimer();
-            } else if (parts[1].equals("RESUME")) {
+            } else if (event.equals("RESUME")) {
                 display.startTimer();
-            } else if (parts[1].equals("TOTAL")) {
+            } else if (event.equals("TOTAL")) {
                 //Total should only be requested if the pump has stopped
                 if (!display.isTimerRunning()) {
                     display.sendGasTotals();

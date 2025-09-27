@@ -56,7 +56,6 @@ public class ServerManager {
         }
         //Messages that are sent from the BankServer:
         if (parts[0].equals("BS")) {
-            //TODO THEN NEED TO SEND A MESSAGE TO SCREEN MANAGER NOW
             if (parts[2].equals("INVALIDCARD")) {
                 message.changeDevice("SC");
                 mainController.sendScreenManagerMessage(message);
