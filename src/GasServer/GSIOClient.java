@@ -66,7 +66,9 @@ public class GSIOClient {
                     double curRegularPrice = display.getRegularCost();
                     double curPlusPrice = display.getPlusCost();
                     double curPremiumPrice = display.getPremiumCost();
-                    Message gasInfo = new Message("GS-GASINFODONE-" + curRegularPrice + "-" + curPlusPrice + "-" + curPremiumPrice);
+                    Message gasInfo =
+                            new Message("GS-CHANGEPRICES-" + curRegularPrice +
+                                    "-" + curPlusPrice + "-" + curPremiumPrice);
                     server.sendMessage(gasInfo);
                 }
             }
