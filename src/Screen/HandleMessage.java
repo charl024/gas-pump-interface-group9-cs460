@@ -3,6 +3,13 @@ package Screen;
 import IOPort.CommPort;
 import MessagePassed.Message;
 
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+
+
 public class HandleMessage {
     private CommPort port;
 
@@ -31,8 +38,10 @@ public class HandleMessage {
 //        messageStr = "SC-receipt";
 
     public void handleMessage(Message msg) {
-        String messageStr = msg.getDescription();
 
+        ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
+
+        String messageStr = msg.getDescription();
 
         String[] parts = messageStr.split("-");
 
@@ -43,17 +52,44 @@ public class HandleMessage {
         } else {
 
             if (parts.length == 2) {
+                // Delete this welcome case
                 if (parts[1].equals("welcome")) {
                     screenDisplay.showWelcomeScreen();
                 } else if (parts[1].equals("authorizing")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showAuthorizationScreen();
+
+
+                    scheduler.schedule(() -> {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showTimeoutScreen();
+                    }, 60, TimeUnit.SECONDS);
+
+                    scheduler.schedule(() -> {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showWelcomeScreen();
+                        scheduler.shutdown();
+                    }, 70, TimeUnit.SECONDS);
+
                 } else if (parts[1].equals("accepted")) {
+                    scheduler.shutdownNow();
+
                     screenDisplay.resetLabels();
                     screenDisplay.showCardAcceptedScreen();
                 } else if (parts[1].equals("denied")) {
+                    scheduler.shutdownNow();
+
                     screenDisplay.resetLabels();
                     screenDisplay.showCardDeniedScreen();
+
+
+                    scheduler.schedule(() -> {
+                        // reset labels and
+                        screenDisplay.resetLabels();
+                        // call method to revert to home screen
+                        screenDisplay.showWelcomeScreen();
+                        scheduler.shutdown();
+                    }, 10, TimeUnit.SECONDS);
                 } else if (parts[1].equals("gas")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showGasSelectionScreen();
@@ -70,10 +106,52 @@ public class HandleMessage {
                         System.out.println("code being sent for gas " + code);
                     });
                     sendMessage(message);
+
+//                    // Might need to move this above setOnAction
+//                    scheduler.schedule(() -> {
+//                        // reset labels and
+//                        screenDisplay.resetLabels();
+//                        // call method to revert to home screen
+//                        screenDisplay.showWelcomeScreen();
+//                        scheduler.shutdown();
+//                    }, 60, TimeUnit.SECONDS);
+
+
+                    scheduler.schedule(() -> {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showTimeoutScreen();
+                    }, 60, TimeUnit.SECONDS);
+
+                    scheduler.schedule(() -> {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showWelcomeScreen();
+                        scheduler.shutdown();
+                    }, 70, TimeUnit.SECONDS);
+
+
+
                 } else if (parts[1].equals("connectHose")) {
+                    scheduler.shutdownNow();
+
                     screenDisplay.resetLabels();
                     screenDisplay.showConnectHoseScreen();
-                } else if (parts[1].equals("hosePaused")) {
+
+                    scheduler.schedule(() -> {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showTimeoutScreen();
+                    }, 60, TimeUnit.SECONDS);
+
+                    scheduler.schedule(() -> {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showWelcomeScreen();
+                        scheduler.shutdown();
+                    }, 70, TimeUnit.SECONDS);
+                }else if(parts[1].equals("hoseConnected")){
+                    scheduler.shutdownNow();
+                }
+                //TODO might need to remove this
+                //technically same thing as connectHose screen
+                else if (parts[1].equals("hosePaused")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showHosePausedScreen();
                 } else if (parts[1].equals("fuelFinished")) {
@@ -86,10 +164,20 @@ public class HandleMessage {
 
                     screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
 
+
+                    scheduler.schedule(() -> {
+                        // reset labels and
+                        screenDisplay.resetLabels();
+                        // call method to revert to home screen
+                        screenDisplay.showWelcomeScreen();
+                        scheduler.shutdown();
+                    }, 10, TimeUnit.SECONDS);
                 } else if (parts[1].equals("pumpUnavailable")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showPumpUnavailableScreen();
-                } else if (parts[1].equals("Disconnected")) {
+                }
+                // Might need to delete this
+                else if (parts[1].equals("Disconnected")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showDisconnectScreen();
                 }
@@ -147,6 +235,5 @@ public class HandleMessage {
 
     public void sendMessage(Message msg) {
         port.send(msg);
-
     }
 }

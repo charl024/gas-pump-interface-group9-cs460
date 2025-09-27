@@ -59,6 +59,11 @@ public class ScreenDisplay {
         root.setCenter(createMiddle());
         addMidLabels();
 
+
+
+
+
+
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
         primaryStage.setTitle("Futuristic Pump Interface");
@@ -373,6 +378,24 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKGRAY, i);
         }
     }
+    public void showTimeoutScreen() {
+        changeLabel(5, 2, 0);  // Span all rows, 2 columns
+        Label unavailable = labelMap.get("0");
+        writeText("Timedout", 0);
+        unavailable.setTextFill(Color.WHITE);
+        changeTextSize(80, 0);
+        unavailable.setAlignment(Pos.CENTER);
+        unavailable.setBackground(new Background(new BackgroundFill(Color.DARKRED, CornerRadii.EMPTY, Insets.EMPTY)));
+        unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
+        // Change all side buttons to gray
+        for (int i = 0; i < 10; i++) {
+            changeButtonColorV2(Color.DARKRED, i);
+        }
+    }
+
+
+    //TODO delete this
     public void showDisconnectScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
