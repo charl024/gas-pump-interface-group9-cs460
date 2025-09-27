@@ -15,6 +15,8 @@ public class HandleMessage {
 
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
+    private ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
+
 
     public HandleMessage(ScreenDisplay screenDisplay) {
         this.screenDisplay = screenDisplay;
@@ -39,7 +41,7 @@ public class HandleMessage {
 
     public void handleMessage(Message msg) {
 
-        ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
+
 
         String messageStr = msg.getDescription();
 
@@ -60,16 +62,7 @@ public class HandleMessage {
                     screenDisplay.showAuthorizationScreen();
 
 
-                    scheduler.schedule(() -> {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showTimeoutScreen();
-                    }, 60, TimeUnit.SECONDS);
-
-                    scheduler.schedule(() -> {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showWelcomeScreen();
-                        scheduler.shutdown();
-                    }, 70, TimeUnit.SECONDS);
+                    timeoutTimer();
 
                 } else if (parts[1].equals("accepted")) {
                     scheduler.shutdownNow();
@@ -98,55 +91,64 @@ public class HandleMessage {
 
                         if (code == 0) {
                             message.addToDescription("Regular");
+                            scheduler.shutdownNow();
+
+                            screenDisplay.resetLabels();
+                            screenDisplay.showConnectHoseScreen();
+
+                            timeoutTimer();
                         } else if (code == 1) {
-                            message.addToDescription("Plus");
+                            message.addToDescription("Plus");scheduler.shutdownNow();
+
+                            screenDisplay.resetLabels();
+                            screenDisplay.showConnectHoseScreen();
+
+                            timeoutTimer();
                         } else if (code == 2) {
                             message.addToDescription("Premium");
+                            scheduler.shutdownNow();
+
+                            screenDisplay.resetLabels();
+                            screenDisplay.showConnectHoseScreen();
+
+                            timeoutTimer();
+                        } else if (code == 5){
+                            screenDisplay.resetLabels();
+                            screenDisplay.showTransactionCanceledScreen();
+                            scheduler.schedule(() -> {
+                                // reset labels and
+                                screenDisplay.resetLabels();
+                                // call method to revert to home screen
+                                screenDisplay.showWelcomeScreen();
+                                scheduler.shutdown();
+                            }, 10, TimeUnit.SECONDS);
                         }
                         System.out.println("code being sent for gas " + code);
                     });
                     sendMessage(message);
 
-//                    // Might need to move this above setOnAction
+                    // Might need to write above button listener
+                    timeoutTimer();
+
+                }
+//                else if (parts[1].equals("connectHose")) {
+//                    scheduler.shutdownNow();
+//
+//                    screenDisplay.resetLabels();
+//                    screenDisplay.showConnectHoseScreen();
+//
 //                    scheduler.schedule(() -> {
-//                        // reset labels and
 //                        screenDisplay.resetLabels();
-//                        // call method to revert to home screen
+//                        screenDisplay.showTimeoutScreen();
+//                    }, 60, TimeUnit.SECONDS);
+//
+//                    scheduler.schedule(() -> {
+//                        screenDisplay.resetLabels();
 //                        screenDisplay.showWelcomeScreen();
 //                        scheduler.shutdown();
-//                    }, 60, TimeUnit.SECONDS);
-
-
-                    scheduler.schedule(() -> {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showTimeoutScreen();
-                    }, 60, TimeUnit.SECONDS);
-
-                    scheduler.schedule(() -> {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showWelcomeScreen();
-                        scheduler.shutdown();
-                    }, 70, TimeUnit.SECONDS);
-
-
-
-                } else if (parts[1].equals("connectHose")) {
-                    scheduler.shutdownNow();
-
-                    screenDisplay.resetLabels();
-                    screenDisplay.showConnectHoseScreen();
-
-                    scheduler.schedule(() -> {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showTimeoutScreen();
-                    }, 60, TimeUnit.SECONDS);
-
-                    scheduler.schedule(() -> {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showWelcomeScreen();
-                        scheduler.shutdown();
-                    }, 70, TimeUnit.SECONDS);
-                }else if(parts[1].equals("hoseConnected")){
+//                    }, 70, TimeUnit.SECONDS);
+//                }
+                else if(parts[1].equals("hoseConnected")){
                     scheduler.shutdownNow();
                 }
                 //TODO might need to remove this
@@ -231,6 +233,19 @@ public class HandleMessage {
             }
 
         }
+    }
+    // rename method
+    private void timeoutTimer(){
+        scheduler.schedule(() -> {
+            screenDisplay.resetLabels();
+            screenDisplay.showTimeoutScreen();
+        }, 60, TimeUnit.SECONDS);
+
+        scheduler.schedule(() -> {
+            screenDisplay.resetLabels();
+            screenDisplay.showWelcomeScreen();
+            scheduler.shutdown();
+        }, 70, TimeUnit.SECONDS);
     }
 
     public void sendMessage(Message msg) {

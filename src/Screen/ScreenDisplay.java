@@ -2,6 +2,8 @@ package Screen;
 
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
@@ -18,7 +20,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -27,7 +31,12 @@ public class ScreenDisplay {
 
     // Shows the possible actions that a button can have
     public enum PossibleActionsForButton {
-        CHOOSE_GAS_TYPE_ONE(0), CHOSE_GAS_TYPE_TWO(1), CHOOSE_GAS_TYPE_THREE(2), ACCEPT_RECEIPT(3), DENY_RECEIPT(4), CANCEL(5);
+        CHOOSE_GAS_TYPE_ONE(0),
+        CHOSE_GAS_TYPE_TWO(1),
+        CHOOSE_GAS_TYPE_THREE(2),
+        ACCEPT_RECEIPT(3),
+        DENY_RECEIPT(4),
+        CANCEL(5);
 
         private final int actionNum;
 
@@ -58,8 +67,6 @@ public class ScreenDisplay {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
         addMidLabels();
-
-
 
 
 
@@ -268,9 +275,11 @@ public class ScreenDisplay {
         setUpButtonPress(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, Color.FORESTGREEN);
         setUpButtonPress(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
         setUpButtonPress(6, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
+        setUpButtonPress(8, PossibleActionsForButton.CANCEL, Color.CRIMSON);
         setUpButtonPress(3, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, Color.FORESTGREEN);
         setUpButtonPress(5, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
         setUpButtonPress(7, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
+        setUpButtonPress(9, PossibleActionsForButton.CANCEL, Color.CRIMSON);
     }
 
     /**
@@ -393,7 +402,7 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKRED, i);
         }
     }
-    public void showTransactionCanceledtScreen() {
+    public void showTransactionCanceledScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
         writeText("Transaction canceled\n goodbye", 0);
