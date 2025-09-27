@@ -5,6 +5,7 @@ package BankServer;
 
 import MessagePassed.Message;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -57,8 +58,10 @@ public class BSDisplay {
      * Reset Card information, removes the current card number and status of it
      */
     public void resetCardInfo() {
-        cardInfo.setGraphic(accountNum);
-        cardValidation.setGraphic(status);
+        Platform.runLater(() -> {
+            cardInfo.setGraphic(accountNum);
+            cardValidation.setGraphic(status);
+        });
     }
 
     /**
