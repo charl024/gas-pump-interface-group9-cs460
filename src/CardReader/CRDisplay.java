@@ -3,6 +3,7 @@
  */
 package CardReader;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -140,7 +141,9 @@ public class CRDisplay {
      * Update text box for info
      */
     public void updateInfo() {
-        info.setText("Tap to Pay!");
+        Platform.runLater(() -> {
+            info.setText("Tap to Pay!");
+        });
     }
 
     /**
