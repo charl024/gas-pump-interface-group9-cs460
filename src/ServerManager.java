@@ -53,6 +53,8 @@ public class ServerManager {
         if (parts[0].equals("CR")) {
             message.changeDevice("BS");
             bankServerPort.send(message);
+            //TODO ALSO SEND A MESSAGE TO THE SCREEN SO THAT IT CAN SHOW
+            // AUTHORIZING SCREEN
         }
         //Messages that are sent from the BankServer:
         if (parts[0].equals("BS")) {

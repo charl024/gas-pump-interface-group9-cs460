@@ -17,6 +17,7 @@ public class PumpAssemblyManager {
     private boolean hoseConnected = false;
     private boolean pumping = false;
     private boolean startedPumping = false;
+    private boolean priceSelected = false;
 
     public PumpAssemblyManager(MainController mainController) {
         this.mainController = mainController;
@@ -49,16 +50,24 @@ public class PumpAssemblyManager {
                 //When hose gets disconnected while in the middle of pumping,
                 // we then need to send a message to the flow meter to also
                 // pause
+                //TODO ALSO SEND A MESSAGE TO SCREEN TO INDICATE THAT A PAUSE
+                // HAS OCCURRED OR TO CHANGE SCREEN TO PUMPING IN PROGRESS
 
-                if (pumping & !hoseConnected) {
-                    pumping = false;
-                    flowMeterPumpPort.send(new Message("FM-PAUSE"));
-                }
-                //if we get a message that hose is connected, and we already
-                // started pumping, then we should automatically start pumping
-                if (hoseConnected & !pumping & startedPumping) {
-                    pumping = true;
-                    flowMeterPumpPort.send(new Message("FM-RESUME"));
+                //If price has been selected and the hose is connected, then
+                // we need to start pumping
+                if(priceSelected & hoseConnected & !pumping) {
+                    sendStartPump();
+                } else {
+                    if (pumping & !hoseConnected) {
+                        pumping = false;
+                        flowMeterPumpPort.send(new Message("FM-PAUSE"));
+                    }
+                    //if we get a message that hose is connected, and we already
+                    // started pumping, then we should automatically start pumping
+                    if (hoseConnected & !pumping & startedPumping) {
+                        pumping = true;
+                        flowMeterPumpPort.send(new Message("FM-RESUME"));
+                    }
                 }
             }
             case "FM" -> {
@@ -69,6 +78,8 @@ public class PumpAssemblyManager {
                 String flowMeterInfo = parts[1];
                 if (flowMeterInfo.equals("NEWTOTAL")) {
                     startedPumping = false;
+                    priceSelected = false;
+                    //^should mean that pumping is over, so reset variables
                     //Send the totals over to the screen so that it can
                     // display it
                     message.changeDevice("SC");
@@ -106,7 +117,12 @@ public class PumpAssemblyManager {
         String description = message.getDescription();
         String[] parts = description.split("-");
         if (parts[0].equals("FM")) {
+            if(parts[1].equals("GASSELECTION")) {
+                priceSelected = true;
+            }
+
             flowMeterPumpPort.send(message);
+
         }
     }
 
