@@ -22,6 +22,7 @@ public class BSServer implements Runnable {
 
     /**
      * Constructor for Bank Server Socket
+     *
      * @param portNumber Port number socket is being created on
      * @param bankServer Main bank server that has most components
      * @throws IOException

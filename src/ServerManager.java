@@ -80,6 +80,7 @@ public class ServerManager {
     /**
      * Handles messages that need to be sent to Gas Station Server
      * (Should be caled by outsider managers)
+     *
      * @param message (Message)
      */
     public void messageRequest(Message message) {

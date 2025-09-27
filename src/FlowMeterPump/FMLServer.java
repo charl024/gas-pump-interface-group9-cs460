@@ -23,8 +23,9 @@ public class FMLServer implements Runnable {
 
     /**
      * Flow Meter Server Constructor
+     *
      * @param portNumber Port number socket runs on
-     * @param flowMeter Flow meter that connects with various needed parts
+     * @param flowMeter  Flow meter that connects with various needed parts
      * @throws IOException
      */
     public FMLServer(int portNumber, FlowMeter flowMeter) throws IOException {
@@ -71,6 +72,7 @@ public class FMLServer implements Runnable {
 
     /**
      * Send message to client
+     *
      * @param message Message
      */
     public void sendMessage(Message message) {

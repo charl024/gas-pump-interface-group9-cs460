@@ -266,6 +266,7 @@ public class FMDisplay {
         pumpCord.getChildren().addAll(pumpOne, pumpTwo, pumpThree, pumpFour, pumpFive);
         pumpCord.setAlignment(Pos.CENTER);
     }
+
     public void pickRandomSize() {
         Random rand = new Random();
         totalVolume = randomVolumes[rand.nextInt(randomVolumes.length)];

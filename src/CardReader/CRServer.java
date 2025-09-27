@@ -21,6 +21,7 @@ public class CRServer implements Runnable {
 
     /**
      * Constructor for Card Reader Socket server
+     *
      * @param portNumber Port number socket is running on
      * @param cardReader Card reader that holds all the components
      * @throws IOException
@@ -58,6 +59,7 @@ public class CRServer implements Runnable {
 
     /**
      * Send message back to connected client
+     *
      * @param message Message being sent
      * @throws IOException
      */
