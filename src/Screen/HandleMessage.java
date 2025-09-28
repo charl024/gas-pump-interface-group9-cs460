@@ -1,6 +1,7 @@
 package Screen;
 
 import IOPort.CommPort;
+import IOPort.PortLookupMap;
 import MessagePassed.Message;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class HandleMessage {
     private Timer timer;
 
     // TODO //IMPORTANT// Need to change to actual port number and fix this
-    private ScreenServer server = new ScreenServer(33, new HandleMessage(screenDisplay));
+    ScreenServer server = new ScreenServer(PortLookupMap.PortMap(6), this);
 
     public HandleMessage(ScreenDisplay screenDisplay) throws IOException {
         this.screenDisplay = screenDisplay;
