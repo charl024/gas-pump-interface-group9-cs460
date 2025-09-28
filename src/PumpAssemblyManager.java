@@ -1,3 +1,7 @@
+/**
+ * Pump Assembly Manager, handles Hose and Flowmeter/Pump
+ */
+
 import IOPort.CommPort;
 import IOPort.IOPort;
 import IOPort.StatusPort;
@@ -6,7 +10,9 @@ import MessagePassed.Message;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Pump Assembly Manager
+ */
 public class PumpAssemblyManager {
     private final MainController mainController;
     private final StatusPort hosePort;
@@ -19,6 +25,11 @@ public class PumpAssemblyManager {
     private boolean startedPumping = false;
     private boolean priceSelected = false;
 
+    /**
+     * Constructor for Pump Assembly Manager
+     *
+     * @param mainController
+     */
     public PumpAssemblyManager(MainController mainController) {
         this.mainController = mainController;
         hosePort = new StatusPort(5);
@@ -28,11 +39,19 @@ public class PumpAssemblyManager {
         start();
     }
 
+    /**
+     * Start threads that will listen for any messages being sent from a device
+     */
     private void start() {
         executor.submit(() -> listenOnPort(hosePort));
         executor.submit(() -> listenOnPort(flowMeterPumpPort));
     }
 
+    /**
+     * Handle message received from device
+     *
+     * @param message Message from device
+     */
     public void handleMessage(Message message) {
         String description = message.getDescription();
         String[] parts = description.split("-");
@@ -54,9 +73,8 @@ public class PumpAssemblyManager {
 
                 //If price has been selected and the hose is connected, then
                 // we need to start pumping
-                if(priceSelected & hoseConnected & !pumping) {
+                if (priceSelected & hoseConnected & !pumping) {
                     sendStartPump();
-                    //TODO SEE IF THIS IS CORRECT
                     mainController.sendScreenManagerMessage(new Message(
                             "SC-PUMPINGPROGRESS"));
                 } else {
@@ -70,7 +88,6 @@ public class PumpAssemblyManager {
                     if (hoseConnected & !pumping & startedPumping) {
                         pumping = true;
                         flowMeterPumpPort.send(new Message("FM-RESUME"));
-                        //TODO SEE IF THIS IS CORRECT
                         mainController.sendScreenManagerMessage(new Message(
                                 "SC-PUMPINGPROGRESS"));
                     }
@@ -104,7 +121,7 @@ public class PumpAssemblyManager {
     }
 
     /**
-     * Called after a user makes a gas selection
+     * Called after a user makes a gas selection so that pump can start
      */
     public void sendStartPump() {
         Message startPump = new Message("FM-START");
@@ -123,7 +140,7 @@ public class PumpAssemblyManager {
         String description = message.getDescription();
         String[] parts = description.split("-");
         if (parts[0].equals("FM")) {
-            if(parts[1].equals("GASSELECTION")) {
+            if (parts[1].equals("GASSELECTION")) {
                 priceSelected = true;
             }
 
@@ -132,7 +149,11 @@ public class PumpAssemblyManager {
         }
     }
 
-
+    /**
+     * Handle messages being to IOPort
+     *
+     * @param port Port
+     */
     private void listenOnPort(IOPort port) {
         while (!Thread.currentThread().isInterrupted()) {
             Message msg = null;
