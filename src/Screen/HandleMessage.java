@@ -4,6 +4,8 @@ import IOPort.CommPort;
 import MessagePassed.Message;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +17,8 @@ public class HandleMessage {
 
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
-    private ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
-
+//    private ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
+    private Timer timer;
 
     public HandleMessage(ScreenDisplay screenDisplay) {
         this.screenDisplay = screenDisplay;
@@ -42,48 +44,48 @@ public class HandleMessage {
     public void handleMessage(Message msg) {
 
 
-
         String messageStr = msg.getDescription();
 
         String[] parts = messageStr.split("-");
 
         String deviceType = parts[0];
         if (!(deviceType.equals("SC"))) {
-            Message invalidMessage = new Message("SC-Invalid");
+            Message invalidMessage = new Message("SC-INVALID");
             sendMessage(invalidMessage);
         } else {
 
             if (parts.length == 2) {
                 // Delete this welcome case
-                if (parts[1].equals("welcome")) {
+                if (parts[1].equals("WELCOME")) {
                     screenDisplay.showWelcomeScreen();
-                } else if (parts[1].equals("authorizing")) {
+                } else if (parts[1].equals("AUTHORIZING")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showAuthorizationScreen();
 
 
                     timeoutTimer();
 
-                } else if (parts[1].equals("accepted")) {
-                    scheduler.shutdownNow();
+                } else if (parts[1].equals("VALIDCARD")) {
+                    cancelTimeout();
 
                     screenDisplay.resetLabels();
                     screenDisplay.showCardAcceptedScreen();
-                } else if (parts[1].equals("denied")) {
-                    scheduler.shutdownNow();
+                } else if (parts[1].equals("INVALIDCARD")) {
+                    cancelTimeout();
 
                     screenDisplay.resetLabels();
                     screenDisplay.showCardDeniedScreen();
 
 
-                    scheduler.schedule(() -> {
-                        // reset labels and
-                        screenDisplay.resetLabels();
-                        // call method to revert to home screen
-                        screenDisplay.showWelcomeScreen();
-                        scheduler.shutdown();
-                    }, 10, TimeUnit.SECONDS);
-                } else if (parts[1].equals("gas")) {
+                    timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            screenDisplay.resetLabels();
+                            screenDisplay.showWelcomeScreen();
+                        }
+                    }, 10000);
+                } else if (parts[1].equals("GASINFO")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showGasSelectionScreen();
                     Message message = new Message();
@@ -91,14 +93,15 @@ public class HandleMessage {
 
                         if (code == 0) {
                             message.addToDescription("Regular");
-                            scheduler.shutdownNow();
+                            cancelTimeout();
 
                             screenDisplay.resetLabels();
                             screenDisplay.showConnectHoseScreen();
 
                             timeoutTimer();
                         } else if (code == 1) {
-                            message.addToDescription("Plus");scheduler.shutdownNow();
+                            message.addToDescription("Plus");
+                            cancelTimeout();
 
                             screenDisplay.resetLabels();
                             screenDisplay.showConnectHoseScreen();
@@ -106,7 +109,7 @@ public class HandleMessage {
                             timeoutTimer();
                         } else if (code == 2) {
                             message.addToDescription("Premium");
-                            scheduler.shutdownNow();
+                            cancelTimeout();
 
                             screenDisplay.resetLabels();
                             screenDisplay.showConnectHoseScreen();
@@ -115,13 +118,14 @@ public class HandleMessage {
                         } else if (code == 5){
                             screenDisplay.resetLabels();
                             screenDisplay.showTransactionCanceledScreen();
-                            scheduler.schedule(() -> {
-                                // reset labels and
-                                screenDisplay.resetLabels();
-                                // call method to revert to home screen
-                                screenDisplay.showWelcomeScreen();
-                                scheduler.shutdown();
-                            }, 10, TimeUnit.SECONDS);
+                            timer = new Timer();
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    screenDisplay.resetLabels();
+                                    screenDisplay.showWelcomeScreen();
+                                }
+                            }, 10000);
                         }
                         System.out.println("code being sent for gas " + code);
                     });
@@ -148,15 +152,15 @@ public class HandleMessage {
 //                        scheduler.shutdown();
 //                    }, 70, TimeUnit.SECONDS);
 //                }
-                else if(parts[1].equals("hoseConnected")){
-                    scheduler.shutdownNow();
+                else if(parts[1].equals("HOSECONNECTED")){
+                    cancelTimeout();
                 }
                 //TODO might need to remove this
                 //technically same thing as connectHose screen
-                else if (parts[1].equals("hosePaused")) {
+                else if (parts[1].equals("HOSEPAUSED")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showHosePausedScreen();
-                } else if (parts[1].equals("fuelFinished")) {
+                } else if (parts[1].equals("NEWTOTAL")) {
                     screenDisplay.resetLabels();
 
                     // Example values, replace with actual pumping results
@@ -167,14 +171,15 @@ public class HandleMessage {
                     screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
 
 
-                    scheduler.schedule(() -> {
-                        // reset labels and
-                        screenDisplay.resetLabels();
-                        // call method to revert to home screen
-                        screenDisplay.showWelcomeScreen();
-                        scheduler.shutdown();
-                    }, 10, TimeUnit.SECONDS);
-                } else if (parts[1].equals("pumpUnavailable")) {
+                    timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            screenDisplay.resetLabels();
+                            screenDisplay.showWelcomeScreen();
+                        }
+                    }, 10000);
+                } else if (parts[1].equals("PUMPUNAVAILABLE")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showPumpUnavailableScreen();
                 }
@@ -235,17 +240,30 @@ public class HandleMessage {
         }
     }
     // rename method
-    private void timeoutTimer(){
-        scheduler.schedule(() -> {
-            screenDisplay.resetLabels();
-            screenDisplay.showTimeoutScreen();
-        }, 60, TimeUnit.SECONDS);
+    private void timeoutTimer() {
+        timer = new Timer();
 
-        scheduler.schedule(() -> {
-            screenDisplay.resetLabels();
-            screenDisplay.showWelcomeScreen();
-            scheduler.shutdown();
-        }, 70, TimeUnit.SECONDS);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                screenDisplay.resetLabels();
+                screenDisplay.showTimeoutScreen();
+            }
+        }, 60000);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                screenDisplay.resetLabels();
+                screenDisplay.showWelcomeScreen();
+            }
+        }, 70000);
+    }
+    private void cancelTimeout() {
+        if (timer != null) {
+            timer.cancel(); // cancels all scheduled tasks
+            timer = null;
+        }
     }
 
     public void sendMessage(Message msg) {
