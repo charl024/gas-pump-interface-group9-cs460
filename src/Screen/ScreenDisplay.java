@@ -63,6 +63,10 @@ public class ScreenDisplay {
 
     private Consumer<Integer> onAction;
 
+    private Label regLabel;
+    private Label plusLabel;
+    private Label premLabel;
+
     public void showScreen(Stage primaryStage) {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
@@ -244,7 +248,7 @@ public class ScreenDisplay {
 
         // Gas option labels stacked vertically
         changeLabel(1, 2, 2);  // Span 1 row, 2 columns
-        Label regLabel = labelMap.get("2");
+        regLabel = labelMap.get("2");
         writeText("REGULAR", 2);
         regLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 2);
@@ -254,7 +258,7 @@ public class ScreenDisplay {
 
 
         changeLabel(1, 2, 4);  // Span 1 row, 2 columns
-        Label plusLabel = labelMap.get("4");
+        plusLabel = labelMap.get("4");
         writeText("PLUS", 4);
         plusLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 4);
@@ -263,7 +267,7 @@ public class ScreenDisplay {
         plusLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         changeLabel(1, 2, 6);  // Span 1 row, 2 columns
-        Label premLabel = labelMap.get("6");
+        premLabel = labelMap.get("6");
         writeText("PREMIUM", 6);
         premLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 6);
@@ -280,6 +284,18 @@ public class ScreenDisplay {
         setUpButtonPress(5, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
         setUpButtonPress(7, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
         setUpButtonPress(9, PossibleActionsForButton.CANCEL, Color.CRIMSON);
+    }
+
+    public void updateGasPrices(double regular, double plus, double premium) {
+        if (regLabel != null) {
+            regLabel.setText("REGULAR: $" + String.format("%.2f", regular));
+        }
+        if (plusLabel != null) {
+            plusLabel.setText("PLUS: $" + String.format("%.2f", plus));
+        }
+        if (premLabel != null) {
+            premLabel.setText("PREMIUM: $" + String.format("%.2f", premium));
+        }
     }
 
     /**
