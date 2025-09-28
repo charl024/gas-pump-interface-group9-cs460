@@ -71,8 +71,10 @@ public class HandleMessage {
             } else if (parts[1].equals("VALIDCARD")) {
                 cancelTimeout();
 
-                screenDisplay.resetLabels();
-                screenDisplay.showCardAcceptedScreen();
+                javafx.application.Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showCardAcceptedScreen();
+                });
 
                 timer = new Timer();
 
@@ -86,9 +88,10 @@ public class HandleMessage {
             } else if (parts[1].equals("INVALIDCARD")) {
                 cancelTimeout();
 
-                screenDisplay.resetLabels();
-                screenDisplay.showCardDeniedScreen();
-
+                javafx.application.Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showCardDeniedScreen();
+                });
 
                 timer = new Timer();
                 timer.schedule(new TimerTask() {
@@ -175,16 +178,22 @@ public class HandleMessage {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                screenDisplay.resetLabels();
-                screenDisplay.showTimeoutScreen();
+                javafx.application.Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showTimeoutScreen();
+                    System.out.println("Timeout triggered!"); // debug message
+                });
             }
         }, 60000);
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                screenDisplay.resetLabels();
-                screenDisplay.showWelcomeScreen();
+                javafx.application.Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showWelcomeScreen();
+                    System.out.println("Back to welcome screen"); // debug message
+                });
             }
         }, 70000);
     }
