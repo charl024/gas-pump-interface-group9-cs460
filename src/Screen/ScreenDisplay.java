@@ -289,7 +289,7 @@ public class ScreenDisplay {
         setUpButtonPress(9, PossibleActionsForButton.CANCEL, Color.CRIMSON);
     }
 
-    public void setInitialPrices(double regular, double plus, double premium) {
+    public void setPrices(double regular, double plus, double premium) {
         this.regPrice = regular;
         this.plusPrice = plus;
         this.premPrice = premium;
@@ -374,7 +374,7 @@ public class ScreenDisplay {
      * @param totalGallons Total gas pumped out
      * @param totalPrice Cost of gas pumped out
      */
-    public void showFuelFinishedScreen(double totalGallons, double totalPrice) {
+    public void showFuelFinishedScreen( double totalPrice, double totalGallons) {
         // Fill the entire middle with one big label
         changeLabel(5, 2, 0); // Span 5 rows, 2 columns
         Label main = labelMap.get("0");
@@ -443,24 +443,6 @@ public class ScreenDisplay {
         }
     }
 
-
-
-    //TODO delete this
-    public void showDisconnectScreen() {
-        changeLabel(5, 2, 0);  // Span all rows, 2 columns
-        Label unavailable = labelMap.get("0");
-        writeText("Disconnected\nPlease see cashier", 0);
-        unavailable.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
-        unavailable.setAlignment(Pos.CENTER);
-        unavailable.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-        unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-
-        // Change all side buttons to gray
-        for (int i = 0; i < 10; i++) {
-            changeButtonColorV2(Color.DARKGRAY, i);
-        }
-    }
     ///////////////////////////////////////////////////////////////////////////
     //SECTION THAT HANDLES MAKING SPECIFIC CHANGES TO A BUTTON OR A LABEL
     ///////////////////////////////////////////////////////////////////////////
@@ -653,8 +635,19 @@ public class ScreenDisplay {
         ft.setToValue(1.0);
         ft.play();
     }
-
-    //TODO: Finish this
+    public void setOnAction(Consumer<Integer> handler) {
+        this.onAction = handler;
+    }
+    public double getRegPrice() {
+        return regPrice;
+    }
+    public double getPlusPrice() {
+        return plusPrice;
+    }
+    public double getPremPrice() {
+        return premPrice;
+    }
+    //TODO: Delete this
     public void giveButtonAction(int action, int button) {
         buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -663,9 +656,4 @@ public class ScreenDisplay {
             }
         });
     }
-
-    public void setOnAction(Consumer<Integer> handler) {
-        this.onAction = handler;
-    }
-
 }

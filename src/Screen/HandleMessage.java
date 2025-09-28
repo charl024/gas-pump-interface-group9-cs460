@@ -3,23 +3,21 @@ package Screen;
 import IOPort.CommPort;
 import MessagePassed.Message;
 
-
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 
 public class HandleMessage {
     private CommPort port;
 
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
-    //    private ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
     private Timer timer;
 
-    public HandleMessage(ScreenDisplay screenDisplay) {
+    // TODO //IMPORTANT// Need to change to actual port number and fix this
+    private ScreenServer server = new ScreenServer(33, new HandleMessage(screenDisplay));
+
+    public HandleMessage(ScreenDisplay screenDisplay) throws IOException {
         this.screenDisplay = screenDisplay;
     }
 
@@ -50,153 +48,122 @@ public class HandleMessage {
         String deviceType = parts[0];
         if (!(deviceType.equals("SC"))) {
             Message invalidMessage = new Message("SC-INVALID");
-            sendMessage(invalidMessage);
+            server.sendMessage(invalidMessage);
         } else {
 
-            if (parts.length == 2) {
-                // Delete this welcome case
-                if (parts[1].equals("WELCOME")) {
-                    screenDisplay.showWelcomeScreen();
-                } else if (parts[1].equals("AUTHORIZING")) {
-                    screenDisplay.resetLabels();
-                    screenDisplay.showAuthorizationScreen();
+//            if (parts.length == 2) {
+            if (parts[1].equals("INITIALPRICE")) {
+
+                screenDisplay.setPrices(
+                        Double.parseDouble(parts[2]),
+                        Double.parseDouble(parts[3]),
+                        Double.parseDouble(parts[4]));
+                screenDisplay.resetLabels();
+                screenDisplay.showWelcomeScreen();
+            } else if (parts[1].equals("AUTHORIZING")) {
+                screenDisplay.resetLabels();
+                screenDisplay.showAuthorizationScreen();
 
 
-                    timeoutTimer();
+                timeoutTimer();
 
-                } else if (parts[1].equals("VALIDCARD")) {
-                    cancelTimeout();
+            } else if (parts[1].equals("VALIDCARD")) {
+                cancelTimeout();
 
-                    screenDisplay.resetLabels();
-                    screenDisplay.showCardAcceptedScreen();
+                screenDisplay.resetLabels();
+                screenDisplay.showCardAcceptedScreen();
 
-                    //TODO remove if statement for getGas, combine with VALIDCARD
+                timer = new Timer();
 
-                } else if (parts[1].equals("INVALIDCARD")) {
-                    cancelTimeout();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        screenDisplay.resetLabels();
+                        initiateGasSelection();
+                    }
+                }, 5000);
+            } else if (parts[1].equals("INVALIDCARD")) {
+                cancelTimeout();
 
-                    screenDisplay.resetLabels();
-                    screenDisplay.showCardDeniedScreen();
-
-
-                    timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            screenDisplay.resetLabels();
-                            screenDisplay.showWelcomeScreen();
-                        }
-                    }, 10000);
-                } else if (parts[1].equals("GASINFO")) {
-                    screenDisplay.resetLabels();
-                    screenDisplay.showGasSelectionScreen();
-                    Message message = new Message();
-                    screenDisplay.setOnAction(code -> {
-
-                        if (code == 0) {
-                            //TODO send message with gas price instead of the type of gas
-                            message.addToDescription("Regular");
-                            cancelTimeout();
-
-                            screenDisplay.resetLabels();
-                            screenDisplay.showConnectHoseScreen();
-
-                            timeoutTimer();
-                        } else if (code == 1) {
-                            message.addToDescription("Plus");
-                            cancelTimeout();
-
-                            screenDisplay.resetLabels();
-                            screenDisplay.showConnectHoseScreen();
-
-                            timeoutTimer();
-                        } else if (code == 2) {
-                            message.addToDescription("Premium");
-                            cancelTimeout();
-
-                            screenDisplay.resetLabels();
-                            screenDisplay.showConnectHoseScreen();
-
-                            timeoutTimer();
-                        } else if (code == 5) {
-                            screenDisplay.resetLabels();
-                            screenDisplay.showTransactionCanceledScreen();
-                            timer = new Timer();
-                            timer.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    screenDisplay.resetLabels();
-                                    screenDisplay.showWelcomeScreen();
-                                }
-                            }, 10000);
-                        }
-                        System.out.println("code being sent for gas " + code);
-                    });
-                    sendMessage(message);
-                    // Might need to write above button listener
-                    timeoutTimer();
-
-                } else if (parts[1].equals("PUMPINGPROGRESS")) {
-                    cancelTimeout();
-                    screenDisplay.showPumpingProgress();
-                } else if (parts[1].equals("HOSEPAUSED")) {
-                    screenDisplay.resetLabels();
-                    screenDisplay.showHosePausedScreen();
-                } else if (parts[1].equals("NEWTOTAL")) {
-                    screenDisplay.resetLabels();
-
-                    // Example values, replace with actual pumping results
-                    // Needs to get this number from a message somewhere
-                    double totalGallons = 10.23;
-                    double totalPrice = 35.87;
-
-                    screenDisplay.showFuelFinishedScreen(totalGallons, totalPrice);
+                screenDisplay.resetLabels();
+                screenDisplay.showCardDeniedScreen();
 
 
-                    timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            screenDisplay.resetLabels();
-                            screenDisplay.showWelcomeScreen();
-                        }
-                    }, 10000);
-                }
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showWelcomeScreen();
+                    }
+                }, 10000);
+            } else if (parts[1].equals("PUMPINGPROGRESS")) {
+                cancelTimeout();
+                screenDisplay.showPumpingProgress();
+            } else if (parts[1].equals("HOSEPAUSED")) {
+                screenDisplay.resetLabels();
+                screenDisplay.showHosePausedScreen();
+            } else if (parts[1].equals("NEWTOTAL")) {
+                screenDisplay.resetLabels();
+
+                screenDisplay.showFuelFinishedScreen(
+                        Double.parseDouble(parts[2]),
+                        Double.parseDouble(parts[3]));
+
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showWelcomeScreen();
+                    }
+                }, 10000);
+            }else if(parts[1].equals("CHANGEPRICES")){
+                screenDisplay.setPrices(
+                        Double.parseDouble(parts[2]),
+                        Double.parseDouble(parts[3]),
+                        Double.parseDouble(parts[4]));
+            }
+
+
 //                else if (parts[1].equals("PUMPUNAVAILABLE")) {
 //                    screenDisplay.resetLabels();
 //                    screenDisplay.showPumpUnavailableScreen();
 //                }
-            }
-            if (parts.length == 3) {
-                screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
-                return;
-            }
-            if (!parts[1].equals("*")) {
-                String[] s = parts[1].split("\\.");
-                screenDisplay.changeFont(s[0], Integer.parseInt(s[1]));
-            }
-            if (!parts[2].equals("*")) {
-                String[] s = parts[2].split("\\.");
-                screenDisplay.changeTextSize(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
-            }
-            if (!parts[3].equals("*")) {
-                // may remove this block of code
-                //Start
-                String[] s = parts[3].split("\\.");
-                screenDisplay.changeButtonColor(
-                        screenDisplay.convertColor(s[0]),
-                        Integer.parseInt(s[1])
-                );
-                //End
-                screenDisplay.changeButtonColorV2(
-                        screenDisplay.convertColorV2(s[0]),
-                        Integer.parseInt(s[1])
-                );
-            }
-            if (!parts[4].equals("*")) {
-                String[] s = parts[4].split("\\.");
-                screenDisplay.giveButtonAction(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
-            }
+//            }
+
+            //MAY NEED TO DELETE THIS CODE, ASK KYLE
+
+//            if (parts.length == 3) {
+//                screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
+//                return;
+//            }
+//            if (!parts[1].equals("*")) {
+//                String[] s = parts[1].split("\\.");
+//                screenDisplay.changeFont(s[0], Integer.parseInt(s[1]));
+//            }
+//            if (!parts[2].equals("*")) {
+//                String[] s = parts[2].split("\\.");
+//                screenDisplay.changeTextSize(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
+//            }
+//            if (!parts[3].equals("*")) {
+//                // may remove this block of code
+//                //Start
+//                String[] s = parts[3].split("\\.");
+//                screenDisplay.changeButtonColor(
+//                        screenDisplay.convertColor(s[0]),
+//                        Integer.parseInt(s[1])
+//                );
+//                //End
+//                screenDisplay.changeButtonColorV2(
+//                        screenDisplay.convertColorV2(s[0]),
+//                        Integer.parseInt(s[1])
+//                );
+//            }
+//            if (!parts[4].equals("*")) {
+//                String[] s = parts[4].split("\\.");
+//                screenDisplay.giveButtonAction(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
+//            }
 
         }
     }
@@ -228,7 +195,51 @@ public class HandleMessage {
         }
     }
 
-    public void sendMessage(Message msg) {
-        port.send(msg);
+    private void initiateGasSelection() {
+        screenDisplay.showGasSelectionScreen();
+        Message message = new Message();
+        screenDisplay.setOnAction(code -> {
+
+            if (code == 0) {
+                message.addToDescription("" + screenDisplay.getRegPrice());
+                cancelTimeout();
+
+                screenDisplay.resetLabels();
+                screenDisplay.showConnectHoseScreen();
+
+                timeoutTimer();
+            } else if (code == 1) {
+                message.addToDescription("" + screenDisplay.getPlusPrice());
+                cancelTimeout();
+
+                screenDisplay.resetLabels();
+                screenDisplay.showConnectHoseScreen();
+
+                timeoutTimer();
+            } else if (code == 2) {
+                message.addToDescription("" + screenDisplay.getPremPrice());
+                cancelTimeout();
+
+                screenDisplay.resetLabels();
+                screenDisplay.showConnectHoseScreen();
+
+                timeoutTimer();
+            } else if (code == 5) {
+                screenDisplay.resetLabels();
+                screenDisplay.showTransactionCanceledScreen();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        screenDisplay.resetLabels();
+                        screenDisplay.showWelcomeScreen();
+                    }
+                }, 10000);
+            }
+            System.out.println("code being sent for gas " + code);
+        });
+        server.sendMessage(message);
+        // Might need to write above button listener
+        timeoutTimer();
     }
 }
