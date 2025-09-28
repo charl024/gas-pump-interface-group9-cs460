@@ -22,6 +22,7 @@ public class ScreenMain extends Application {
     public void start(Stage primaryStage) throws IOException {
         screenDisplay = new ScreenDisplay();
         screenDisplay.showScreen(primaryStage);
+        screenDisplay.showPumpUnavailableScreen();
 
         handleMessage = new HandleMessage(screenDisplay);
         ScreenServer  screenServer = new ScreenServer(PortLookupMap.PortMap(6),handleMessage);
