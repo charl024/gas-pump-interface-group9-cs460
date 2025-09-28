@@ -1,3 +1,7 @@
+/**
+ * Screen manager, handles the screen device
+ */
+
 import IOPort.CommPort;
 import MessagePassed.Message;
 
@@ -6,12 +10,20 @@ public class ScreenManager {
     private final MainController mainController;
     private final CommPort screenServerPort;
 
+    /**
+     * Constructor for Screen manager
+     *
+     * @param mainController Main controller that holds the other managers
+     */
     public ScreenManager(MainController mainController) {
         this.mainController = mainController;
         screenServerPort = new CommPort(6);
         start();
     }
 
+    /**
+     * Create thread that handles messages between manager and screen
+     */
     private void start() {
         Thread listenerThread = new Thread(() -> listenOnPort(screenServerPort));
         listenerThread.start();
@@ -50,6 +62,11 @@ public class ScreenManager {
         screenServerPort.send(message);
     }
 
+    /**
+     * Listen to any new messages from IOPort
+     *
+     * @param port Port
+     */
     private void listenOnPort(CommPort port) {
         while (!Thread.currentThread().isInterrupted()) {
             Message message = port.get();

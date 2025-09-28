@@ -1,3 +1,8 @@
+/**
+ * Server manager, handles Gas Station server, Bank Station server and Card
+ * Reader
+ */
+
 import IOPort.CommPort;
 import IOPort.StatusPort;
 import IOPort.IOPort;
@@ -7,15 +12,23 @@ import MessagePassed.Message;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Server manager handles three devices
+ */
 public class ServerManager {
     private final MainController mainController;
     private final CommPort gasServerPort;
     private final CommPort bankServerPort;
-//    private final CommPort cardReaderPort;
+    //    private final CommPort cardReaderPort;
     private final StatusPort cardReaderPort;
 
     private final ExecutorService executor;
 
+    /**
+     * Constructor for Server Manager, will create the ports needed to connect
+     * to the devices that it manages
+     * @param mainController Main controller that holds the other managers
+     */
     public ServerManager(MainController mainController) {
         this.mainController = mainController;
         //When called, it should then create the IOConnections that will then
@@ -39,12 +52,19 @@ public class ServerManager {
         start();
     }
 
+    /**
+     * Create thread that handles message between device and manager
+     */
     public void start() {
         executor.submit(() -> listenOnPort(gasServerPort));
         executor.submit(() -> listenOnPort(bankServerPort));
         executor.submit(() -> listenOnPort(cardReaderPort));
     }
 
+    /**
+     * Handle message received from device
+     * @param message Message from device
+     */
     public void handleMessage(Message message) {
         String description = message.getDescription();
         //Going to do this section by devices
@@ -72,7 +92,7 @@ public class ServerManager {
         if (parts[0].equals("GS")) {
             //Gas station will only be sending information about what the
             // current gas prices are
-            if (parts[1].equals("CHANGEPRICES")) {
+            if (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE")) {
                 message.changeDevice("SC");
                 //then send message to screen with prices
             }
@@ -97,14 +117,16 @@ public class ServerManager {
         }
     }
 
-
+    /**
+     * Listen to any messages that are sent to the IOPort
+     * @param port Port
+     */
     private void listenOnPort(IOPort port) {
         while (!Thread.currentThread().isInterrupted()) {
             Message message = null;
             if (port instanceof CommPort) {
                 message = ((CommPort) port).get();
-            }
-            else if (port instanceof StatusPort) {
+            } else if (port instanceof StatusPort) {
                 message = ((StatusPort) port).read();
             }
 
@@ -118,10 +140,5 @@ public class ServerManager {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-
-    public void handleStop() {
-        executor.shutdown();
     }
 }

@@ -19,7 +19,6 @@ public class GSServer implements Runnable {
     private final int portNumber;
     private final GasStation gasStation;
     private final ServerSocket serverSocket;
-    private ObjectInputStream in;
     private ObjectOutputStream out;
 
     /**
@@ -44,10 +43,16 @@ public class GSServer implements Runnable {
         try {
             Socket socket = serverSocket.accept();
             System.out.println("Client connected");
-            //TODO should probably immediately send a with price list stuff
-            // or have gas station send a request on start up
+
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+
+            //Send initial price list to screen:
+            double reg = gasStation.getDisplay().getRegularCost();
+            double plus = gasStation.getDisplay().getPlusCost();
+            double prem = gasStation.getDisplay().getPremiumCost();
+            sendMessage(new Message("GS-INITIALPRICE-" + reg + "-" + plus + "-" + prem));
+
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
             while (true) {
                 try {
