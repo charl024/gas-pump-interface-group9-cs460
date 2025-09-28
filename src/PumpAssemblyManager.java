@@ -50,23 +50,29 @@ public class PumpAssemblyManager {
                 //When hose gets disconnected while in the middle of pumping,
                 // we then need to send a message to the flow meter to also
                 // pause
-                //TODO ALSO SEND A MESSAGE TO SCREEN TO INDICATE THAT A PAUSE
-                // HAS OCCURRED OR TO CHANGE SCREEN TO PUMPING IN PROGRESS
+
 
                 //If price has been selected and the hose is connected, then
                 // we need to start pumping
                 if(priceSelected & hoseConnected & !pumping) {
                     sendStartPump();
+                    //TODO SEE IF THIS IS CORRECT
+                    mainController.sendScreenManagerMessage(new Message(
+                            "SC-PUMPINGPROGRESS"));
                 } else {
                     if (pumping & !hoseConnected) {
                         pumping = false;
                         flowMeterPumpPort.send(new Message("FM-PAUSE"));
+                        mainController.sendScreenManagerMessage(new Message("SC-HOSEPAUSED"));
                     }
                     //if we get a message that hose is connected, and we already
                     // started pumping, then we should automatically start pumping
                     if (hoseConnected & !pumping & startedPumping) {
                         pumping = true;
                         flowMeterPumpPort.send(new Message("FM-RESUME"));
+                        //TODO SEE IF THIS IS CORRECT
+                        mainController.sendScreenManagerMessage(new Message(
+                                "SC-PUMPINGPROGRESS"));
                     }
                 }
             }

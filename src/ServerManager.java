@@ -1,5 +1,5 @@
 import IOPort.CommPort;
-
+import IOPort.StatusPort;
 import IOPort.IOPort;
 import MessagePassed.Message;
 
@@ -11,7 +11,8 @@ public class ServerManager {
     private final MainController mainController;
     private final CommPort gasServerPort;
     private final CommPort bankServerPort;
-    private final CommPort cardReaderPort;
+//    private final CommPort cardReaderPort;
+    private final StatusPort cardReaderPort;
 
     private final ExecutorService executor;
 
@@ -32,8 +33,8 @@ public class ServerManager {
 
         gasServerPort = new CommPort(2);
         bankServerPort = new CommPort(1);
-        //TODO CHANGE CARD READER PORT TYPE
-        cardReaderPort = new CommPort(3);
+        //cardReaderPort = new CommPort(3);
+        cardReaderPort = new StatusPort(2);
         executor = Executors.newFixedThreadPool(3);
         start();
     }
@@ -53,8 +54,7 @@ public class ServerManager {
         if (parts[0].equals("CR")) {
             message.changeDevice("BS");
             bankServerPort.send(message);
-            //TODO ALSO SEND A MESSAGE TO THE SCREEN SO THAT IT CAN SHOW
-            // AUTHORIZING SCREEN
+            mainController.sendScreenManagerMessage(new Message("SC-AUTHORIZING"));
         }
         //Messages that are sent from the BankServer:
         if (parts[0].equals("BS")) {
@@ -104,7 +104,9 @@ public class ServerManager {
             if (port instanceof CommPort) {
                 message = ((CommPort) port).get();
             }
-//            else if (port instanceof )
+            else if (port instanceof StatusPort) {
+                message = ((StatusPort) port).read();
+            }
 
             if (message != null) {
                 handleMessage(message);
