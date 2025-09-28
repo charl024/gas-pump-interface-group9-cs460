@@ -72,7 +72,7 @@ public class ServerManager {
         if (parts[0].equals("GS")) {
             //Gas station will only be sending information about what the
             // current gas prices are
-            if (parts[1].equals("CHANGEPRICES")) {
+            if (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE")) {
                 message.changeDevice("SC");
                 //then send message to screen with prices
             }

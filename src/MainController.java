@@ -6,9 +6,9 @@ public class MainController {
     private final PumpAssemblyManager pumpAssembly;
 
     public MainController() {
-        serverManager = new ServerManager(this);
         screenManager = new ScreenManager(this);
         pumpAssembly = new PumpAssemblyManager(this);
+        serverManager = new ServerManager(this);
 
     }
 
