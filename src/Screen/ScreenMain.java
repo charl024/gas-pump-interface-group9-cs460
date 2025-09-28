@@ -13,7 +13,6 @@ public class ScreenMain extends Application {
     private ScreenDisplay screenDisplay;
     private HandleMessage handleMessage;
 
-
     public static void main(String[] args) {
         launch(args);
     }
