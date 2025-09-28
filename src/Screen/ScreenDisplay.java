@@ -66,6 +66,9 @@ public class ScreenDisplay {
     private Label regLabel;
     private Label plusLabel;
     private Label premLabel;
+    private double regPrice;
+    private double plusPrice;
+    private double premPrice;
 
     public void showScreen(Stage primaryStage) {
         BorderPane root = createSideButtons();
@@ -249,7 +252,7 @@ public class ScreenDisplay {
         // Gas option labels stacked vertically
         changeLabel(1, 2, 2);  // Span 1 row, 2 columns
         regLabel = labelMap.get("2");
-        writeText("REGULAR", 2);
+        writeText("REGULAR - $" + String.format("%.2f", regPrice), 2);
         regLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 2);
         regLabel.setAlignment(Pos.CENTER);
@@ -259,7 +262,7 @@ public class ScreenDisplay {
 
         changeLabel(1, 2, 4);  // Span 1 row, 2 columns
         plusLabel = labelMap.get("4");
-        writeText("PLUS", 4);
+        writeText("PLUS - $" + String.format("%.2f", plusPrice), 4);
         plusLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 4);
         plusLabel.setAlignment(Pos.CENTER);
@@ -268,7 +271,7 @@ public class ScreenDisplay {
 
         changeLabel(1, 2, 6);  // Span 1 row, 2 columns
         premLabel = labelMap.get("6");
-        writeText("PREMIUM", 6);
+        writeText("PREMIUM - $" + String.format("%.2f", premPrice), 6);
         premLabel.setTextFill(Color.WHITE);
         changeTextSize(40, 6);
         premLabel.setAlignment(Pos.CENTER);
@@ -284,6 +287,12 @@ public class ScreenDisplay {
         setUpButtonPress(5, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
         setUpButtonPress(7, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
         setUpButtonPress(9, PossibleActionsForButton.CANCEL, Color.CRIMSON);
+    }
+
+    public void setInitialPrices(double regular, double plus, double premium) {
+        this.regPrice = regular;
+        this.plusPrice = plus;
+        this.premPrice = premium;
     }
 
     public void updateGasPrices(double regular, double plus, double premium) {
