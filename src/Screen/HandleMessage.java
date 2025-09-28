@@ -11,13 +11,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-
 public class HandleMessage {
     private CommPort port;
 
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
-//    private ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
+    //    private ScheduledExecutorService scheduler  = Executors.newScheduledThreadPool(1);
     private Timer timer;
 
     public HandleMessage(ScreenDisplay screenDisplay) {
@@ -70,6 +69,9 @@ public class HandleMessage {
 
                     screenDisplay.resetLabels();
                     screenDisplay.showCardAcceptedScreen();
+
+                    //TODO remove if statement for getGas, combine with VALIDCARD
+
                 } else if (parts[1].equals("INVALIDCARD")) {
                     cancelTimeout();
 
@@ -92,6 +94,7 @@ public class HandleMessage {
                     screenDisplay.setOnAction(code -> {
 
                         if (code == 0) {
+                            //TODO send message with gas price instead of the type of gas
                             message.addToDescription("Regular");
                             cancelTimeout();
 
@@ -115,7 +118,7 @@ public class HandleMessage {
                             screenDisplay.showConnectHoseScreen();
 
                             timeoutTimer();
-                        } else if (code == 5){
+                        } else if (code == 5) {
                             screenDisplay.resetLabels();
                             screenDisplay.showTransactionCanceledScreen();
                             timer = new Timer();
@@ -130,34 +133,13 @@ public class HandleMessage {
                         System.out.println("code being sent for gas " + code);
                     });
                     sendMessage(message);
-
                     // Might need to write above button listener
                     timeoutTimer();
 
-                }
-//                else if (parts[1].equals("connectHose")) {
-//                    scheduler.shutdownNow();
-//
-//                    screenDisplay.resetLabels();
-//                    screenDisplay.showConnectHoseScreen();
-//
-//                    scheduler.schedule(() -> {
-//                        screenDisplay.resetLabels();
-//                        screenDisplay.showTimeoutScreen();
-//                    }, 60, TimeUnit.SECONDS);
-//
-//                    scheduler.schedule(() -> {
-//                        screenDisplay.resetLabels();
-//                        screenDisplay.showWelcomeScreen();
-//                        scheduler.shutdown();
-//                    }, 70, TimeUnit.SECONDS);
-//                }
-                else if(parts[1].equals("HOSECONNECTED")){
+                } else if (parts[1].equals("PUMPINGPROGRESS")) {
                     cancelTimeout();
-                }
-                //TODO might need to remove this
-                //technically same thing as connectHose screen
-                else if (parts[1].equals("HOSEPAUSED")) {
+                    screenDisplay.showPumpingProgress();
+                } else if (parts[1].equals("HOSEPAUSED")) {
                     screenDisplay.resetLabels();
                     screenDisplay.showHosePausedScreen();
                 } else if (parts[1].equals("NEWTOTAL")) {
@@ -179,32 +161,11 @@ public class HandleMessage {
                             screenDisplay.showWelcomeScreen();
                         }
                     }, 10000);
-                } else if (parts[1].equals("PUMPUNAVAILABLE")) {
-                    screenDisplay.resetLabels();
-                    screenDisplay.showPumpUnavailableScreen();
                 }
-                // Might need to delete this
-                else if (parts[1].equals("Disconnected")) {
-                    screenDisplay.resetLabels();
-                    screenDisplay.showDisconnectScreen();
-                }
-                // THIS NEEDS TO BE DELETED
-                else if (parts[1].equals("receipt")) {
-                    screenDisplay.resetLabels();
-                    //screenDisplay.showReceiptScreen();
-                    Message message = new Message();
-                    screenDisplay.setOnAction(code -> {
-
-                        if (code == 3) {
-                            message.addToDescription("Accepted");
-                        } else if (code == 4) {
-                            message.addToDescription("Denied");
-                        }
-                        System.out.println("code being sent for gas " + code);
-                    });
-                    sendMessage(message);
-                }
-                return;
+//                else if (parts[1].equals("PUMPUNAVAILABLE")) {
+//                    screenDisplay.resetLabels();
+//                    screenDisplay.showPumpUnavailableScreen();
+//                }
             }
             if (parts.length == 3) {
                 screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
@@ -239,7 +200,7 @@ public class HandleMessage {
 
         }
     }
-    // rename method
+
     private void timeoutTimer() {
         timer = new Timer();
 
@@ -259,6 +220,7 @@ public class HandleMessage {
             }
         }, 70000);
     }
+
     private void cancelTimeout() {
         if (timer != null) {
             timer.cancel(); // cancels all scheduled tasks
