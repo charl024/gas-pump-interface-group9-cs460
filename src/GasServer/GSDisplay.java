@@ -3,9 +3,13 @@
  */
 package GasServer;
 
+import MessagePassed.Message;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -14,6 +18,8 @@ import javafx.scene.text.Font;
  * Gas Station Display
  */
 public class GSDisplay {
+    private final GSServer server;
+
     private final BorderPane pane;
 
     private final Label totalMoney; //Total money made by the gas station
@@ -28,10 +34,16 @@ public class GSDisplay {
     private final Label premiumCostLabel;
     private double premiumCost;
 
+    private HBox changePrices;
+    private final TextField inputPrices;
+    private Button updatePrices;
+
     /**
      * Gas Station Display Constructor, creates all the panes and texts
      */
-    public GSDisplay() {
+    public GSDisplay(GSServer server) {
+        this.server = server;
+
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,
                 CornerRadii.EMPTY, Insets.EMPTY
@@ -96,9 +108,70 @@ public class GSDisplay {
         gasInfo.getChildren().addAll(gasTypeOne, gasTypeTwo, gasTypeThree);
 
         updateGasPrices();
+        Label infoText = new Label("Enter new Gas prices: ");
+        inputPrices = new TextField();
+
+
+        updatePrices = new Button("Update");
+        updatePrices.setOnAction(event -> {
+            sendNewPrices();
+        });
+
+        changePrices = new HBox();
+        changePrices.setMinHeight(40);
+        changePrices.getChildren().addAll(infoText, inputPrices, updatePrices);
+        changePrices.setAlignment(Pos.CENTER);
+        changePrices.setSpacing(10);
 
         pane.setTop(generalInfo);
         pane.setCenter(gasInfo);
+        pane.setBottom(changePrices);
+    }
+
+    /**
+     * Sends a new price list to manager
+     */
+    private void sendNewPrices() {
+        if (server.isConnected()) {
+            String newPrice = inputPrices.getText();
+            String[] prices = newPrice.split("-");
+            boolean passed = true;
+            //Check if valid input was given
+            if (prices.length != 3) {
+                passed = false;
+            }
+            for (String price : prices) {
+                try {
+                    Double.parseDouble(price);
+                } catch (NumberFormatException e) {
+                    passed = false;
+                }
+            }
+
+            //If valid input, then we can send screen the new prices
+            String reg = prices[0];
+            String plus = prices[1];
+            String premium = prices[2];
+            //Don't want negative values (don't think possible) or any zero
+            //values
+            if ((Double.parseDouble(reg) <= 0)
+                    || Double.parseDouble(plus) <= 0
+                    || Double.parseDouble(premium) <= 0) {
+                passed = false;
+            }
+
+            if (!passed) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Input");
+                alert.setContentText("Invalid input received\nExample format: 2.44-3.23-4.57");
+                alert.showAndWait();
+                return;
+            }
+
+            Message newPriceMessage = new Message("GS-CHANGEPRICES-" + reg + "-" + plus + "-" + premium);
+            server.sendMessage(newPriceMessage);
+
+        }
     }
 
     /**

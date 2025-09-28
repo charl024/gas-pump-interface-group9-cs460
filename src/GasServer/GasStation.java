@@ -19,7 +19,7 @@ public class GasStation {
      */
     public GasStation(double reg, double plus, double prem) throws IOException {
         GSServer server = new GSServer(PortLookupMap.PortMap(2), this);
-        display = new GSDisplay();
+        display = new GSDisplay(server);
         client = new GSIOClient(display, server);
 
         display.updatePriceInput(reg, plus, prem);

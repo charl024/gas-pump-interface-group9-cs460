@@ -20,6 +20,7 @@ public class GSServer implements Runnable {
     private final GasStation gasStation;
     private final ServerSocket serverSocket;
     private ObjectOutputStream out;
+    private boolean connected = false;
 
     /**
      * Gas Station Server Socket
@@ -43,6 +44,7 @@ public class GSServer implements Runnable {
         try {
             Socket socket = serverSocket.accept();
             System.out.println("Client connected");
+            connected = true;
 
             out = new ObjectOutputStream(socket.getOutputStream());
 
@@ -84,5 +86,9 @@ public class GSServer implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isConnected() {
+        return connected;
     }
 }
