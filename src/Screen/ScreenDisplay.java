@@ -298,12 +298,15 @@ public class ScreenDisplay {
     public void updateGasPrices(double regular, double plus, double premium) {
         if (regLabel != null) {
             regLabel.setText("REGULAR: $" + String.format("%.2f", regular));
+            this.regPrice = regular;
         }
         if (plusLabel != null) {
             plusLabel.setText("PLUS: $" + String.format("%.2f", plus));
+            this.plusPrice = plus;
         }
         if (premLabel != null) {
             premLabel.setText("PREMIUM: $" + String.format("%.2f", premium));
+            this.premPrice = premium;
         }
     }
 

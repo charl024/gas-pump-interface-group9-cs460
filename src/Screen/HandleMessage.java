@@ -120,7 +120,7 @@ public class HandleMessage {
                     }
                 }, 10000);
             }else if(parts[1].equals("CHANGEPRICES")){
-                screenDisplay.setPrices(
+                screenDisplay.updateGasPrices(
                         Double.parseDouble(parts[2]),
                         Double.parseDouble(parts[3]),
                         Double.parseDouble(parts[4]));
