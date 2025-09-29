@@ -24,7 +24,6 @@ public class ScreenMain extends Application {
         screenDisplay.showPumpUnavailableScreen();
 
         handleMessage = new HandleMessage(screenDisplay);
-        //TODO have screen display have an instance of the server
         primaryStage.show();
     }
 }
