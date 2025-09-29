@@ -1,11 +1,5 @@
 package Screen;
 
-
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,14 +12,9 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 
 public class ScreenDisplay {
 
@@ -53,6 +42,7 @@ public class ScreenDisplay {
     //TODO continued: setters for these global variables
     private Screen screenHandler; // Reference to Screen class to send messages
 
+    // Screen Variables
     private Map<Integer, Button> buttonMap = new HashMap<>();
     private GridPane centerPane;
     private Map<String, Label> labelMap = new HashMap<>();
@@ -63,6 +53,7 @@ public class ScreenDisplay {
 
     private Consumer<Integer> onAction;
 
+    // Gas Variables
     private Label regLabel;
     private Label plusLabel;
     private Label premLabel;
@@ -74,9 +65,6 @@ public class ScreenDisplay {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
         addMidLabels();
-
-
-
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
@@ -157,6 +145,7 @@ public class ScreenDisplay {
             }
         }
     }
+
     ///////////////////////////////////////////////////////////////////////////
     //CREATE THE TYPE OF SCREENS THAT WILL BE SHOWN
     ///////////////////////////////////////////////////////////////////////////
@@ -289,27 +278,6 @@ public class ScreenDisplay {
         setUpButtonPress(9, PossibleActionsForButton.CANCEL, Color.CRIMSON);
     }
 
-    public void setPrices(double regular, double plus, double premium) {
-        this.regPrice = regular;
-        this.plusPrice = plus;
-        this.premPrice = premium;
-    }
-
-    public void updateGasPrices(double regular, double plus, double premium) {
-        if (regLabel != null) {
-            regLabel.setText("REGULAR: $" + String.format("%.2f", regular));
-            this.regPrice = regular;
-        }
-        if (plusLabel != null) {
-            plusLabel.setText("PLUS: $" + String.format("%.2f", plus));
-            this.plusPrice = plus;
-        }
-        if (premLabel != null) {
-            premLabel.setText("PREMIUM: $" + String.format("%.2f", premium));
-            this.premPrice = premium;
-        }
-    }
-
     /**
      * Show screen telling the user to please connect the hose to the gas tank
      */
@@ -322,12 +290,7 @@ public class ScreenDisplay {
         accept.setTextFill(Color.WHITE);
         changeTextSize(80, 0);
         accept.setAlignment(Pos.CENTER);
-//        accept.setBackground(new Background(new BackgroundFill(colorForScreen,  CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
-
-//        for(int i = 0; i < 10; i++){
-//            changeButtonColorV2(colorForScreen, i);
-//        }
     }
 
     /**
@@ -415,6 +378,10 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKGRAY, i);
         }
     }
+
+    /**
+     * Shows screen that indicates that the current action/screen has timed out
+     */
     public void showTimeoutScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
@@ -430,6 +397,10 @@ public class ScreenDisplay {
             changeButtonColorV2(Color.DARKRED, i);
         }
     }
+
+    /**
+     * Shows screen that indicates that the current transaction has been canceled
+     */
     public void showTransactionCanceledScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
@@ -466,10 +437,6 @@ public class ScreenDisplay {
                 // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));
                 onAction.accept(action.actionNum);
             }
-
-            // After selecting gas type → go to receipt screen
-            // May need to first receive a message in order to progress to receipt screen
-//            showReceiptScreen();
         });
     }
 
@@ -493,16 +460,8 @@ public class ScreenDisplay {
             }
         }
 
-//        l.setBackground(new Background(new BackgroundFill(Color.WHITE,
-//                CornerRadii.EMPTY, Insets.EMPTY)));
         GridPane.setColumnSpan(l, width);
         GridPane.setRowSpan(l, height);
-
-        ////// This is used for testing purposes
-//        l.setStyle("-fx-background-color: green;");
-//        l.setText("dddd");
-        //////
-
         l.setAlignment(Pos.CENTER);
     }
 
@@ -533,32 +492,6 @@ public class ScreenDisplay {
         l.setText(text);
     }
 
-    //TODO: need to pass string value (for map) of which label to remove text from
-    private void removeText(int label) {
-        Label l = labelMap.get("" + label);
-        l.setText("");
-    }
-
-    // Changes the font of specified label
-    public void changeFont(String fontStyle, int numNode) {
-        Label l = labelMap.get("" + numNode);
-        Font current = l.getFont();
-        FontWeight weight = current.getStyle().contains("Bold") ? FontWeight.BOLD : FontWeight.NORMAL;
-        FontPosture posture = current.getStyle().contains("Italic") ? FontPosture.ITALIC : FontPosture.REGULAR;
-
-        if (fontStyle.equals("i")) {
-            posture = FontPosture.ITALIC;
-            weight = FontWeight.NORMAL;
-        } else if (fontStyle.equals("b")) {
-            weight = FontWeight.BOLD;
-            posture = FontPosture.REGULAR;
-        } else if (fontStyle.equals("n")) {
-            weight = FontWeight.NORMAL;
-            posture = FontPosture.REGULAR;
-        }
-        l.setFont(Font.font(current.getFamily(), weight, posture, current.getSize()));
-    }
-
     // Changes text size of specified label
     public void changeTextSize(int size, int numNode) {
         Label l = labelMap.get("" + numNode);
@@ -566,97 +499,48 @@ public class ScreenDisplay {
         l.setFont(Font.font(current.getFamily(), current.getStyle().contains("Bold") ? FontWeight.BOLD : FontWeight.NORMAL, current.getStyle().contains("Italic") ? FontPosture.ITALIC : FontPosture.REGULAR, size));
     }
 
-    // Changes button color of specified number
-    public void changeButtonColor(String s, int buttonNum) {
-        buttonMap.get(buttonNum).setStyle("-fx-background-color: " + s + ";");
-    }
-
-    // Converts color representation from message received to actual color
-    public String convertColor(String color) {
-        if (color == null) {
-            return "transparent";
-        }
-        switch (color) {
-            case "re":
-                return "crimson";
-            case "gr":
-                return "forestgreen";
-            case "bl":
-                return "deepskyblue";
-            case "ye":
-                return "yellow";
-            case "or":
-                return "orangered";
-            case "pu":
-                return "darkslateblue";
-            case "go":
-                return "goldenrod";
-            case "pi":
-                return "thistle";
-            case "cy":
-                return "aquamarine";
-            default:
-                return "ghostwhite";
-        }
-    }
-
-    public Color convertColorV2(String color) {
-        if (color == null) {
-            return Color.TRANSPARENT;
-        }
-        switch (color) {
-            case "re":
-                return Color.CRIMSON;
-            case "gr":
-                return Color.FORESTGREEN;
-            case "bl":
-                return Color.DEEPSKYBLUE;
-            case "ye":
-                return Color.YELLOW;
-            case "or":
-                return Color.ORANGERED;
-            case "pu":
-                return Color.DARKSLATEBLUE;
-            case "go":
-                return Color.GOLDENROD;
-            case "pi":
-                return Color.THISTLE;
-            case "cy":
-                return Color.AQUAMARINE;
-            default:
-                return Color.GHOSTWHITE;
-        }
-    }
-
     public void changeButtonColorV2(Color color, int buttonNum) {
         buttonMap.get(buttonNum).setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    private void fadeIn(Node node) {
-        FadeTransition ft = new FadeTransition(Duration.millis(500), node);
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.play();
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Setters and Getters
+    ///////////////////////////////////////////////////////////////////////////
+
     public void setOnAction(Consumer<Integer> handler) {
         this.onAction = handler;
     }
+
     public double getRegPrice() {
         return regPrice;
     }
+
     public double getPlusPrice() {
         return plusPrice;
     }
+
     public double getPremPrice() {
         return premPrice;
     }
-    //TODO: Delete this
-    public void giveButtonAction(int action, int button) {
-        buttonMap.get(button).setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
 
-            }
-        });
+    public void setPrices(double regular, double plus, double premium) {
+        this.regPrice = regular;
+        this.plusPrice = plus;
+        this.premPrice = premium;
+    }
+
+    public void updateGasPrices(double regular, double plus, double premium) {
+        if (regLabel != null) {
+            regLabel.setText("REGULAR: $" + String.format("%.2f", regular));
+            this.regPrice = regular;
+        }
+        if (plusLabel != null) {
+            plusLabel.setText("PLUS: $" + String.format("%.2f", plus));
+            this.plusPrice = plus;
+        }
+        if (premLabel != null) {
+            premLabel.setText("PREMIUM: $" + String.format("%.2f", premium));
+            this.premPrice = premium;
+        }
     }
 }

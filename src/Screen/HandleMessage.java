@@ -22,22 +22,23 @@ public class HandleMessage {
         this.screenDisplay = screenDisplay;
     }
 
-//        String message examples
-//        This message is used to change things like
-//the font style, font size, button color, given button an action, give label some text
-//        messageStr = "SC-i.4-12.4-re.9-3.6";
-//        This message is used to add text to a desired label (0)
-//        messageStr = "SC-Here is some example text.0";
-//        This message initiates welcome screen
-//        messageStr = "SC-welcome";
-//        This message lets us know if card was accepted
-//        messageStr = "SC-accepted";
-//        This message lets us know if card was denied
-//        messageStr = "SC-denied";
-//        This message initiates gas option screen
-//        messageStr = "SC-gas";
-//        This message shows receipt screen
-//        messageStr = "SC-receipt";
+    /*        String message examples
+    //        This message is used to change things like
+    //        the font style, font size, button color, given button an action, give label some text
+    //        messageStr = "SC-i.4-12.4-re.9-3.6";
+    //        This message is used to add text to a desired label (0)
+    //        messageStr = "SC-Here is some example text.0";
+    //        This message initiates welcome screen
+    //        messageStr = "SC-welcome";
+    //        This message lets us know if card was accepted
+    //        messageStr = "SC-accepted";
+    //        This message lets us know if card was denied
+    //        messageStr = "SC-denied";
+    //        This message initiates gas option screen
+    //        messageStr = "SC-gas";
+    //        This message shows receipt screen
+    //        messageStr = "SC-receipt";
+     */
 
     public void handleMessage(Message msg) {
 
