@@ -41,7 +41,7 @@ public class HoseIOServer {
      * - Accepts incoming socket connections.
      * - Stores the first two as clientOne and clientTwo.
      * - Once two clients are connected, starts relay threads to forward messages
-     *   between them.
+     * between them.
      * - Any extra clients beyond two are rejected.
      */
     public void start() {
@@ -112,6 +112,7 @@ public class HoseIOServer {
             if (clientOne != null) clientOne.close();
             if (clientTwo != null) clientTwo.close();
             if (serverSocket != null) serverSocket.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 }

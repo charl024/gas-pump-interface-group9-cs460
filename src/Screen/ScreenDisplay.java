@@ -12,6 +12,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -338,9 +339,9 @@ public class ScreenDisplay {
      * pumped out
      *
      * @param totalGallons Total gas pumped out
-     * @param totalPrice Cost of gas pumped out
+     * @param totalPrice   Cost of gas pumped out
      */
-    public void showFuelFinishedScreen( double totalPrice, double totalGallons) {
+    public void showFuelFinishedScreen(double totalPrice, double totalGallons) {
         // Fill the entire middle with one big label
         changeLabel(5, 2, 0); // Span 5 rows, 2 columns
         Label main = labelMap.get("0");

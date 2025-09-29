@@ -27,6 +27,7 @@ public class ServerManager {
     /**
      * Constructor for Server Manager, will create the ports needed to connect
      * to the devices that it manages
+     *
      * @param mainController Main controller that holds the other managers
      */
     public ServerManager(MainController mainController) {
@@ -63,6 +64,7 @@ public class ServerManager {
 
     /**
      * Handle message received from device
+     *
      * @param message Message from device
      */
     public void handleMessage(Message message) {
@@ -119,6 +121,7 @@ public class ServerManager {
 
     /**
      * Listen to any messages that are sent to the IOPort
+     *
      * @param port Port
      */
     private void listenOnPort(IOPort port) {

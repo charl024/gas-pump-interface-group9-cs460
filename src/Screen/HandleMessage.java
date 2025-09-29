@@ -123,7 +123,7 @@ public class HandleMessage {
                         screenDisplay.showWelcomeScreen();
                     }
                 }, 10000);
-            }else if(parts[1].equals("CHANGEPRICES")){
+            } else if (parts[1].equals("CHANGEPRICES")) {
                 screenDisplay.updateGasPrices(
                         Double.parseDouble(parts[2]),
                         Double.parseDouble(parts[3]),
