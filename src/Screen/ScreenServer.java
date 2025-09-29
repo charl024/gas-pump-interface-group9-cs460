@@ -24,16 +24,20 @@ public class ScreenServer implements Runnable {
     public void run() {
         System.out.println("Screen server is running on port " + portNumber);
         try {
-            Socket socket = serverSocket.accept();
-            out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             while (true) {
-                try {
-                    Message message = (Message) in.readObject();
-                    screen.handleMessage(message);
-                    System.out.println("Message received");
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                Socket socket = serverSocket.accept();
+                out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                System.out.println("Client connected");
+                while (true) {
+                    try {
+                        Message message = (Message) in.readObject();
+                        screen.handleMessage(message);
+                        System.out.println("Message received");
+                        System.out.println(message.getDescription());
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         } catch (IOException e) {

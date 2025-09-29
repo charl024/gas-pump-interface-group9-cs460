@@ -36,6 +36,7 @@ public class ScreenManager {
      */
     public void handleMessage(Message message) {
         String description = message.getDescription();
+        System.out.println(description);
         String[] parts = description.split("-");
 
         if (parts[0].equals("SC")) {

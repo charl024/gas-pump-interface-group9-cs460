@@ -41,23 +41,26 @@ public class FMServer implements Runnable {
     public void run() {
         System.out.println("Flow meter pump is running on port " + portNumber);
         try {
-            Socket socket = serverSocket.accept();
-            System.out.println("Client connected");
-
-            out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in =
-                    new ObjectInputStream(socket.getInputStream());
-
             while (true) {
-                try {
-                    Message message = (Message) in.readObject();
-                    System.out.println("Message received");
-                    flowMeter.getClient().handleMessage(message);
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected");
 
-                } catch (EOFException e) {
-                    System.out.println("Client disconnected");
-                    break;
+                out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in =
+                        new ObjectInputStream(socket.getInputStream());
+
+                while (true) {
+                    try {
+                        Message message = (Message) in.readObject();
+                        System.out.println("Message received");
+                        flowMeter.getClient().handleMessage(message);
+
+                    } catch (EOFException e) {
+                        System.out.println("Client disconnected");
+                        break;
+                    }
                 }
+                socket.close();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

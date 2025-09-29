@@ -3,6 +3,7 @@ package Screen;
 import IOPort.CommPort;
 import IOPort.PortLookupMap;
 import MessagePassed.Message;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -16,10 +17,12 @@ public class HandleMessage {
     private Timer timer;
 
     // TODO //IMPORTANT// Need to change to actual port number and fix this
-    ScreenServer server = new ScreenServer(PortLookupMap.PortMap(6), this);
+    private ScreenServer server;
 
     public HandleMessage(ScreenDisplay screenDisplay) throws IOException {
         this.screenDisplay = screenDisplay;
+        server = new ScreenServer(PortLookupMap.PortMap(6), this);
+        new Thread(server).start();
     }
 
     /*        String message examples
@@ -60,48 +63,70 @@ public class HandleMessage {
                         Double.parseDouble(parts[2]),
                         Double.parseDouble(parts[3]),
                         Double.parseDouble(parts[4]));
-                screenDisplay.resetLabels();
-                screenDisplay.showWelcomeScreen();
+                Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showWelcomeScreen();
+                });
+
             } else if (parts[1].equals("AUTHORIZING")) {
-                screenDisplay.resetLabels();
-                screenDisplay.showAuthorizationScreen();
+                Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showAuthorizationScreen();
+                });
 
 
                 timeoutTimer();
 
-            } else if (parts[1].equals("VALIDCARD")) {
+            } else if (parts[2].equals("VALIDCARD")) {
+                System.out.println("received valid");
                 cancelTimeout();
 
-                javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
                     screenDisplay.resetLabels();
                     screenDisplay.showCardAcceptedScreen();
+                    timer = new Timer();
+
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> {
+                                screenDisplay.resetLabels();
+                                initiateGasSelection();
+                            });
+
+                        }
+                    }, 5000);
                 });
 
-                timer = new Timer();
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        screenDisplay.resetLabels();
-                        initiateGasSelection();
-                    }
-                }, 5000);
-            } else if (parts[1].equals("INVALIDCARD")) {
+//                timer = new Timer();
+//
+//                timer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        screenDisplay.resetLabels();
+//                        initiateGasSelection();
+//                    }
+//                }, 5000);
+            } else if (parts[2].equals("INVALIDCARD")) {
+                System.out.println("received invalid");
                 cancelTimeout();
 
-                javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
                     screenDisplay.resetLabels();
                     screenDisplay.showCardDeniedScreen();
+                    timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> {
+                                screenDisplay.resetLabels();
+                                screenDisplay.showWelcomeScreen();
+                            });
+                        }
+                    }, 10000);
                 });
 
-                timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showWelcomeScreen();
-                    }
-                }, 10000);
+
             } else if (parts[1].equals("PUMPINGPROGRESS")) {
                 cancelTimeout();
                 screenDisplay.showPumpingProgress();
@@ -109,11 +134,14 @@ public class HandleMessage {
                 screenDisplay.resetLabels();
                 screenDisplay.showHosePausedScreen();
             } else if (parts[1].equals("NEWTOTAL")) {
-                screenDisplay.resetLabels();
+                Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
 
-                screenDisplay.showFuelFinishedScreen(
-                        Double.parseDouble(parts[2]),
-                        Double.parseDouble(parts[3]));
+                    screenDisplay.showFuelFinishedScreen(
+                            Double.parseDouble(parts[2]),
+                            Double.parseDouble(parts[3]));
+                });
+
 
                 timer = new Timer();
                 timer.schedule(new TimerTask() {
@@ -179,7 +207,7 @@ public class HandleMessage {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
                     screenDisplay.resetLabels();
                     screenDisplay.showTimeoutScreen();
                     System.out.println("Timeout triggered!"); // debug message
@@ -190,7 +218,7 @@ public class HandleMessage {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
                     screenDisplay.resetLabels();
                     screenDisplay.showWelcomeScreen();
                     System.out.println("Back to welcome screen"); // debug message
@@ -248,8 +276,8 @@ public class HandleMessage {
                 }, 10000);
             }
             System.out.println("code being sent for gas " + code);
+            server.sendMessage(message);
         });
-        server.sendMessage(message);
         // Might need to write above button listener
         timeoutTimer();
     }

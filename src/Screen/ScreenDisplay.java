@@ -456,7 +456,7 @@ public class ScreenDisplay {
                 if (index != section) {
                     Label below = labelMap.get("" + index);
                     below.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY))); // or transparent
-                    System.out.println(index);
+                    //System.out.println(index);
                 }
             }
         }

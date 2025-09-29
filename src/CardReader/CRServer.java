@@ -38,21 +38,17 @@ public class CRServer implements Runnable {
     @Override
     public void run() {
         System.out.println("Card reader is running on port " + portNumber);
-        try {
-            Socket socket = serverSocket.accept();
-
-            cardReader.getDisplay().getInput().connected();
-            cardReader.getDisplay().updateInfo();
-
-            System.out.println("Client connected");
-            out = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
+        while (true) {
             try {
-                serverSocket.close();
+                Socket socket = serverSocket.accept();
+
+                cardReader.getDisplay().getInput().connected();
+                cardReader.getDisplay().updateInfo();
+
+                System.out.println("Client connected");
+                out = new ObjectOutputStream(socket.getOutputStream());
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

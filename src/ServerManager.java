@@ -48,7 +48,7 @@ public class ServerManager {
         gasServerPort = new CommPort(2);
         bankServerPort = new CommPort(1);
         //cardReaderPort = new CommPort(3);
-        cardReaderPort = new StatusPort(2);
+        cardReaderPort = new StatusPort(3);
         executor = Executors.newFixedThreadPool(3);
         start();
     }
@@ -81,10 +81,12 @@ public class ServerManager {
         //Messages that are sent from the BankServer:
         if (parts[0].equals("BS")) {
             if (parts[2].equals("INVALIDCARD")) {
+                System.out.println("Received invalid card manager");
                 message.changeDevice("SC");
                 mainController.sendScreenManagerMessage(message);
                 //Inform the screen so that it can change to the correct display
             } else if (parts[2].equals("VALIDCARD")) {
+                System.out.println("Received valid card manager");
                 message.changeDevice("SC");
                 mainController.sendScreenManagerMessage(message);
             }
@@ -97,6 +99,7 @@ public class ServerManager {
             if (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE")) {
                 message.changeDevice("SC");
                 //then send message to screen with prices
+                mainController.sendScreenManagerMessage(message);
             }
         }
     }

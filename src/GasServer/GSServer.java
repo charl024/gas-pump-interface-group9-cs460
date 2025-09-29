@@ -42,31 +42,33 @@ public class GSServer implements Runnable {
     public void run() {
         System.out.println("Gas Server is running on port " + portNumber);
         try {
-            Socket socket = serverSocket.accept();
-            System.out.println("Client connected");
-            connected = true;
-
-            out = new ObjectOutputStream(socket.getOutputStream());
-
-            //Send initial price list to screen:
-            double reg = gasStation.getDisplay().getRegularCost();
-            double plus = gasStation.getDisplay().getPlusCost();
-            double prem = gasStation.getDisplay().getPremiumCost();
-            sendMessage(new Message("GS-INITIALPRICE-" + reg + "-" + plus + "-" + prem));
-
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
             while (true) {
-                try {
-                    Message message = (Message) in.readObject();
-                    gasStation.getClient().handleMessage(message);
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected");
+                connected = true;
 
-                    System.out.println("Message received");
-                } catch (EOFException e) {
-                    System.out.println("Client disconnected");
-                    break;
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                out = new ObjectOutputStream(socket.getOutputStream());
+
+                //Send initial price list to screen:
+                double reg = gasStation.getDisplay().getRegularCost();
+                double plus = gasStation.getDisplay().getPlusCost();
+                double prem = gasStation.getDisplay().getPremiumCost();
+                sendMessage(new Message("GS-INITIALPRICE-" + reg + "-" + plus + "-" + prem));
+                System.out.println("message was sent");
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+                while (true) {
+                    try {
+                        Message message = (Message) in.readObject();
+                        gasStation.getClient().handleMessage(message);
+
+                        System.out.println("Message received");
+                    } catch (EOFException e) {
+                        System.out.println("Client disconnected");
+                        break;
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         } catch (IOException e) {

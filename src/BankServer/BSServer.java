@@ -42,29 +42,38 @@ public class BSServer implements Runnable {
         System.out.println("Bank Server is running on port " + portNumber);
         bankServer.getDisplay().waitingConnection();
         try {
-            Socket socket = serverSocket.accept();
-            System.out.println("Client connected");
-            bankServer.getDisplay().resetCardInfo();
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            out.flush();
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-
             while (true) {
                 try {
-                    Message message = (Message) in.readObject();
-                    System.out.println("Message received");
-
-                    Message bankResponse = bankServer.getClient().handleMessage(message);
-                    out.writeObject(bankResponse);
+                    Socket socket = serverSocket.accept();
+                    System.out.println("Client connected");
+                    bankServer.getDisplay().resetCardInfo();
+                    ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                     out.flush();
-                } catch (EOFException eof) {
-                    System.out.println("Client disconnected.");
-                    break;
+                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+
+                    while (true) {
+                        try {
+                            Message message = (Message) in.readObject();
+                            System.out.println("Message received");
+
+                            Message bankResponse = bankServer.getClient().handleMessage(message);
+                            out.writeObject(bankResponse);
+                            out.flush();
+                            System.out.println("Message was sent");
+                        } catch (EOFException eof) {
+                            System.out.println("Client disconnected.");
+                            break;
+                        }
+                    }
+                    socket.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
+
             }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
         } finally {
             try {
                 serverSocket.close();
