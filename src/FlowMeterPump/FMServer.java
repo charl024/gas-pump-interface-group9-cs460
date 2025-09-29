@@ -15,7 +15,7 @@ import java.net.Socket;
 /**
  * Flow Meter Server Socket
  */
-public class FMLServer implements Runnable {
+public class FMServer implements Runnable {
     private final int portNumber;
     private final ServerSocket serverSocket;
     private ObjectOutputStream out;
@@ -28,7 +28,7 @@ public class FMLServer implements Runnable {
      * @param flowMeter  Flow meter that connects with various needed parts
      * @throws IOException
      */
-    public FMLServer(int portNumber, FlowMeter flowMeter) throws IOException {
+    public FMServer(int portNumber, FlowMeter flowMeter) throws IOException {
         this.portNumber = portNumber;
         this.flowMeter = flowMeter;
         serverSocket = new ServerSocket(portNumber);

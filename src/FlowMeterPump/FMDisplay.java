@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Flow Meter Display
  */
 public class FMDisplay {
-    private final FMLServer server;
+    private final FMServer server;
 
     private final BorderPane pane; //Where all images/text will be placed on
     private final Label costInfo;
@@ -58,7 +58,7 @@ public class FMDisplay {
      * Flow meter constructor, will create the text boxes and button needed
      * to simulate the flow meter
      */
-    public FMDisplay(FMLServer server) {
+    public FMDisplay(FMServer server) {
         this.server = server;
         randomVolumes = new double[]{20, 15, 4, 6, 11, 8.75, 9.32, 7.44, 4.60, 13.20, 10.5, 13.8, 17.09,};
         pane = new BorderPane();

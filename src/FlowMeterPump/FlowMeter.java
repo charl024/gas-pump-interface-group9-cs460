@@ -16,14 +16,14 @@ public class FlowMeter {
 
     private final FMDisplay display;
     private final FMIOClient client;
-    private FMLServer server;
+    private FMServer server;
 
     /**
      * Main constructor that should be called when Flow meter needs to be
      * created
      */
     public FlowMeter() throws IOException {
-        server = new FMLServer(PortLookupMap.PortMap(4), this);
+        server = new FMServer(PortLookupMap.PortMap(4), this);
         display = new FMDisplay(server);
         client = new FMIOClient(display, server);
 

@@ -13,14 +13,14 @@ import MessagePassed.Message;
 public class FMIOClient {
 
     private final FMDisplay display;
-    private final FMLServer server;
+    private final FMServer server;
 
     /**
      * Constructor for Flow Meter client
      *
      * @param display Display class that shows the GUI
      */
-    public FMIOClient(FMDisplay display, FMLServer server) {
+    public FMIOClient(FMDisplay display, FMServer server) {
         this.display = display;
         this.server = server;
     }
