@@ -68,11 +68,14 @@ public class ScreenManager implements Manager {
 
     /**
      * Called by the controller to send commands to this manager's devices.
+     *
      */
     @Override
-    public void sendMessage(Message message) {
+    public List<Message> sendMessage(Message message) {
+        List<Message> toForward = new ArrayList<>();
         // Send message directly to Screen device (output to GUI)
         System.out.printf("[ScreenManager] Sending to Screen: %s%n", message.getDescription());
         screenServerPort.send(message);
+        return toForward;
     }
 }

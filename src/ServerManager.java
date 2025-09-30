@@ -100,9 +100,12 @@ public class ServerManager implements Manager {
 
     /**
      * Called by the controller to send commands to this manager's devices.
+     *
+     * @return
      */
     @Override
-    public void sendMessage(Message message) {
+    public List<Message> sendMessage(Message message) {
+        List<Message> toForward = new ArrayList<>();
         String[] parts = message.getDescription().split("-");
         switch (parts[0]) {
             case "GS" -> {
@@ -117,5 +120,6 @@ public class ServerManager implements Manager {
                 bankServerPort.send(message);
             }
         }
+        return toForward;
     }
 }

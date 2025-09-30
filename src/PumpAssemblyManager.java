@@ -95,10 +95,10 @@ public class PumpAssemblyManager implements Manager {
         String flowMeterInfo = parts[1];
         System.out.printf("[PumpAssemblyManager] FlowMeter message: %s%n", flowMeterInfo);
         //TODO FIX
-//        if(flowMeterInfo.equals("DC")) {
-//            Message toScreen = new Message("SC-DC");
-//            toForward.add(toScreen);
-//        }
+        if(flowMeterInfo.equals("DC")) {
+            Message toScreen = new Message("SC-DC");
+            toForward.add(toScreen);
+        }
 
         if (flowMeterInfo.equals("NEWTOTAL")) {
             // End of pumping session so reset state
@@ -120,35 +120,27 @@ public class PumpAssemblyManager implements Manager {
 
     /**
      * Called by the controller to send commands to this manager's devices.
+     *
+     * @return
      */
     @Override
-    public void sendMessage(Message message) {
+    public List<Message> sendMessage(Message message) {
         System.out.printf("[PumpAssemblyManager] Sending to %s: %s%n",
                 message.getDescription().split("-")[0],
                 message.getDescription());
+
+        List<Message> toForward = new ArrayList<>();
 
         String[] parts = message.getDescription().split("-");
         if (parts[0].equals("FM")) {
             if (parts[1].equals("GASSELECTION")) {
                 priceSelected = true;
                 System.out.println("[PumpAssemblyManager] Gas selection received, price set.");
-
-                //After we are informed that gas has been selected, check
-                // current state of hose connection
-                //TODO FIX
-//                if(hoseConnected) {
-//                    //send a message to flow meter to start
-//                    //send a message to screen so that it changes to "pumping
-//                    // in progress"
-//                    handleMessage(new Message("HS-CN"));
-//                } else {
-//                    //send a message to screen only, change screen to "Please
-//                    // connect hose"
-//                    handleMessage(new Message("FM-DC"));
-//                }
+                toForward.addAll(handleMessage(message));
             }
             flowMeterPumpPort.send(message);
         }
+        return toForward;
     }
 
     private void sendStartPump() {

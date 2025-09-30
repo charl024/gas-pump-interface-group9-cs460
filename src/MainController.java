@@ -77,14 +77,23 @@ public class MainController {
         List<Message> forwards = source.handleMessage(msg);
 
         for (Message fwd : forwards) {
-            DeviceType targetPrefix = DeviceType.fromMessage(fwd);
-            Manager target = routingTable.get(targetPrefix);
-            if (target != null) {
-                System.out.printf(
-                        "[MainController] Routing message: %s to %s%n",
-                        fwd.getDescription(), target.getClass().getSimpleName()
-                );
-                target.sendMessage(fwd);
+            routeSingle(fwd);
+        }
+    }
+
+    private void routeSingle(Message fwd) {
+        DeviceType targetPrefix = DeviceType.fromMessage(fwd);
+        Manager target = routingTable.get(targetPrefix);
+        if (target != null) {
+            System.out.printf(
+                    "[MainController] Routing message: %s to %s%n",
+                    fwd.getDescription(), target.getClass().getSimpleName()
+            );
+
+            List<Message> cascaded = target.sendMessage(fwd);
+
+            for (Message cascade : cascaded) {
+                routeSingle(cascade);
             }
         }
     }

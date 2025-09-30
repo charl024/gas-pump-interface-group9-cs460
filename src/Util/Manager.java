@@ -38,5 +38,5 @@ public interface Manager {
      *
      * @param message the outgoing message
      */
-    void sendMessage(Message message);
+    List<Message> sendMessage(Message message);
 }
