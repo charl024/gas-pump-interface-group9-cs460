@@ -1,8 +1,7 @@
 package Screen;
 
-import IOPort.CommPort;
-import IOPort.PortLookupMap;
-import MessagePassed.Message;
+import Util.PortLookupMap;
+import Util.Message;
 import javafx.application.Platform;
 
 import java.io.IOException;

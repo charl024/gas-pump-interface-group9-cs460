@@ -4,7 +4,7 @@
  */
 package FlowMeterPump;
 
-import MessagePassed.Message;
+import Util.Message;
 
 
 /**

@@ -1,6 +1,6 @@
 package IOPort;
 
-import MessagePassed.Message;
+import Util.Message;
 
 /**
  * {@code MonitorPort} is a specialized {@link IOPort} intended for

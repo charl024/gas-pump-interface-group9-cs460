@@ -3,7 +3,7 @@
  */
 package GasServer;
 
-import MessagePassed.Message;
+import Util.Message;
 
 /**
  * Gas Station Server IOPort Client

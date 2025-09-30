@@ -4,7 +4,7 @@
  */
 package BankServer;
 
-import MessagePassed.Message;
+import Util.Message;
 import javafx.application.Platform;
 
 /**

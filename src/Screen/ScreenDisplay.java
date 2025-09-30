@@ -1,6 +1,6 @@
 package Screen;
 
-import MessagePassed.Message;
+import Util.Message;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;

@@ -1,7 +1,7 @@
 package Hose;
 
-import IOPort.PortLookupMap;
-import MessagePassed.Message;
+import Util.PortLookupMap;
+import Util.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

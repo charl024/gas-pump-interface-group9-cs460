@@ -1,6 +1,6 @@
 package IOPort;
 
-import MessagePassed.Message;
+import Util.Message;
 
 /**
  * {@code ControlPort} is a specialized {@link IOPort} used for

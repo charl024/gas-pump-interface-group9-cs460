@@ -1,6 +1,6 @@
 package IOPort;
 
-import MessagePassed.Message;
+import Util.Message;
 
 /**
  * {@code StatusPort} is a specialized {@link IOPort} designed for

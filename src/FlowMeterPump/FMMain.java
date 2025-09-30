@@ -5,8 +5,6 @@
  */
 package FlowMeterPump;
 
-import IOPort.CommPort;
-import MessagePassed.Message;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -14,7 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Main

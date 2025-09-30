@@ -3,7 +3,7 @@
  */
 package BankServer;
 
-import MessagePassed.Message;
+import Util.Message;
 
 import java.io.EOFException;
 import java.io.IOException;

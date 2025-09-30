@@ -3,7 +3,7 @@
  */
 package BankServer;
 
-import MessagePassed.Message;
+import Util.Message;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;

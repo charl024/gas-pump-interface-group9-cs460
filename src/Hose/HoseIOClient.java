@@ -1,7 +1,7 @@
 package Hose;
 
 import IOPort.ControlPort;
-import MessagePassed.Message;
+import Util.Message;
 
 public class HoseIOClient {
     private ControlPort controlPort;

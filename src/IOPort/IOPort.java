@@ -1,6 +1,7 @@
 package IOPort;
 
-import MessagePassed.Message;
+import Util.Message;
+import Util.PortLookupMap;
 
 import java.io.*;
 import java.net.ServerSocket;

@@ -1,7 +1,7 @@
 package Screen;
 
-import IOPort.PortLookupMap;
-import MessagePassed.Message;
+import Util.PortLookupMap;
+import Util.Message;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

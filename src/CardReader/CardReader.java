@@ -4,7 +4,7 @@
  */
 package CardReader;
 
-import IOPort.PortLookupMap;
+import Util.PortLookupMap;
 
 import java.io.IOException;
 

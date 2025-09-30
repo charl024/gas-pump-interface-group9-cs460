@@ -1,6 +1,6 @@
 package Screen;
 
-import MessagePassed.Message;
+import Util.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

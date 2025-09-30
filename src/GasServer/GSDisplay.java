@@ -3,7 +3,7 @@
  */
 package GasServer;
 
-import MessagePassed.Message;
+import Util.Message;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
