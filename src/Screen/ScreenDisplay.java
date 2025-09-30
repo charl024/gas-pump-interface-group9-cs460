@@ -1,5 +1,6 @@
 package Screen;
 
+import MessagePassed.Message;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -62,12 +63,15 @@ public class ScreenDisplay {
     private double plusPrice;
     private double premPrice;
 
+    private boolean onGasSelection = false;
+    private HandleMessage handleMessage;
+
     public void showScreen(Stage primaryStage) {
         BorderPane root = createSideButtons();
         root.setCenter(createMiddle());
         addMidLabels();
 
-        primaryStage.setScene(new Scene(root,697,534));
+        primaryStage.setScene(new Scene(root, 697, 534));
         //primaryStage.setMaximized(true);
 //        primaryStage.setMaxWidth(100);
 //        primaryStage.setMaxHeight(100);
@@ -161,9 +165,10 @@ public class ScreenDisplay {
         Label main = labelMap.get("0");
         writeText("Welcome to _______!\nPlease tap your card", 0);
         main.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         main.setAlignment(Pos.CENTER);
         main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+        onGasSelection = false;
     }
 
     /**
@@ -178,7 +183,7 @@ public class ScreenDisplay {
         Label accept = labelMap.get("0");
         writeText("Authorizing...", 0);
         accept.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         accept.setAlignment(Pos.CENTER);
         accept.setBackground(new Background(new BackgroundFill(colorForScreen, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -196,7 +201,7 @@ public class ScreenDisplay {
         Label accept = labelMap.get("0");
         writeText("Your payment was successful!", 0);
         accept.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         accept.setAlignment(Pos.CENTER);
         accept.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -214,7 +219,7 @@ public class ScreenDisplay {
         Label accept = labelMap.get("0");
         writeText("Warning: Card has been denied", 0);
         accept.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         accept.setAlignment(Pos.CENTER);
         accept.setBackground(new Background(new BackgroundFill(Color.DARKRED, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -236,7 +241,7 @@ public class ScreenDisplay {
         Label titleLabel = labelMap.get("0");
         writeText("SELECT GAS:", 0);
         titleLabel.setTextFill(Color.WHITE);
-        changeTextSize(40, 0);
+        changeTextSize(20, 0);
         titleLabel.setAlignment(Pos.CENTER);
         titleLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         titleLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -246,7 +251,7 @@ public class ScreenDisplay {
         regLabel = labelMap.get("2");
         writeText("REGULAR - $" + String.format("%.2f", regPrice), 2);
         regLabel.setTextFill(Color.WHITE);
-        changeTextSize(40, 2);
+        changeTextSize(20, 2);
         regLabel.setAlignment(Pos.CENTER);
         regLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         regLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -256,7 +261,7 @@ public class ScreenDisplay {
         plusLabel = labelMap.get("4");
         writeText("PLUS - $" + String.format("%.2f", plusPrice), 4);
         plusLabel.setTextFill(Color.WHITE);
-        changeTextSize(40, 4);
+        changeTextSize(20, 4);
         plusLabel.setAlignment(Pos.CENTER);
         plusLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         plusLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -265,7 +270,7 @@ public class ScreenDisplay {
         premLabel = labelMap.get("6");
         writeText("PREMIUM - $" + String.format("%.2f", premPrice), 6);
         premLabel.setTextFill(Color.WHITE);
-        changeTextSize(40, 6);
+        changeTextSize(20, 6);
         premLabel.setAlignment(Pos.CENTER);
         premLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         premLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -291,7 +296,7 @@ public class ScreenDisplay {
         Label accept = labelMap.get("0");
         writeText("Please connect hose", 0);
         accept.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         accept.setAlignment(Pos.CENTER);
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
     }
@@ -305,7 +310,7 @@ public class ScreenDisplay {
         Label accept = labelMap.get("0");
         writeText("Pumping in Progress...\nPlease wait.", 0);
         accept.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         accept.setAlignment(Pos.CENTER);
         accept.setBackground(new Background(new BackgroundFill(colorForScreen, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -325,7 +330,7 @@ public class ScreenDisplay {
         Label accept = labelMap.get("0");
         writeText("Gas pumping has been paused", 0);
         accept.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         accept.setAlignment(Pos.CENTER);
         accept.setBackground(new Background(new BackgroundFill(colorForScreen, CornerRadii.EMPTY, Insets.EMPTY)));
         accept.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -352,7 +357,7 @@ public class ScreenDisplay {
         writeText(String.format("Pumping Complete\nTotal Gallons: %.2f\nTotal Price: $%.2f", totalGallons, totalPrice), 0);
 
         main.setTextFill(Color.WHITE);
-        changeTextSize(60, 0);
+        changeTextSize(20, 0);
         main.setAlignment(Pos.CENTER);
         main.setBackground(new Background(new BackgroundFill(Color.DARKBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         main.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -371,7 +376,7 @@ public class ScreenDisplay {
         Label unavailable = labelMap.get("0");
         writeText("Pump Unavailable\nPlease see cashier", 0);
         unavailable.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         unavailable.setAlignment(Pos.CENTER);
         unavailable.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -390,7 +395,7 @@ public class ScreenDisplay {
         Label unavailable = labelMap.get("0");
         writeText("Timedout", 0);
         unavailable.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         unavailable.setAlignment(Pos.CENTER);
         unavailable.setBackground(new Background(new BackgroundFill(Color.DARKRED, CornerRadii.EMPTY, Insets.EMPTY)));
         unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -409,7 +414,7 @@ public class ScreenDisplay {
         Label unavailable = labelMap.get("0");
         writeText("Transaction canceled\n goodbye", 0);
         unavailable.setTextFill(Color.WHITE);
-        changeTextSize(80, 0);
+        changeTextSize(20, 0);
         unavailable.setAlignment(Pos.CENTER);
         unavailable.setBackground(new Background(new BackgroundFill(Color.DARKMAGENTA, CornerRadii.EMPTY, Insets.EMPTY)));
         unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
@@ -434,6 +439,38 @@ public class ScreenDisplay {
 
         btn.setOnAction(e -> {
             // Keep your original message functionality
+            if (onGasSelection) {
+                if (buttonNum == 2 || buttonNum == 3) {
+                    Message gasSelection =
+                            new Message("SC-GASSELECTION-" + regPrice);
+                    handleMessage.cancelTimeout();
+                    resetLabels();
+                    showConnectHoseScreen();
+                    handleMessage.timeoutTimer();
+                    handleMessage.sendServerMessage(gasSelection);
+                } else if (buttonNum == 4 || buttonNum == 5) {
+                    Message gasSelection =
+                            new Message("SC-GASSELECTION-" + plusPrice);
+                    handleMessage.cancelTimeout();
+                    resetLabels();
+                    showConnectHoseScreen();
+                    handleMessage.timeoutTimer();
+                    handleMessage.sendServerMessage(gasSelection);
+                } else if (buttonNum == 6 || buttonNum == 7) {
+                    Message gasSelection =
+                            new Message("SC-GASSELECTION-" + premPrice);
+                    handleMessage.cancelTimeout();
+                    resetLabels();
+                    showConnectHoseScreen();
+                    handleMessage.timeoutTimer();
+                    handleMessage.sendServerMessage(gasSelection);
+                }
+
+                if (buttonNum == 8 || buttonNum == 9) {
+                    handleMessage.transactionCancel();
+                    return;
+                }
+            }
             System.out.println("Button " + buttonNum + " pressed: " + action.name());
             if (screenHandler != null) {
                 // Example:
@@ -545,5 +582,13 @@ public class ScreenDisplay {
             premLabel.setText("PREMIUM: $" + String.format("%.2f", premium));
             this.premPrice = premium;
         }
+    }
+
+    public void setOnGasSelection() {
+        onGasSelection = true;
+    }
+
+    public void setHandleMessage(HandleMessage handleMessage) {
+        this.handleMessage = handleMessage;
     }
 }

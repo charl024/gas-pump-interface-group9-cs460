@@ -10,8 +10,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class HandleMessage {
-    private CommPort port;
-
     private ScreenDisplay screenDisplay;
     private ScreenDisplay.PossibleActionsForButton possibleActions;
     private Timer timer;
@@ -201,7 +199,7 @@ public class HandleMessage {
         }
     }
 
-    private void timeoutTimer() {
+    public void timeoutTimer() {
         timer = new Timer();
 
         timer.schedule(new TimerTask() {
@@ -227,58 +225,77 @@ public class HandleMessage {
         }, 70000);
     }
 
-    private void cancelTimeout() {
+    public void cancelTimeout() {
         if (timer != null) {
             timer.cancel(); // cancels all scheduled tasks
             timer = null;
         }
     }
 
-    private void initiateGasSelection() {
-        screenDisplay.showGasSelectionScreen();
-        Message message = new Message();
-        screenDisplay.setOnAction(code -> {
-
-            if (code == 0) {
-                message.addToDescription("" + screenDisplay.getRegPrice());
-                cancelTimeout();
-
+    public void transactionCancel() {
+        screenDisplay.resetLabels();
+        screenDisplay.showTransactionCanceledScreen();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
                 screenDisplay.resetLabels();
-                screenDisplay.showConnectHoseScreen();
-
-                timeoutTimer();
-            } else if (code == 1) {
-                message.addToDescription("" + screenDisplay.getPlusPrice());
-                cancelTimeout();
-
-                screenDisplay.resetLabels();
-                screenDisplay.showConnectHoseScreen();
-
-                timeoutTimer();
-            } else if (code == 2) {
-                message.addToDescription("" + screenDisplay.getPremPrice());
-                cancelTimeout();
-
-                screenDisplay.resetLabels();
-                screenDisplay.showConnectHoseScreen();
-
-                timeoutTimer();
-            } else if (code == 5) {
-                screenDisplay.resetLabels();
-                screenDisplay.showTransactionCanceledScreen();
-                timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showWelcomeScreen();
-                    }
-                }, 10000);
+                screenDisplay.showWelcomeScreen();
             }
-            System.out.println("code being sent for gas " + code);
-            server.sendMessage(message);
-        });
+        }, 10000);
+    }
+
+    private void initiateGasSelection() {
+        System.out.println("Got here");
+        screenDisplay.showGasSelectionScreen();
+        screenDisplay.setOnGasSelection();
+
+//        Message message = new Message("SC-GASSELECTION-");
+//        screenDisplay.setOnAction(code -> {
+//
+//            if (code == 0) {
+//                message.addToDescription("" + screenDisplay.getRegPrice());
+//                cancelTimeout();
+//
+//                screenDisplay.resetLabels();
+//                screenDisplay.showConnectHoseScreen();
+//
+//                timeoutTimer();
+//            } else if (code == 1) {
+//                message.addToDescription("" + screenDisplay.getPlusPrice());
+//                cancelTimeout();
+//
+//                screenDisplay.resetLabels();
+//                screenDisplay.showConnectHoseScreen();
+//
+//                timeoutTimer();
+//            } else if (code == 2) {
+//                message.addToDescription("" + screenDisplay.getPremPrice());
+//                cancelTimeout();
+//
+//                screenDisplay.resetLabels();
+//                screenDisplay.showConnectHoseScreen();
+//
+//                timeoutTimer();
+//            } else if (code == 5) {
+//                screenDisplay.resetLabels();
+//                screenDisplay.showTransactionCanceledScreen();
+//                timer = new Timer();
+//                timer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showWelcomeScreen();
+//                    }
+//                }, 10000);
+//            }
+//            System.out.println("code being sent for gas " + code);
+//            server.sendMessage(message);
+//        });
         // Might need to write above button listener
         timeoutTimer();
+    }
+    public void sendServerMessage(Message msg) {
+        server.sendMessage(msg);
     }
 }

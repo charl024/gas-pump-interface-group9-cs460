@@ -65,7 +65,7 @@ public class PumpAssemblyManager {
                 // if we are connected, we are free to begin pumping
                 // MainController will be the one checking this I assume
                 hoseConnected = hoseConnectionStatus.equals("CN");
-
+                System.out.println(hoseConnected);
                 //When hose gets disconnected while in the middle of pumping,
                 // we then need to send a message to the flow meter to also
                 // pause
@@ -74,6 +74,7 @@ public class PumpAssemblyManager {
                 //If price has been selected and the hose is connected, then
                 // we need to start pumping
                 if (priceSelected & hoseConnected & !pumping) {
+                    System.out.println("Got in here");
                     sendStartPump();
                     mainController.sendScreenManagerMessage(new Message(
                             "SC-PUMPINGPROGRESS"));
@@ -141,11 +142,12 @@ public class PumpAssemblyManager {
         String[] parts = description.split("-");
         if (parts[0].equals("FM")) {
             if (parts[1].equals("GASSELECTION")) {
+                pumping = false;
                 priceSelected = true;
+                System.out.println("Reached selected");
             }
-
+            System.out.println(message.getDescription());
             flowMeterPumpPort.send(message);
-
         }
     }
 
