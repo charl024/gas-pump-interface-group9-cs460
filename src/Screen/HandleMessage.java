@@ -16,10 +16,23 @@ public class HandleMessage {
     // TODO //IMPORTANT// Need to change to actual port number and fix this
     private ScreenServer server;
 
+    private boolean onScreenUnavailable;
+    private boolean onWelcomeScreen;
+    private boolean onAuthorizing;
+    private boolean onGasSelection;
+    private boolean onPumping;
+    private boolean onWaitingConnection;
+
     public HandleMessage(ScreenDisplay screenDisplay) throws IOException {
         this.screenDisplay = screenDisplay;
         server = new ScreenServer(PortLookupMap.PortMap(6), this);
         new Thread(server).start();
+        onScreenUnavailable = true;
+        onWelcomeScreen = false;
+        onAuthorizing = false;
+        onGasSelection = false;
+        onPumping = false;
+        onWaitingConnection = false;
     }
 
     /*        String message examples
@@ -52,8 +65,6 @@ public class HandleMessage {
             Message invalidMessage = new Message("SC-INVALID");
             server.sendMessage(invalidMessage);
         } else {
-
-//            if (parts.length == 2) {
             if (parts[1].equals("INITIALPRICE")) {
 
                 screenDisplay.setPrices(
@@ -94,15 +105,6 @@ public class HandleMessage {
                     }, 5000);
                 });
 
-//                timer = new Timer();
-//
-//                timer.schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        screenDisplay.resetLabels();
-//                        initiateGasSelection();
-//                    }
-//                }, 5000);
             } else if (parts.length >= 3 && parts[2].equals("INVALIDCARD")) {
 
                 cancelTimeout();
@@ -165,6 +167,8 @@ public class HandleMessage {
                         Platform.runLater(() -> {
                             screenDisplay.resetLabels();
                             screenDisplay.showWelcomeScreen();
+                            onPumping = false;
+                            onWelcomeScreen = true;
                         });
 
                     }
@@ -174,48 +178,168 @@ public class HandleMessage {
                         Double.parseDouble(parts[2]),
                         Double.parseDouble(parts[3]),
                         Double.parseDouble(parts[4]));
+            } else if (parts[1].equals("PUMPUNAVAILABLE")) {
+                screenDisplay.resetLabels();
+                screenDisplay.showPumpUnavailableScreen();
             }
 
 
-//                else if (parts[1].equals("PUMPUNAVAILABLE")) {
-//                    screenDisplay.resetLabels();
-//                    screenDisplay.showPumpUnavailableScreen();
+//            if (onScreenUnavailable) {
+//                if (parts[1].equals("INITIALPRICE")) {
+//
+//                    screenDisplay.setPrices(
+//                            Double.parseDouble(parts[2]),
+//                            Double.parseDouble(parts[3]),
+//                            Double.parseDouble(parts[4]));
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showWelcomeScreen();
+//                    });
+//                    onScreenUnavailable = false;
+//                    onWelcomeScreen = true;
+//                }
+//            } else if (onWelcomeScreen) {
+//                if (parts[1].equals("AUTHORIZING")) {
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showAuthorizationScreen();
+//                    });
+//
+//
+//                    timeoutTimer();
+//                }
+//                onWelcomeScreen = false;
+//                onAuthorizing = true;
+//            } else if (onAuthorizing) {
+//                if (parts.length >= 3 && parts[2].equals("VALIDCARD")) {
+//                    cancelTimeout();
+//
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showCardAcceptedScreen();
+//                        timer = new Timer();
+//
+//                        timer.schedule(new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                Platform.runLater(() -> {
+//                                    screenDisplay.resetLabels();
+//                                    initiateGasSelection();
+//                                    onGasSelection = true;
+//                                    onAuthorizing = false;
+//                                });
+//
+//                            }
+//                        }, 5000);
+//                    });
+//                } else if (parts.length >= 3 && parts[2].equals("INVALIDCARD")) {
+//
+//                    cancelTimeout();
+//
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showCardDeniedScreen();
+//                        timer = new Timer();
+//                        timer.schedule(new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                Platform.runLater(() -> {
+//                                    screenDisplay.resetLabels();
+//                                    screenDisplay.showWelcomeScreen();
+//                                    onWelcomeScreen = true;
+//                                    onAuthorizing = false;
+//                                });
+//                            }
+//                        }, 10000);
+//                    });
+//                }
+//            } else if (onGasSelection) {
+//                if (parts[1].equals("PUMPINGPROGRESS")) {
+//                    //display screen that says "hose is pumping"
+//                    System.out.println("reach here yes");
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showPumpingProgress();
+//                        onPumping = true;
+//                        onGasSelection = false;
+//                    });
+//                } else if (parts[1].equals("DC")) {
+//                    System.out.println("reaching here why");
+//                    //display screen that says "please connect hose"
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showConnectHoseScreen();
+//                        onWaitingConnection = true;
+//                        onGasSelection = false;
+//                    });
+//                }
+//            } else if (onWaitingConnection) {
+//                if (parts[1].equals("PUMPINGPROGRESS")) {
+//                    cancelTimeout();
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showPumpingProgress();
+//                        onPumping = true;
+//                        //onWaitingConnection = false;
+//                    });
+//                }
+//            } else if (onPumping) {
+//                if (parts[1].equals("PUMPINGPROGRESS")) {
+//                    cancelTimeout();
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showPumpingProgress();
+//                        onWaitingConnection = false;
+//                    });
+//                } else if (parts[1].equals("HOSEPAUSED")) {
+//                    Platform.runLater(() -> {
+//                        screenDisplay.resetLabels();
+//                        screenDisplay.showHosePausedScreen();
+//                    });
+//
+//                    timer = new Timer();
+//                    timer.schedule(new TimerTask() {
+//                        @Override
+//                        public void run() {
+//                            Platform.runLater(() -> {
+//                                screenDisplay.resetLabels();
+//                                screenDisplay.showTimeoutScreen();
+//                                sendServerMessage(new Message("SC-NEWTOTAL"));
+//                            });
+//
+//                        }
+//                    }, 10000);
 //                }
 //            }
-
-            //MAY NEED TO DELETE THIS CODE, ASK KYLE
-
-//            if (parts.length == 3) {
-//                screenDisplay.writeText(parts[1], Integer.parseInt(parts[2]));
-//                return;
+//
+//            //these messages won't be randomly sent out like the others could
+//            if (parts[1].equals("NEWTOTAL")) {
+//                Platform.runLater(() -> {
+//                    screenDisplay.resetLabels();
+//                    double price = Double.parseDouble(parts[2]);
+//                    double volume = Double.parseDouble(parts[3]);
+//                    screenDisplay.showFuelFinishedScreen(price, volume);
+//                });
+//
+//                timer = new Timer();
+//                timer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        Platform.runLater(() -> {
+//                            screenDisplay.resetLabels();
+//                            screenDisplay.showWelcomeScreen();
+//
+//                            onPumping = false;
+//                            onWelcomeScreen = true;
+//                        });
+//                    }
+//                }, 10000);
+//            } else if (parts[1].equals("CHANGEPRICES")) {
+//                double reg = Double.parseDouble(parts[2]);
+//                double plus = Double.parseDouble(parts[3]);
+//                double prem = Double.parseDouble(parts[4]);
+//                screenDisplay.updateGasPrices(reg, plus, prem);
 //            }
-//            if (!parts[1].equals("*")) {
-//                String[] s = parts[1].split("\\.");
-//                screenDisplay.changeFont(s[0], Integer.parseInt(s[1]));
-//            }
-//            if (!parts[2].equals("*")) {
-//                String[] s = parts[2].split("\\.");
-//                screenDisplay.changeTextSize(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
-//            }
-//            if (!parts[3].equals("*")) {
-//                // may remove this block of code
-//                //Start
-//                String[] s = parts[3].split("\\.");
-//                screenDisplay.changeButtonColor(
-//                        screenDisplay.convertColor(s[0]),
-//                        Integer.parseInt(s[1])
-//                );
-//                //End
-//                screenDisplay.changeButtonColorV2(
-//                        screenDisplay.convertColorV2(s[0]),
-//                        Integer.parseInt(s[1])
-//                );
-//            }
-//            if (!parts[4].equals("*")) {
-//                String[] s = parts[4].split("\\.");
-//                screenDisplay.giveButtonAction(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
-//            }
-
         }
     }
 

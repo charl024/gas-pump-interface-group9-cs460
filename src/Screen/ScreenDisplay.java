@@ -489,7 +489,6 @@ public class ScreenDisplay {
                     handleMessage.sendServerMessage(gasSelection);
                     onGasSelection = false;
                 }
-
                 if (buttonNum == 8 || buttonNum == 9) {
                     handleMessage.transactionCancel();
                     return;
