@@ -1,142 +1,83 @@
-/**
- * Server manager, handles Gas Station server, Bank Station server and Card
- * Reader
- */
-
 import IOPort.CommPort;
+import IOPort.StatusPort;
 import IOPort.IOPort;
-import MessagePassed.Message;
+import Util.Message;
+import Util.Manager;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-/**
- * Server manager handles three devices
- */
-public class ServerManager {
-    private final MainController mainController;
+public class ServerManager implements Manager {
     private final CommPort gasServerPort;
     private final CommPort bankServerPort;
-    private final CommPort cardReaderPort;
+    private final StatusPort cardReaderPort;
 
-    private final ExecutorService executor;
-
-    /**
-     * Constructor for Server Manager, will create the ports needed to connect
-     * to the devices that it manages
-     *
-     * @param mainController Main controller that holds the other managers
-     */
-    public ServerManager(MainController mainController) {
-        this.mainController = mainController;
-        //When called, it should then create the IOConnections that will then
-        // connect to the corresponding devices
-
-        //Card reader won't receive any messages, just sends information out
-
-        //Gas station server should receive input for when a gas transaction
-        // is finished. Gas station can send out information about the gas
-        // prices
-
-        //Bank server will receive input of a credit card, it will determine
-        // if its valid or not. After it determines validation, it will send
-        // the information back
-
+    public ServerManager() {
         gasServerPort = new CommPort(2);
         bankServerPort = new CommPort(1);
-        //cardReaderPort = new CommPort(3);
-        cardReaderPort = new CommPort(3);
-        executor = Executors.newFixedThreadPool(3);
-        start();
+        cardReaderPort = new StatusPort(3);
     }
 
-    /**
-     * Create thread that handles message between device and manager
-     */
-    public void start() {
-        executor.submit(() -> listenOnPort(gasServerPort));
-        executor.submit(() -> listenOnPort(bankServerPort));
-        executor.submit(() -> listenOnPort(cardReaderPort));
+    @Override
+    public List<IOPort> getPorts() {
+        return List.of(gasServerPort, bankServerPort, cardReaderPort);
     }
 
-    /**
-     * Handle message received from device
-     *
-     * @param message Message from device
-     */
-    public void handleMessage(Message message) {
-        String description = message.getDescription();
-        //Going to do this section by devices
-        String[] parts = description.split("-");
+    @Override
+    public List<Message> handleMessage(Message message) {
+        System.out.printf("[ServerManager] Received: %s%n", message.getDescription());
 
-        //Messages that are sent from the Card Reader:
-        if (parts[0].equals("CR")) {
-            message.changeDevice("BS");
-            bankServerPort.send(message);
-            mainController.sendScreenManagerMessage(new Message("SC-AUTHORIZING"));
-        }
-        //Messages that are sent from the BankServer:
-        if (parts[0].equals("BS")) {
-            if (parts[2].equals("INVALIDCARD")) {
-                message.changeDevice("SC");
-                mainController.sendScreenManagerMessage(message);
-                //Inform the screen so that it can change to the correct display
-            } else if (parts[2].equals("VALIDCARD")) {
-                message.changeDevice("SC");
-                mainController.sendScreenManagerMessage(message);
+        List<Message> toForward = new ArrayList<>();
+        String[] parts = message.getDescription().split("-");
+
+        switch (parts[0]) {
+            case "CR" -> {
+                System.out.println("[ServerManager] CardReader input sending to BankServer");
+                Message toBank = new Message(message.getDescription());
+                toBank.changeDevice("BS");
+                bankServerPort.send(toBank);
+                toForward.add(new Message("SC-AUTHORIZING"));
+            }
+            case "BS" -> {
+                if (parts.length > 2) {
+                    if (parts[2].equals("INVALIDCARD")) {
+                        System.out.println("[ServerManager] BankServer: INVALIDCARD");
+                        Message toScreen = new Message(message.getDescription());
+                        toScreen.changeDevice("SC");
+                        toForward.add(toScreen);
+                    } else if (parts[2].equals("VALIDCARD")) {
+                        System.out.println("[ServerManager] BankServer: VALIDCARD");
+                        Message toScreen = new Message(message.getDescription());
+                        toScreen.changeDevice("SC");
+                        toForward.add(toScreen);
+                    }
+                }
+            }
+            case "GS" -> {
+                if (parts.length > 1 &&
+                        (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE"))) {
+                    System.out.println("[ServerManager] GasServer: price update");
+                    Message toScreen = new Message(message.getDescription());
+                    toScreen.changeDevice("SC");
+                    toForward.add(toScreen);
+                }
             }
         }
 
-        //Messages that are received are sent by Gas Station server
-        if (parts[0].equals("GS")) {
-            //Gas station will only be sending information about what the
-            // current gas prices are
-            if (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE")) {
-                message.changeDevice("SC");
-                //then send message to screen with prices
-                mainController.sendScreenManagerMessage(message);
-            }
-        }
+        return toForward;
     }
 
-    /**
-     * Handles messages that need to be sent to Gas Station Server
-     * (Should be caled by outsider managers)
-     *
-     * @param message (Message)
-     */
-    public void messageRequest(Message message) {
-        String description = message.getDescription();
-        String[] parts = description.split("-");
-        if (parts[0].equals("GS")) {
-            //Three messages that can be sent to gas station:
-            //New total: Value that needs to be added to the server
-            //Update gas: New gas prices (i have no clue who's calling this
-            //Gas info: Requests the current gas prices
-            gasServerPort.send(message);
-        }
-    }
-
-    /**
-     * Listen to any messages that are sent to the IOPort
-     *
-     * @param port Port
-     */
-    private void listenOnPort(IOPort port) {
-        while (!Thread.currentThread().isInterrupted()) {
-            Message message = null;
-            if (port instanceof CommPort) {
-                message = ((CommPort) port).get();
+    @Override
+    public void sendMessage(Message message) {
+        String[] parts = message.getDescription().split("-");
+        switch (parts[0]) {
+            case "GS" -> {
+                System.out.printf("[ServerManager] Sending to GasServer: %s%n", message.getDescription());
+                gasServerPort.send(message);
             }
-            if (message != null) {
-                handleMessage(message);
-            }
-
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            case "BS" -> {
+                System.out.printf("[ServerManager] Sending to BankServer: %s%n", message.getDescription());
+                bankServerPort.send(message);
             }
         }
     }

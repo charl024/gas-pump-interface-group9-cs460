@@ -1,181 +1,114 @@
-/**
- * Pump Assembly Manager, handles Hose and Flowmeter/Pump
- */
-
 import IOPort.CommPort;
 import IOPort.IOPort;
 import IOPort.StatusPort;
-import MessagePassed.Message;
+import Util.Message;
+import Util.Manager;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Pump Assembly Manager
+ * Pump Assembly Manager, handles Hose and Flowmeter/Pump
  */
-public class PumpAssemblyManager {
-    private final MainController mainController;
+public class PumpAssemblyManager implements Manager {
     private final StatusPort hosePort;
     private final CommPort flowMeterPumpPort;
-
-    private final ExecutorService executor;
 
     private boolean hoseConnected = false;
     private boolean pumping = false;
     private boolean startedPumping = false;
     private boolean priceSelected = false;
 
-    /**
-     * Constructor for Pump Assembly Manager
-     *
-     * @param mainController
-     */
-    public PumpAssemblyManager(MainController mainController) {
-        this.mainController = mainController;
+    public PumpAssemblyManager() {
         hosePort = new StatusPort(5);
         flowMeterPumpPort = new CommPort(4);
-
-        executor = Executors.newFixedThreadPool(2);
-        start();
     }
 
-    /**
-     * Start threads that will listen for any messages being sent from a device
-     */
-    private void start() {
-        executor.submit(() -> listenOnPort(hosePort));
-        executor.submit(() -> listenOnPort(flowMeterPumpPort));
+    @Override
+    public List<IOPort> getPorts() {
+        return List.of(hosePort, flowMeterPumpPort);
     }
 
-    /**
-     * Handle message received from device
-     *
-     * @param message Message from device
-     */
-    public void handleMessage(Message message) {
-        String description = message.getDescription();
-        String[] parts = description.split("-");
+    @Override
+    public List<Message> handleMessage(Message message) {
+        System.out.printf("[PumpAssemblyManager] Received message: %s%n", message.getDescription());
 
-        String deviceDescriptor = parts[0];
+        List<Message> toForward = new ArrayList<>();
+        String[] parts = message.getDescription().split("-");
+        String device = parts[0];
 
-        switch (deviceDescriptor) {
-            case "HS" -> {
-                // hose always sends out a status message that tells us if it's disconnected or connected
-                String hoseConnectionStatus = parts[1];
-                // if we are connected, we are free to begin pumping
-                // MainController will be the one checking this I assume
-                hoseConnected = hoseConnectionStatus.equals("CN");
-                //When hose gets disconnected while in the middle of pumping,
-                // we then need to send a message to the flow meter to also
-                // pause
+        switch (device) {
+            case "HS" -> handleHoseMessage(parts, toForward);
+            case "FM" -> handleFlowMeterMessage(parts, message, toForward);
+        }
 
+        return toForward;
+    }
 
-                //If price has been selected and the hose is connected, then
-                // we need to start pumping
-                if (priceSelected & hoseConnected & !pumping) {
-                    sendStartPump();
-                    mainController.sendScreenManagerMessage(new Message(
-                            "SC-PUMPINGPROGRESS"));
-                } else {
-                    if (pumping & !hoseConnected) {
-                        pumping = false;
-                        flowMeterPumpPort.send(new Message("FM-PAUSE"));
-                        mainController.sendScreenManagerMessage(new Message("SC-HOSEPAUSED"));
-                    }
-                    //if we get a message that hose is connected, and we already
-                    // started pumping, then we should automatically start pumping
-                    if (hoseConnected & !pumping & startedPumping) {
-                        pumping = true;
-                        flowMeterPumpPort.send(new Message("FM-RESUME"));
-                        mainController.sendScreenManagerMessage(new Message(
-                                "SC-PUMPINGPROGRESS"));
-                    }
-                }
+    private void handleHoseMessage(String[] parts, List<Message> toForward) {
+        String hoseStatus = parts[1];
+        hoseConnected = hoseStatus.equals("CN");
+        System.out.printf("[PumpAssemblyManager] Hose status: %s (connected=%s)%n", hoseStatus, hoseConnected);
+
+        if (priceSelected && hoseConnected && !pumping) {
+            sendStartPump();
+            toForward.add(new Message("SC-PUMPINGPROGRESS"));
+        } else {
+            if (pumping && !hoseConnected) {
+                pumping = false;
+                flowMeterPumpPort.send(new Message("FM-PAUSE"));
+                System.out.println("[PumpAssemblyManager] Pump paused due to hose disconnect");
+                toForward.add(new Message("SC-HOSEPAUSED"));
             }
-            case "FM" -> {
-                //Types of messages that the flow meter can send to the
-                // manager:
-                //Gas total information, how much the gas cost, and how many
-                // gallons was pumped total
-                String flowMeterInfo = parts[1];
-                if (flowMeterInfo.equals("NEWTOTAL")) {
-                    startedPumping = false;
-                    priceSelected = false;
-                    //^should mean that pumping is over, so reset variables
-                    //Send the totals over to the screen so that it can
-                    // display it
-                    message.changeDevice("SC");
-                    mainController.sendScreenManagerMessage(message);
-
-                    Message tempMessage = new Message(message.getDescription());
-                    tempMessage.changeDevice("GS");
-                    mainController.sendServerManagerMessage(tempMessage);
-                }
-
-            }
-            default -> {
-
+            if (hoseConnected && !pumping && startedPumping) {
+                pumping = true;
+                flowMeterPumpPort.send(new Message("FM-RESUME"));
+                System.out.println("[PumpAssemblyManager] Pump resumed after hose reconnect");
+                toForward.add(new Message("SC-PUMPINGPROGRESS"));
             }
         }
     }
 
-    /**
-     * Called after a user makes a gas selection so that pump can start
-     */
-    public void sendStartPump() {
-        Message startPump = new Message("FM-START");
-        pumping = true;
-        startedPumping = true;
-        flowMeterPumpPort.send(startPump);
+    private void handleFlowMeterMessage(String[] parts, Message message, List<Message> toForward) {
+        String flowMeterInfo = parts[1];
+        System.out.printf("[PumpAssemblyManager] FlowMeter message: %s%n", flowMeterInfo);
+
+        if (flowMeterInfo.equals("NEWTOTAL")) {
+            startedPumping = false;
+            priceSelected = false;
+            System.out.println("[PumpAssemblyManager] Pumping complete. Resetting state.");
+
+            Message toScreen = new Message(message.getDescription());
+            toScreen.changeDevice("SC");
+            toForward.add(toScreen);
+
+            Message toServer = new Message(message.getDescription());
+            toServer.changeDevice("GS");
+            toForward.add(toServer);
+        }
     }
 
-    /**
-     * Handles messages that need to be sent to Flow meter and pump
-     * (Should be called by outside managers)
-     *
-     * @param message (Message)
-     */
-    public void messageRequest(Message message) {
-        String description = message.getDescription();
-        String[] parts = description.split("-");
+    @Override
+    public void sendMessage(Message message) {
+        System.out.printf("[PumpAssemblyManager] Sending to %s: %s%n",
+                message.getDescription().split("-")[0],
+                message.getDescription());
+
+        String[] parts = message.getDescription().split("-");
         if (parts[0].equals("FM")) {
             if (parts[1].equals("GASSELECTION")) {
-                pumping = false;
                 priceSelected = true;
+                System.out.println("[PumpAssemblyManager] Gas selection received, price set.");
             }
             flowMeterPumpPort.send(message);
         }
     }
 
-    /**
-     * Handle messages being to IOPort
-     *
-     * @param port Port
-     */
-    private void listenOnPort(IOPort port) {
-        Message lastMsg = null;
-
-        while (!Thread.currentThread().isInterrupted()) {
-            Message msg = null;
-
-            if (port instanceof StatusPort) {
-                msg = ((StatusPort) port).read();
-            } else if (port instanceof CommPort) {
-                msg = ((CommPort) port).get();
-            }
-
-            // Only process if it's new/different
-            if (msg != null && (lastMsg == null || !msg.getDescription().equals(lastMsg.getDescription()))) {
-                handleMessage(msg);
-                lastMsg = msg;
-            }
-
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+    private void sendStartPump() {
+        Message startPump = new Message("FM-START");
+        pumping = true;
+        startedPumping = true;
+        flowMeterPumpPort.send(startPump);
+        System.out.println("[PumpAssemblyManager] Pump started.");
     }
-
 }

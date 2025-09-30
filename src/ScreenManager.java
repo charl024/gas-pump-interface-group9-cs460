@@ -1,88 +1,60 @@
-/**
- * Screen manager, handles the screen device
- */
-
 import IOPort.CommPort;
-import MessagePassed.Message;
+import IOPort.IOPort;
+import Util.Message;
+import Util.Manager;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class ScreenManager {
-    private final MainController mainController;
+public class ScreenManager implements Manager {
     private final CommPort screenServerPort;
 
-    /**
-     * Constructor for Screen manager
-     *
-     * @param mainController Main controller that holds the other managers
-     */
-    public ScreenManager(MainController mainController) {
-        this.mainController = mainController;
+    public ScreenManager() {
         screenServerPort = new CommPort(6);
-        start();
     }
 
-    /**
-     * Create thread that handles messages between manager and screen
-     */
-    private void start() {
-        Thread listenerThread = new Thread(() -> listenOnPort(screenServerPort));
-        listenerThread.start();
+    @Override
+    public List<IOPort> getPorts() {
+        return List.of(screenServerPort);
     }
 
-    /**
-     * Handles messages that are received from the screen
-     *
-     * @param message Message that needs to be sent out to other managers
-     */
-    public void handleMessage(Message message) {
-        String description = message.getDescription();
-        String[] parts = description.split("-");
+    @Override
+    public List<Message> handleMessage(Message message) {
+        System.out.printf("[ScreenManager] Received: %s%n", message.getDescription());
+
+        List<Message> toForward = new ArrayList<>();
+        String[] parts = message.getDescription().split("-");
 
         if (parts[0].equals("SC")) {
-            //Types of messages that the Screen will send out:
-            //Users gas selection
-            //Gas station prices request
             String request = parts[1];
-            if (request.equals("GASINFO")) {
-                message.changeDevice("GS");
-                mainController.sendServerManagerMessage(message);
-            } else if (request.equals("GASSELECTION")) {
-                message.changeDevice("FM");
-                mainController.sendPumpAssemblyManagerMessage(message);
-            } else if (request.equals("NEWTOTAL")) {
-                message.changeDevice("FM");
-                mainController.sendPumpAssemblyManagerMessage(message);
-
+            switch (request) {
+                case "GASINFO" -> {
+                    System.out.println("[ScreenManager] Forwarding GASINFO request to GasServer");
+                    Message toServer = new Message(message.getDescription());
+                    toServer.changeDevice("GS");
+                    toForward.add(toServer);
+                }
+                case "GASSELECTION" -> {
+                    System.out.println("[ScreenManager] Forwarding GASSELECTION to PumpAssembly");
+                    Message toPump = new Message(message.getDescription());
+                    toPump.changeDevice("FM");
+                    toForward.add(toPump);
+                }
+                case "NEWTOTAL" -> {
+                    System.out.println("[ScreenManager] Forwarding NEWTOTAL to PumpAssembly");
+                    Message toPump = new Message(message.getDescription());
+                    toPump.changeDevice("FM");
+                    toForward.add(toPump);
+                }
             }
         }
+
+        return toForward;
     }
 
-    /**
-     * Handles messages that need to be sent to the screen
-     *
-     * @param message Message being sent
-     */
-    public void messageRequest(Message message) {
+    @Override
+    public void sendMessage(Message message) {
+        System.out.printf("[ScreenManager] Sending to Screen: %s%n", message.getDescription());
         screenServerPort.send(message);
-    }
-
-    /**
-     * Listen to any new messages from IOPort
-     *
-     * @param port Port
-     */
-    private void listenOnPort(CommPort port) {
-        while (!Thread.currentThread().isInterrupted()) {
-            Message message = port.get();
-            if (message != null) {
-                handleMessage(message);
-            }
-
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
     }
 }
