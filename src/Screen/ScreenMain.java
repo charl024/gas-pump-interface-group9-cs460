@@ -28,6 +28,5 @@ public class ScreenMain extends Application {
         primaryStage.setY(0);
 
         primaryStage.show();
-        System.out.println(primaryStage.getWidth());
     }
 }
