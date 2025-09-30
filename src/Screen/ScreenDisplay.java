@@ -63,6 +63,8 @@ public class ScreenDisplay {
     private double plusPrice;
     private double premPrice;
 
+    private Label cancelLabel;
+
     private double inUseReg;
     private double inUsePlus;
     private double inUsePrem;
@@ -279,6 +281,15 @@ public class ScreenDisplay {
         premLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         premLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
+        changeLabel(1,2,8);
+        cancelLabel = labelMap.get("8");
+        writeText("CANCEL TRANSACTION", 8);
+        cancelLabel.setTextFill(Color.WHITE);
+        changeTextSize(20, 8);
+        cancelLabel.setAlignment(Pos.CENTER);
+        cancelLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
+        cancelLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
+
         // Assign side buttons to gas options
         setUpButtonPress(2, PossibleActionsForButton.CHOOSE_GAS_TYPE_ONE, Color.FORESTGREEN);
         setUpButtonPress(4, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
@@ -421,7 +432,7 @@ public class ScreenDisplay {
     public void showTransactionCanceledScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
-        writeText("Transaction canceled\n    Goodbye", 0);
+        writeText("Transaction canceled", 0);
         unavailable.setTextFill(Color.WHITE);
         changeTextSize(20, 0);
         unavailable.setAlignment(Pos.CENTER);

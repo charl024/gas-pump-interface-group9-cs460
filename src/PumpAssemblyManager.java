@@ -127,6 +127,20 @@ public class PumpAssemblyManager implements Manager {
             if (parts[1].equals("GASSELECTION")) {
                 priceSelected = true;
                 System.out.println("[PumpAssemblyManager] Gas selection received, price set.");
+
+                //After we are informed that gas has been selected, check
+                // current state of hose connection
+                if(hoseConnected) {
+                    //send a message to flow meter to start
+                    //send a message to screen so that it changes to "pumping
+                    // in progress"
+                } else {
+                    //send a message to screen only, change screen to "Please
+                    // connect hose"
+                }
+                //TODO AFTER THIS IS IMPLEMENTED, MAKE SURE SCREEN DOESN'T
+                // AUTOMATICALLY CHANGE TO SCREEN ASKING FOR PUMP TO BE
+                // CONNECTED
             }
             flowMeterPumpPort.send(message);
         }
