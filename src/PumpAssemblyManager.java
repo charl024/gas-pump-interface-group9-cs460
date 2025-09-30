@@ -95,15 +95,16 @@ public class PumpAssemblyManager implements Manager {
         String flowMeterInfo = parts[1];
         System.out.printf("[PumpAssemblyManager] FlowMeter message: %s%n", flowMeterInfo);
         //TODO FIX
-        if(flowMeterInfo.equals("DC")) {
-            Message toScreen = new Message("SC-DC");
-            toForward.add(toScreen);
-        }
+//        if(flowMeterInfo.equals("DC")) {
+//            Message toScreen = new Message("SC-DC");
+//            toForward.add(toScreen);
+//        }
 
         if (flowMeterInfo.equals("NEWTOTAL")) {
             // End of pumping session so reset state
             startedPumping = false;
             priceSelected = false;
+            pumping = false;
             System.out.println("[PumpAssemblyManager] Pumping complete. Resetting state.");
 
             // Forward results to Screen
@@ -136,6 +137,14 @@ public class PumpAssemblyManager implements Manager {
             if (parts[1].equals("GASSELECTION")) {
                 priceSelected = true;
                 System.out.println("[PumpAssemblyManager] Gas selection received, price set.");
+                System.out.println("printing something");
+                System.out.println(hoseConnected);
+                if(hoseConnected) {
+                    toForward.addAll(handleMessage(new Message("HS-CN")));
+                } else {
+                    toForward.add(new Message("SC-DC"));
+                }
+
                 toForward.addAll(handleMessage(message));
             }
             flowMeterPumpPort.send(message);
