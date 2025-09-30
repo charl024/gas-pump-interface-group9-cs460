@@ -36,10 +36,8 @@ public class MainController {
                     for (IOPort port : m.getPorts()) {
                         Message msg = readFromPort(port);
                         if (msg != null) {
-                            System.out.printf(
-                                    "[MainController] Received message from port (%s): %s%n",
-                                    port.getClass().getSimpleName(),
-                                    msg.getDescription()
+                            System.out.printf("[MainController] Received message from port (%s): %s%n",
+                                    port.getClass().getSimpleName(), msg.getDescription()
                             );
                             routeMessage(msg, m);
                         }
@@ -84,8 +82,7 @@ public class MainController {
             if (target != null) {
                 System.out.printf(
                         "[MainController] Routing message: %s to %s%n",
-                        fwd.getDescription(),
-                        target.getClass().getSimpleName()
+                        fwd.getDescription(), target.getClass().getSimpleName()
                 );
                 target.sendMessage(fwd);
             }
