@@ -19,6 +19,8 @@ public class ServerManager implements Manager {
     private final CommPort bankServerPort;
     private final StatusPort cardReaderPort;
 
+    private boolean inTransaction;
+
     public ServerManager() {
         //When called, it should then create the IOConnections that will then
         // connect to the corresponding devices
@@ -53,12 +55,16 @@ public class ServerManager implements Manager {
         // Decide how to handle based on the device prefix
         switch (parts[0]) {
             case "CR" -> {
-                // Forward CardReader input to BankServer for validation
-                System.out.println("[ServerManager] CardReader input sending to BankServer");
-                Message toBank = new Message(message.getDescription());
-                toBank.changeDevice("BS");
-                bankServerPort.send(toBank);
-                toForward.add(new Message("SC-AUTHORIZING"));
+                //Only request for bank to validate card if we aren't
+                // currently in transaction
+                if(!inTransaction) {
+                    // Forward CardReader input to BankServer for validation
+                    System.out.println("[ServerManager] CardReader input sending to BankServer");
+                    Message toBank = new Message(message.getDescription());
+                    toBank.changeDevice("BS");
+                    bankServerPort.send(toBank);
+                    toForward.add(new Message("SC-AUTHORIZING"));
+                }
             }
             case "BS" -> {
                 // Handle responses from BankServer (VALIDCARD / INVALIDCARD)
@@ -73,6 +79,7 @@ public class ServerManager implements Manager {
                         Message toScreen = new Message(message.getDescription());
                         toScreen.changeDevice("SC");
                         toForward.add(toScreen);
+                        inTransaction = true;
                     }
                 }
             }
@@ -99,6 +106,9 @@ public class ServerManager implements Manager {
         String[] parts = message.getDescription().split("-");
         switch (parts[0]) {
             case "GS" -> {
+                //Gas station should only be receiving final transaction
+                //messages, can reset in transaction
+                inTransaction = false;
                 System.out.printf("[ServerManager] Sending to GasServer: %s%n", message.getDescription());
                 gasServerPort.send(message);
             }

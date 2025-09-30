@@ -54,7 +54,6 @@ public class GSServer implements Runnable {
                 double plus = gasStation.getDisplay().getPlusCost();
                 double prem = gasStation.getDisplay().getPremiumCost();
                 sendMessage(new Message("GS-INITIALPRICE-" + reg + "-" + plus + "-" + prem));
-                System.out.println("message was sent");
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
                 while (true) {
@@ -62,7 +61,6 @@ public class GSServer implements Runnable {
                         Message message = (Message) in.readObject();
                         gasStation.getClient().handleMessage(message);
 
-                        System.out.println("Message received");
                     } catch (EOFException e) {
                         System.out.println("Client disconnected");
                         break;

@@ -171,6 +171,12 @@ public class GSDisplay {
             }
             inputPrices.clear();
             Message newPriceMessage = new Message("GS-CHANGEPRICES-" + reg + "-" + plus + "-" + premium);
+            updatePriceInput(Double.parseDouble(reg), Double.parseDouble(plus), Double.parseDouble(premium));
+
+            Platform.runLater(() -> {
+                updateGasPrices();
+            });
+
             server.sendMessage(newPriceMessage);
 
         }
