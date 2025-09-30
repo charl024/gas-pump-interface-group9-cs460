@@ -63,6 +63,10 @@ public class ScreenDisplay {
     private double plusPrice;
     private double premPrice;
 
+    private double inUseReg;
+    private double inUsePlus;
+    private double inUsePrem;
+
     private boolean onGasSelection = false;
     private HandleMessage handleMessage;
 
@@ -284,6 +288,10 @@ public class ScreenDisplay {
         setUpButtonPress(5, PossibleActionsForButton.CHOSE_GAS_TYPE_TWO, Color.DEEPSKYBLUE);
         setUpButtonPress(7, PossibleActionsForButton.CHOOSE_GAS_TYPE_THREE, Color.ORANGE);
         setUpButtonPress(9, PossibleActionsForButton.CANCEL, Color.CRIMSON);
+
+        inUseReg = regPrice;
+        inUsePlus = plusPrice;
+        inUsePrem = premPrice;
     }
 
     /**
@@ -355,7 +363,7 @@ public class ScreenDisplay {
 
         // Main message
         writeText(String.format("Pumping Complete\nTotal Price: $%.2f\nTotal " +
-                "Gallons: %.2f", totalGallons, totalPrice), 0);
+                "Gallons: %.2f", totalPrice, totalGallons), 0);
 
         main.setTextFill(Color.WHITE);
         changeTextSize(20, 0);
@@ -444,7 +452,7 @@ public class ScreenDisplay {
             if (onGasSelection) {
                 if (buttonNum == 2 || buttonNum == 3) {
                     Message gasSelection =
-                            new Message("SC-GASSELECTION-" + regPrice);
+                            new Message("SC-GASSELECTION-" + inUseReg);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();
@@ -453,7 +461,7 @@ public class ScreenDisplay {
                     onGasSelection = false;
                 } else if (buttonNum == 4 || buttonNum == 5) {
                     Message gasSelection =
-                            new Message("SC-GASSELECTION-" + plusPrice);
+                            new Message("SC-GASSELECTION-" + inUsePlus);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();
@@ -462,7 +470,7 @@ public class ScreenDisplay {
                     onGasSelection = false;
                 } else if (buttonNum == 6 || buttonNum == 7) {
                     Message gasSelection =
-                            new Message("SC-GASSELECTION-" + premPrice);
+                            new Message("SC-GASSELECTION-" + inUsePrem);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();

@@ -102,10 +102,10 @@ public class BSDisplay {
         delay.playFromStart(); //If we update the info, reset timer
         String description = message.getDescription();
         String[] parts = description.split("-");
-        String accountNum = parts[1];
+        String accountNumString = parts[1];
 
-        Text messageAccountNum = new Text(accountNum);
-        TextFlow textFlow = new TextFlow(messageAccountNum);
+        Text messageAccountNum = new Text(accountNumString);
+        TextFlow textFlow = new TextFlow(accountNum, messageAccountNum);
         cardInfo.setGraphic(textFlow);
 
         Text invalid = new Text("Invalid");
