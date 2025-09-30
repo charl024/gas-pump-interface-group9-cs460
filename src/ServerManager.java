@@ -7,12 +7,31 @@ import Util.Manager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ServerManager is responsible for managing communication
+ * between the MainController and three external devices:
+ *  - Gas Server (GS)
+ *  - Bank Server (BS)
+ *  - Card Reader (CR)
+ */
 public class ServerManager implements Manager {
     private final CommPort gasServerPort;
     private final CommPort bankServerPort;
     private final StatusPort cardReaderPort;
 
     public ServerManager() {
+        //When called, it should then create the IOConnections that will then
+        // connect to the corresponding devices
+
+        //Card reader won't receive any messages, just sends information out
+
+        //Gas station server should receive input for when a gas transaction
+        // is finished. Gas station can send out information about the gas
+        // prices
+
+        //Bank server will receive input of a credit card, it will determine
+        // if its valid or not. After it determines validation, it will send
+        // the information back
         gasServerPort = new CommPort(2);
         bankServerPort = new CommPort(1);
         cardReaderPort = new StatusPort(3);
@@ -20,6 +39,7 @@ public class ServerManager implements Manager {
 
     @Override
     public List<IOPort> getPorts() {
+        // Provide MainController with the list of ports this manager listens to
         return List.of(gasServerPort, bankServerPort, cardReaderPort);
     }
 
@@ -30,8 +50,10 @@ public class ServerManager implements Manager {
         List<Message> toForward = new ArrayList<>();
         String[] parts = message.getDescription().split("-");
 
+        // Decide how to handle based on the device prefix
         switch (parts[0]) {
             case "CR" -> {
+                // Forward CardReader input to BankServer for validation
                 System.out.println("[ServerManager] CardReader input sending to BankServer");
                 Message toBank = new Message(message.getDescription());
                 toBank.changeDevice("BS");
@@ -39,6 +61,7 @@ public class ServerManager implements Manager {
                 toForward.add(new Message("SC-AUTHORIZING"));
             }
             case "BS" -> {
+                // Handle responses from BankServer (VALIDCARD / INVALIDCARD)
                 if (parts.length > 2) {
                     if (parts[2].equals("INVALIDCARD")) {
                         System.out.println("[ServerManager] BankServer: INVALIDCARD");
@@ -54,8 +77,8 @@ public class ServerManager implements Manager {
                 }
             }
             case "GS" -> {
-                if (parts.length > 1 &&
-                        (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE"))) {
+                if (parts.length > 1 && (parts[1].equals("CHANGEPRICES") || parts[1].equals("INITIALPRICE"))) {
+                    // Handle updates from GasServer (price updates)
                     System.out.println("[ServerManager] GasServer: price update");
                     Message toScreen = new Message(message.getDescription());
                     toScreen.changeDevice("SC");
@@ -64,9 +87,13 @@ public class ServerManager implements Manager {
             }
         }
 
+        // Return list of messages that MainController should route to other managers
         return toForward;
     }
 
+    /**
+     * Called by the controller to send commands to this manager's devices.
+     */
     @Override
     public void sendMessage(Message message) {
         String[] parts = message.getDescription().split("-");

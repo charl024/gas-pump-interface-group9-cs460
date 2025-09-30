@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Pump Assembly Manager, handles Hose and Flowmeter/Pump
+ * PumpAssembly is responsible for managing communication
+ * between the MainController and two external devices:
+ *  - Flow Meter Pump (FM)
+ *  - Hose (HS)
  */
 public class PumpAssemblyManager implements Manager {
     private final StatusPort hosePort;
@@ -26,9 +29,17 @@ public class PumpAssemblyManager implements Manager {
 
     @Override
     public List<IOPort> getPorts() {
+        // Provide MainController with the list of ports this manager listens to
         return List.of(hosePort, flowMeterPumpPort);
     }
 
+    /**
+     * Handles incoming messages from the hose or flow meter.
+     * May generate messages to forward to other managers (e.g., Screen, GasServer).
+     *
+     * @param message the incoming device message
+     * @return messages that should be forwarded to other managers
+     */
     @Override
     public List<Message> handleMessage(Message message) {
         System.out.printf("[PumpAssemblyManager] Received message: %s%n", message.getDescription());
@@ -45,22 +56,29 @@ public class PumpAssemblyManager implements Manager {
         return toForward;
     }
 
+    /**
+     * Handle hose status messages.
+     * Controls pump state depending on connection/disconnection events.
+     */
     private void handleHoseMessage(String[] parts, List<Message> toForward) {
         String hoseStatus = parts[1];
         hoseConnected = hoseStatus.equals("CN");
         System.out.printf("[PumpAssemblyManager] Hose status: %s (connected=%s)%n", hoseStatus, hoseConnected);
 
         if (priceSelected && hoseConnected && !pumping) {
+            // Start pumping once gas is selected and hose is connected
             sendStartPump();
             toForward.add(new Message("SC-PUMPINGPROGRESS"));
         } else {
             if (pumping && !hoseConnected) {
+                // Pause pump if hose disconnects mid-pump
                 pumping = false;
                 flowMeterPumpPort.send(new Message("FM-PAUSE"));
                 System.out.println("[PumpAssemblyManager] Pump paused due to hose disconnect");
                 toForward.add(new Message("SC-HOSEPAUSED"));
             }
             if (hoseConnected && !pumping && startedPumping) {
+                // Resume pump automatically if hose reconnects mid-transaction
                 pumping = true;
                 flowMeterPumpPort.send(new Message("FM-RESUME"));
                 System.out.println("[PumpAssemblyManager] Pump resumed after hose reconnect");
@@ -69,25 +87,35 @@ public class PumpAssemblyManager implements Manager {
         }
     }
 
+    /**
+     * Handle flow meter messages (e.g., totals when pumping ends).
+     * Forwards results to the Screen and Gas Server.
+     */
     private void handleFlowMeterMessage(String[] parts, Message message, List<Message> toForward) {
         String flowMeterInfo = parts[1];
         System.out.printf("[PumpAssemblyManager] FlowMeter message: %s%n", flowMeterInfo);
 
         if (flowMeterInfo.equals("NEWTOTAL")) {
+            // End of pumping session so reset state
             startedPumping = false;
             priceSelected = false;
             System.out.println("[PumpAssemblyManager] Pumping complete. Resetting state.");
 
+            // Forward results to Screen
             Message toScreen = new Message(message.getDescription());
             toScreen.changeDevice("SC");
             toForward.add(toScreen);
 
+            // Forward results to Gas Server
             Message toServer = new Message(message.getDescription());
             toServer.changeDevice("GS");
             toForward.add(toServer);
         }
     }
 
+    /**
+     * Called by the controller to send commands to this manager's devices.
+     */
     @Override
     public void sendMessage(Message message) {
         System.out.printf("[PumpAssemblyManager] Sending to %s: %s%n",
