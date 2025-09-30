@@ -27,6 +27,7 @@ public class HoseMain extends Application {
 
         stage.show();
 
-
+        stage.setX(1113);
+        stage.setY(0);
     }
 }

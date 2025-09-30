@@ -53,7 +53,11 @@ public class GSMain extends Application {
             Platform.exit();
             System.exit(0);
         });
+        primaryStage.setX(0);
+        primaryStage.setY(317);
         primaryStage.show();
+        System.out.println(primaryStage.getWidth());
+        System.out.println(primaryStage.getHeight());
     }
 
     /**

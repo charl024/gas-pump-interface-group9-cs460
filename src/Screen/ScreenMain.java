@@ -24,6 +24,8 @@ public class ScreenMain extends Application {
         screenDisplay.showPumpUnavailableScreen();
 
         handleMessage = new HandleMessage(screenDisplay);
+        primaryStage.setX(415);
+        primaryStage.setY(0);
         primaryStage.show();
     }
 }

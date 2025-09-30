@@ -27,6 +27,8 @@ public class CRMain extends Application {
             Platform.exit();
             System.exit(0);
         });
+        primaryStage.setX(0);
+        primaryStage.setY(602);
         primaryStage.show();
     }
 
@@ -38,7 +40,7 @@ public class CRMain extends Application {
      */
     private void createPane(Stage primaryStage, CardReader cardReader) {
         StackPane pane = new StackPane();
-        pane.setMinSize(400, 400);
+        pane.setMinSize(400, 250);
         pane.setBackground(new Background(new BackgroundFill(Color.GREY,
                 CornerRadii.EMPTY, Insets.EMPTY)));
         pane.getChildren().add(cardReader.getDisplay().getPane());

@@ -67,8 +67,10 @@ public class ScreenDisplay {
         root.setCenter(createMiddle());
         addMidLabels();
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setMaximized(true);
+        primaryStage.setScene(new Scene(root,697,534));
+        //primaryStage.setMaximized(true);
+//        primaryStage.setMaxWidth(100);
+//        primaryStage.setMaxHeight(100);
         primaryStage.setTitle("Futuristic Pump Interface");
     }
 

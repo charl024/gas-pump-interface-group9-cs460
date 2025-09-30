@@ -75,7 +75,7 @@ public class CRDisplay {
 
         BorderPane.setAlignment(imagePane, Pos.CENTER);
 
-        pane.setOnMouseClicked(event -> {
+        imagePane.setOnMouseClicked(event -> {
             try {
                 input.handleTap();
             } catch (IOException e) {
@@ -90,8 +90,8 @@ public class CRDisplay {
     private void createBasePane() {
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        pane.setMinSize(350, 250);
-        pane.setMaxSize(350, 250);
+        pane.setMinSize(414, 200);
+        pane.setMaxSize(414, 200);
         imagePane = new StackPane();
     }
 
