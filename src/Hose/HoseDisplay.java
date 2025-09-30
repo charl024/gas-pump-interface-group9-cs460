@@ -60,7 +60,6 @@ public class HoseDisplay extends BorderPane {
         endpointCircle = new Circle(centerX, centerY, 8, Color.BLACK);
     }
 
-
     private void hoseStartRectangleSetup() {
         hoseStart = new Rectangle(30, displayHeight);
         hoseStart.setFill(Color.BLACK);
@@ -72,7 +71,6 @@ public class HoseDisplay extends BorderPane {
         hoseNozzle.setFill(Color.GRAY);
         hoseNozzle.setX(10 + connectorWidth);
         hoseNozzle.setY((double) displayHeight / 2 - 2.5);
-
     }
 
     private void hoseEndRectangleSetup() {
@@ -111,7 +109,8 @@ public class HoseDisplay extends BorderPane {
 
         draggableHoseConnector.setOnMouseDragged(e -> {
             double connectorNewX = e.getSceneX() - connectorX;
-            connectorNewX = Math.max(10, Math.min(displayWidth - connectorWidth - ((double) displayWidth / 4), connectorNewX));
+            connectorNewX = Math.max(10,
+                    Math.min(displayWidth - connectorWidth - ((double) displayWidth / 4), connectorNewX));
             draggableHoseConnector.setX(connectorNewX);
 
             hoseNozzle.setX(connectorNewX + 40);
@@ -119,15 +118,18 @@ public class HoseDisplay extends BorderPane {
             hoseHose.setX(10);
             hoseHose.setWidth(connectorNewX - 10);
 
-            connectedToCar = connectorNewX == (displayWidth - connectorWidth - ((double) displayWidth / 4));
+            boolean nowConnected = connectorNewX == (displayWidth - connectorWidth - ((double) displayWidth / 4));
 
-            if (connectedToCar) {
-                internal.onConnect();
-            } else {
-                internal.onDisconnect();
+            if (nowConnected != connectedToCar) {
+                connectedToCar = nowConnected;
+                if (connectedToCar) {
+                    internal.onConnect();
+                    System.out.println("Connected to car.");
+                } else {
+                    internal.onDisconnect();
+                    System.out.println("Disconnected from car.");
+                }
             }
-
-
         });
     }
 }

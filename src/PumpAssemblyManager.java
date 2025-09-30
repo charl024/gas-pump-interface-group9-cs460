@@ -157,16 +157,21 @@ public class PumpAssemblyManager {
      * @param port Port
      */
     private void listenOnPort(IOPort port) {
+        Message lastMsg = null;
+
         while (!Thread.currentThread().isInterrupted()) {
             Message msg = null;
+
             if (port instanceof StatusPort) {
                 msg = ((StatusPort) port).read();
             } else if (port instanceof CommPort) {
                 msg = ((CommPort) port).get();
             }
 
-            if (msg != null) {
+            // Only process if it's new/different
+            if (msg != null && (lastMsg == null || !msg.getDescription().equals(lastMsg.getDescription()))) {
                 handleMessage(msg);
+                lastMsg = msg;
             }
 
             try {
@@ -176,4 +181,5 @@ public class PumpAssemblyManager {
             }
         }
     }
+
 }
