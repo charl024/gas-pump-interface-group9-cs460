@@ -4,7 +4,6 @@
  */
 
 import IOPort.CommPort;
-import IOPort.StatusPort;
 import IOPort.IOPort;
 import MessagePassed.Message;
 
@@ -19,8 +18,7 @@ public class ServerManager {
     private final MainController mainController;
     private final CommPort gasServerPort;
     private final CommPort bankServerPort;
-    //    private final CommPort cardReaderPort;
-    private final StatusPort cardReaderPort;
+    private final CommPort cardReaderPort;
 
     private final ExecutorService executor;
 
@@ -48,7 +46,7 @@ public class ServerManager {
         gasServerPort = new CommPort(2);
         bankServerPort = new CommPort(1);
         //cardReaderPort = new CommPort(3);
-        cardReaderPort = new StatusPort(3);
+        cardReaderPort = new CommPort(3);
         executor = Executors.newFixedThreadPool(3);
         start();
     }
@@ -81,12 +79,10 @@ public class ServerManager {
         //Messages that are sent from the BankServer:
         if (parts[0].equals("BS")) {
             if (parts[2].equals("INVALIDCARD")) {
-                System.out.println("Received invalid card manager");
                 message.changeDevice("SC");
                 mainController.sendScreenManagerMessage(message);
                 //Inform the screen so that it can change to the correct display
             } else if (parts[2].equals("VALIDCARD")) {
-                System.out.println("Received valid card manager");
                 message.changeDevice("SC");
                 mainController.sendScreenManagerMessage(message);
             }
@@ -132,10 +128,7 @@ public class ServerManager {
             Message message = null;
             if (port instanceof CommPort) {
                 message = ((CommPort) port).get();
-            } else if (port instanceof StatusPort) {
-                message = ((StatusPort) port).read();
             }
-
             if (message != null) {
                 handleMessage(message);
             }

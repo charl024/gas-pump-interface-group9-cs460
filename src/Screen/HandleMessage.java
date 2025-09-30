@@ -75,8 +75,7 @@ public class HandleMessage {
 
                 timeoutTimer();
 
-            } else if (parts[2].equals("VALIDCARD")) {
-                System.out.println("received valid");
+            } else if (parts.length >= 3 && parts[2].equals("VALIDCARD")) {
                 cancelTimeout();
 
                 Platform.runLater(() -> {
@@ -105,8 +104,8 @@ public class HandleMessage {
 //                        initiateGasSelection();
 //                    }
 //                }, 5000);
-            } else if (parts[2].equals("INVALIDCARD")) {
-                System.out.println("received invalid");
+            } else if (parts.length >= 3 && parts[2].equals("INVALIDCARD")) {
+
                 cancelTimeout();
 
                 Platform.runLater(() -> {
@@ -127,10 +126,29 @@ public class HandleMessage {
 
             } else if (parts[1].equals("PUMPINGPROGRESS")) {
                 cancelTimeout();
-                screenDisplay.showPumpingProgress();
+                Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showPumpingProgress();
+                });
+
             } else if (parts[1].equals("HOSEPAUSED")) {
-                screenDisplay.resetLabels();
-                screenDisplay.showHosePausedScreen();
+                Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showHosePausedScreen();
+                });
+
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> {
+                            screenDisplay.resetLabels();
+                            screenDisplay.showTimeoutScreen();
+                            sendServerMessage(new Message("SC-NEWTOTAL"));
+                        });
+
+                    }
+                }, 10000);
             } else if (parts[1].equals("NEWTOTAL")) {
                 Platform.runLater(() -> {
                     screenDisplay.resetLabels();
@@ -145,8 +163,11 @@ public class HandleMessage {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        screenDisplay.resetLabels();
-                        screenDisplay.showWelcomeScreen();
+                        Platform.runLater(() -> {
+                            screenDisplay.resetLabels();
+                            screenDisplay.showWelcomeScreen();
+                        });
+
                     }
                 }, 10000);
             } else if (parts[1].equals("CHANGEPRICES")) {
@@ -239,62 +260,21 @@ public class HandleMessage {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                screenDisplay.resetLabels();
-                screenDisplay.showWelcomeScreen();
+                Platform.runLater(() -> {
+                    screenDisplay.resetLabels();
+                    screenDisplay.showWelcomeScreen();
+                });
             }
         }, 10000);
     }
 
     private void initiateGasSelection() {
-        System.out.println("Got here");
+
         screenDisplay.showGasSelectionScreen();
         screenDisplay.setOnGasSelection();
-
-//        Message message = new Message("SC-GASSELECTION-");
-//        screenDisplay.setOnAction(code -> {
-//
-//            if (code == 0) {
-//                message.addToDescription("" + screenDisplay.getRegPrice());
-//                cancelTimeout();
-//
-//                screenDisplay.resetLabels();
-//                screenDisplay.showConnectHoseScreen();
-//
-//                timeoutTimer();
-//            } else if (code == 1) {
-//                message.addToDescription("" + screenDisplay.getPlusPrice());
-//                cancelTimeout();
-//
-//                screenDisplay.resetLabels();
-//                screenDisplay.showConnectHoseScreen();
-//
-//                timeoutTimer();
-//            } else if (code == 2) {
-//                message.addToDescription("" + screenDisplay.getPremPrice());
-//                cancelTimeout();
-//
-//                screenDisplay.resetLabels();
-//                screenDisplay.showConnectHoseScreen();
-//
-//                timeoutTimer();
-//            } else if (code == 5) {
-//                screenDisplay.resetLabels();
-//                screenDisplay.showTransactionCanceledScreen();
-//                timer = new Timer();
-//                timer.schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        screenDisplay.resetLabels();
-//                        screenDisplay.showWelcomeScreen();
-//                    }
-//                }, 10000);
-//            }
-//            System.out.println("code being sent for gas " + code);
-//            server.sendMessage(message);
-//        });
-        // Might need to write above button listener
         timeoutTimer();
     }
+
     public void sendServerMessage(Message msg) {
         server.sendMessage(msg);
     }

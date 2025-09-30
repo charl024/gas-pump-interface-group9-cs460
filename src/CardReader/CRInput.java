@@ -34,8 +34,6 @@ public class CRInput {
      * Handles what happens when the use "taps their card" on the screen
      */
     public void handleTap() throws IOException {
-        System.out.println("Clicked on");
-
         Random random = new Random();
         StringBuilder randomNums = new StringBuilder();
         //Create randoms sequence of 8 numbers
@@ -48,7 +46,6 @@ public class CRInput {
         // handle the output from card reader
         if (connected) {
             server.sendMessage(cardTap);
-
             //Tapping the card animation
             display.updateStatusBox();
             Timer timer = new Timer();

@@ -36,7 +36,6 @@ public class ScreenManager {
      */
     public void handleMessage(Message message) {
         String description = message.getDescription();
-        System.out.println(description);
         String[] parts = description.split("-");
 
         if (parts[0].equals("SC")) {
@@ -50,6 +49,10 @@ public class ScreenManager {
             } else if (request.equals("GASSELECTION")) {
                 message.changeDevice("FM");
                 mainController.sendPumpAssemblyManagerMessage(message);
+            } else if (request.equals("NEWTOTAL")) {
+                message.changeDevice("FM");
+                mainController.sendPumpAssemblyManagerMessage(message);
+
             }
         }
     }

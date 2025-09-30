@@ -9,7 +9,6 @@ class Main {
     public static void main(String[] args) {
 
         MainController mainController = new MainController();
-        System.out.println("Worked");
 //        CommPort screenPort1 = new CommPort(1);
 //
 //        Message message = new Message("What's up from Main");

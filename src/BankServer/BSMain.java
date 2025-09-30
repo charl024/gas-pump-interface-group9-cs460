@@ -39,8 +39,6 @@ public class BSMain extends Application {
         primaryStage.setX(71);
         primaryStage.setY(0);
         primaryStage.show();
-        System.out.println(primaryStage.getWidth());
-        System.out.println(primaryStage.getHeight());
     }
 
     /**

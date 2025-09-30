@@ -4,6 +4,7 @@
 package GasServer;
 
 import MessagePassed.Message;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -110,6 +111,7 @@ public class GSDisplay {
         updateGasPrices();
         Label infoText = new Label("Enter new Gas prices: ");
         inputPrices = new TextField();
+        inputPrices.setPromptText("1-2-3");
 
 
         updatePrices = new Button("Update");
@@ -167,7 +169,7 @@ public class GSDisplay {
                 alert.showAndWait();
                 return;
             }
-
+            inputPrices.clear();
             Message newPriceMessage = new Message("GS-CHANGEPRICES-" + reg + "-" + plus + "-" + premium);
             server.sendMessage(newPriceMessage);
 
@@ -179,7 +181,8 @@ public class GSDisplay {
      */
     public void updateTotal() {
         String format = String.format("Total Money: $%.2f", total);
-        totalMoney.setText(format);
+        Platform.runLater(() -> totalMoney.setText(format));
+
     }
 
     /**

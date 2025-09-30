@@ -27,6 +27,8 @@ public class ScreenMain extends Application {
         screenDisplay.setHandleMessage(handleMessage);
         primaryStage.setX(415);
         primaryStage.setY(0);
+
         primaryStage.show();
+        System.out.println(primaryStage.getWidth());
     }
 }

@@ -51,11 +51,11 @@ public class FMIOClient {
             String event = parts[1];
             //Start the flow meter and change the color of the cord to be green
             if (event.equals("START")) {
+                display.setLastStartTime();
                 display.pickRandomSize();
                 display.setTimerRunning(true);
                 display.startGasTimer();
                 display.startPump();
-
             } else if (event.equals("GASSELECTION")) {
                 double costPerGal = Double.parseDouble(parts[2]);
                 display.setGasRate(costPerGal);
@@ -63,7 +63,7 @@ public class FMIOClient {
                 display.pauseTimer();
             } else if (event.equals("RESUME")) {
                 display.startTimer();
-            } else if (event.equals("TOTAL")) {
+            } else if (event.equals("NEWTOTAL")) {
                 //Total should only be requested if the pump has stopped
                 if (!display.isTimerRunning()) {
                     display.sendGasTotals();

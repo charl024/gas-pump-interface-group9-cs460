@@ -6,6 +6,7 @@ package CardReader;
 import MessagePassed.Message;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -47,6 +48,8 @@ public class CRServer implements Runnable {
 
                 System.out.println("Client connected");
                 out = new ObjectOutputStream(socket.getOutputStream());
+                out.flush();
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

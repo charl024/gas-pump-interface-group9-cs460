@@ -33,8 +33,6 @@ public class ScreenServer implements Runnable {
                     try {
                         Message message = (Message) in.readObject();
                         screen.handleMessage(message);
-                        System.out.println("Message received");
-                        System.out.println(message.getDescription());
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }

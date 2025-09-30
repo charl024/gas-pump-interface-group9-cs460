@@ -37,7 +37,7 @@ public class FMDisplay {
     private double totalVolume;
     private double[] randomVolumes;
     private double gasRate; //How much gas costs per gallon
-    private double volRate = 10.0; //Rate gas is pumped into tank
+    private double volRate = 11.0; //Rate gas is pumped into tank
 
     //Using this to replicate gas being pumped out
     private boolean timerRunning = false;
@@ -61,6 +61,7 @@ public class FMDisplay {
     public FMDisplay(FMServer server) {
         this.server = server;
         randomVolumes = new double[]{20, 15, 4, 6, 11, 8.75, 9.32, 7.44, 4.60, 13.20, 10.5, 13.8, 17.09,};
+        //randomVolumes = new double[]{2};//Use for testing
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);
@@ -326,4 +327,9 @@ public class FMDisplay {
     public void setTimerRunning(boolean timerRunning) {
         this.timerRunning = timerRunning;
     }
+
+    public void setLastStartTime() {
+        lastStartTime = System.currentTimeMillis();
+    }
 }
+

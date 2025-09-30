@@ -354,7 +354,8 @@ public class ScreenDisplay {
         Label main = labelMap.get("0");
 
         // Main message
-        writeText(String.format("Pumping Complete\nTotal Gallons: %.2f\nTotal Price: $%.2f", totalGallons, totalPrice), 0);
+        writeText(String.format("Pumping Complete\nTotal Price: $%.2f\nTotal " +
+                "Gallons: %.2f", totalGallons, totalPrice), 0);
 
         main.setTextFill(Color.WHITE);
         changeTextSize(20, 0);
@@ -393,7 +394,7 @@ public class ScreenDisplay {
     public void showTimeoutScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
-        writeText("Timedout", 0);
+        writeText("Timed-Out", 0);
         unavailable.setTextFill(Color.WHITE);
         changeTextSize(20, 0);
         unavailable.setAlignment(Pos.CENTER);
@@ -412,16 +413,17 @@ public class ScreenDisplay {
     public void showTransactionCanceledScreen() {
         changeLabel(5, 2, 0);  // Span all rows, 2 columns
         Label unavailable = labelMap.get("0");
-        writeText("Transaction canceled\n goodbye", 0);
+        writeText("Transaction canceled\n    Goodbye", 0);
         unavailable.setTextFill(Color.WHITE);
         changeTextSize(20, 0);
         unavailable.setAlignment(Pos.CENTER);
-        unavailable.setBackground(new Background(new BackgroundFill(Color.DARKMAGENTA, CornerRadii.EMPTY, Insets.EMPTY)));
+        unavailable.setBackground(new Background(new BackgroundFill(Color.CORAL,
+                CornerRadii.EMPTY, Insets.EMPTY)));
         unavailable.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
         // Change all side buttons to gray
         for (int i = 0; i < 10; i++) {
-            changeButtonColorV2(Color.DARKMAGENTA, i);
+            changeButtonColorV2(Color.CORAL, i);
         }
     }
 
@@ -448,6 +450,7 @@ public class ScreenDisplay {
                     showConnectHoseScreen();
                     handleMessage.timeoutTimer();
                     handleMessage.sendServerMessage(gasSelection);
+                    onGasSelection = false;
                 } else if (buttonNum == 4 || buttonNum == 5) {
                     Message gasSelection =
                             new Message("SC-GASSELECTION-" + plusPrice);
@@ -456,6 +459,7 @@ public class ScreenDisplay {
                     showConnectHoseScreen();
                     handleMessage.timeoutTimer();
                     handleMessage.sendServerMessage(gasSelection);
+                    onGasSelection = false;
                 } else if (buttonNum == 6 || buttonNum == 7) {
                     Message gasSelection =
                             new Message("SC-GASSELECTION-" + premPrice);
@@ -464,6 +468,7 @@ public class ScreenDisplay {
                     showConnectHoseScreen();
                     handleMessage.timeoutTimer();
                     handleMessage.sendServerMessage(gasSelection);
+                    onGasSelection = false;
                 }
 
                 if (buttonNum == 8 || buttonNum == 9) {
@@ -471,7 +476,6 @@ public class ScreenDisplay {
                     return;
                 }
             }
-            System.out.println("Button " + buttonNum + " pressed: " + action.name());
             if (screenHandler != null) {
                 // Example:
                 // screenHandler.sendMessage(new Message("SC-BUTTON-" + buttonNum + "-" + action.name()));

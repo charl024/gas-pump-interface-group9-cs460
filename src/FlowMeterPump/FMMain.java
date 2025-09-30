@@ -39,7 +39,7 @@ public class FMMain extends Application {
             Platform.exit();
             System.exit(0);
         });
-        primaryStage.setX(415);
+        primaryStage.setX(415 + 100);
         primaryStage.setY(602);
         primaryStage.show();
     }
