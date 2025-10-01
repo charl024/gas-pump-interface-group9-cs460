@@ -162,7 +162,7 @@ public class ScreenDisplay {
     public void showWelcomeScreen() {
         changeLabel(5, 2, 0);  // Span 1 row, 2 columns
         Label main = labelMap.get("0");
-        writeText("Welcome to _______!\nPlease tap your card", 0);
+        writeText("Welcome to Gas Station!\nPlease tap your card", 0);
         main.setTextFill(Color.WHITE);
         changeTextSize(20, 0);
         main.setAlignment(Pos.CENTER);

@@ -124,6 +124,7 @@ public class HandleMessage {
                             @Override
                             public void run() {
                                 Platform.runLater(() -> {
+                                    resetVars();
                                     screenDisplay.resetLabels();
                                     screenDisplay.showWelcomeScreen();
                                     onWelcomeScreen = true;
