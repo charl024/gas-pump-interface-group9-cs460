@@ -34,14 +34,8 @@ public class ScreenDisplay {
         PossibleActionsForButton(int actionNum) {
             this.actionNum = actionNum;
         }
-
-        public int getActionNum() {
-            return actionNum;
-        }
     }
 
-    //TODO: super important TODO, make sure to have getters and/or
-    //TODO continued: setters for these global variables
     private Screen screenHandler; // Reference to Screen class to send messages
 
     // Screen Variables
@@ -78,9 +72,7 @@ public class ScreenDisplay {
         addMidLabels();
 
         primaryStage.setScene(new Scene(root, 697, 534));
-        //primaryStage.setMaximized(true);
-//        primaryStage.setMaxWidth(100);
-//        primaryStage.setMaxHeight(100);
+
         primaryStage.setTitle("Futuristic Pump Interface");
     }
 
@@ -100,7 +92,6 @@ public class ScreenDisplay {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
         for (int i = 0; i < 10; i++) {
-//            Button b = new Button("" + i);
             Button b = new Button();
             buttonMap.put(i, b);
             b.setPrefSize(200, screenBounds.getHeight() / 5);

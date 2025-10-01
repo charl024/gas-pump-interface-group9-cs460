@@ -6,8 +6,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-//display needs to know message
-
 public class ScreenMain extends Application {
     private ScreenDisplay screenDisplay;
     private HandleMessage handleMessage;
