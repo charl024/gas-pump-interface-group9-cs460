@@ -10,9 +10,9 @@ import java.util.List;
  * ScreenManager is responsible for handling communication
  * between the MainController and the Screen device.
  * Responsibilities:
- *  - Listen for user input or requests coming from the Screen
- *  - Forward those requests to the appropriate manager (GasServer or PumpAssembly)
- *  - Deliver messages from other managers back to the Screen
+ * - Listen for user input or requests coming from the Screen
+ * - Forward those requests to the appropriate manager (GasServer or PumpAssembly)
+ * - Deliver messages from other managers back to the Screen
  */
 public class ScreenManager implements Manager {
     private final CommPort screenServerPort;
@@ -59,6 +59,12 @@ public class ScreenManager implements Manager {
                     toPump.changeDevice("FM");
                     toForward.add(toPump);
                 }
+                case "CANCELTRANSACTION" -> {
+                    System.out.println("[ScreenManager] Forwarding CANCELTRANSACTION to ServerManager");
+                    Message toServer = new Message(message.getDescription());
+                    toServer.changeDevice("GS");
+                    toForward.add(toServer);
+                }
             }
         }
 
@@ -68,7 +74,6 @@ public class ScreenManager implements Manager {
 
     /**
      * Called by the controller to send commands to this manager's devices.
-     *
      */
     @Override
     public List<Message> sendMessage(Message message) {

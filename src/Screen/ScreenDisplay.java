@@ -86,7 +86,8 @@ public class ScreenDisplay {
 
     ///////////////////////////////////////////////////////////////////////////
     //CREATE GENERAL THINGS, SIDE BUTTONS, AND MIDDLE SECTION
-    ///////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////
 
     // Method creates buttons 0-9 (placed on left and right side of screen)
     // Occupies left and right side of BorderPane
@@ -281,7 +282,7 @@ public class ScreenDisplay {
         premLabel.setBackground(new Background(new BackgroundFill(Color.web("#111111"), CornerRadii.EMPTY, Insets.EMPTY)));
         premLabel.setStyle("-fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5;");
 
-        changeLabel(1,2,8);
+        changeLabel(1, 2, 8);
         cancelLabel = labelMap.get("8");
         writeText("CANCEL TRANSACTION", 8);
         cancelLabel.setTextFill(Color.WHITE);
@@ -448,7 +449,8 @@ public class ScreenDisplay {
 
     ///////////////////////////////////////////////////////////////////////////
     //SECTION THAT HANDLES MAKING SPECIFIC CHANGES TO A BUTTON OR A LABEL
-    ///////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////
 
     // TODO: need to finish/work on message sending from buttons and test
     // Modified to go to receipt after selecting gas
@@ -480,8 +482,7 @@ public class ScreenDisplay {
                     handleMessage.sendServerMessage(gasSelection);
                     onGasSelection = false;
                 } else if (buttonNum == 6 || buttonNum == 7) {
-                    Message gasSelection =
-                            new Message("SC-GASSELECTION-" + inUsePrem);
+                    Message gasSelection = new Message("SC-GASSELECTION-" + inUsePrem);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();
@@ -490,7 +491,12 @@ public class ScreenDisplay {
                     onGasSelection = false;
                 }
                 if (buttonNum == 8 || buttonNum == 9) {
+                    handleMessage.resetVars();
+                    handleMessage.setWelcomeScreen();
+                    resetLabels();
                     handleMessage.transactionCancel();
+                    handleMessage.sendServerMessage(new Message("SC-CANCELTRANSACTION"));
+                    onGasSelection = false;
                     return;
                 }
             }
@@ -567,7 +573,8 @@ public class ScreenDisplay {
 
     ///////////////////////////////////////////////////////////////////////////
     // Setters and Getters
-    ///////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////
 
     public void setOnAction(Consumer<Integer> handler) {
         this.onAction = handler;

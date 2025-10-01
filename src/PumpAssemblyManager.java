@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * PumpAssembly is responsible for managing communication
  * between the MainController and two external devices:
- *  - Flow Meter Pump (FM)
- *  - Hose (HS)
+ * - Flow Meter Pump (FM)
+ * - Hose (HS)
  */
 public class PumpAssemblyManager implements Manager {
     private final StatusPort hosePort;
@@ -139,7 +139,7 @@ public class PumpAssemblyManager implements Manager {
                 System.out.println("[PumpAssemblyManager] Gas selection received, price set.");
                 System.out.println("printing something");
                 System.out.println(hoseConnected);
-                if(hoseConnected) {
+                if (hoseConnected) {
                     toForward.addAll(handleMessage(new Message("HS-CN")));
                 } else {
                     toForward.add(new Message("SC-DC"));
@@ -149,6 +149,7 @@ public class PumpAssemblyManager implements Manager {
             }
             flowMeterPumpPort.send(message);
         }
+
         return toForward;
     }
 

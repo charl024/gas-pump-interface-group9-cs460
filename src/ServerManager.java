@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * ServerManager is responsible for managing communication
  * between the MainController and three external devices:
- *  - Gas Server (GS)
- *  - Bank Server (BS)
- *  - Card Reader (CR)
+ * - Gas Server (GS)
+ * - Bank Server (BS)
+ * - Card Reader (CR)
  */
 public class ServerManager implements Manager {
     private final CommPort gasServerPort;
@@ -57,7 +57,7 @@ public class ServerManager implements Manager {
             case "CR" -> {
                 //Only request for bank to validate card if we aren't
                 // currently in transaction
-                if(!inTransaction) {
+                if (!inTransaction) {
                     // Forward CardReader input to BankServer for validation
                     System.out.println("[ServerManager] CardReader input sending to BankServer");
                     Message toBank = new Message(message.getDescription());
@@ -112,8 +112,10 @@ public class ServerManager implements Manager {
                 //Gas station should only be receiving final transaction
                 //messages, can reset in transaction
                 inTransaction = false;
-                System.out.printf("[ServerManager] Sending to GasServer: %s%n", message.getDescription());
-                gasServerPort.send(message);
+                if (!parts[1].equals("CANCELTRANSACTION")) {
+                    System.out.printf("[ServerManager] Sending to GasServer: %s%n", message.getDescription());
+                    gasServerPort.send(message);
+                }
             }
             case "BS" -> {
                 System.out.printf("[ServerManager] Sending to BankServer: %s%n", message.getDescription());

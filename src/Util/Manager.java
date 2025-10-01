@@ -1,6 +1,7 @@
 package Util;
 
 import IOPort.IOPort;
+
 import java.util.List;
 
 /**
@@ -8,9 +9,9 @@ import java.util.List;
  * Each Manager is responsible for handling a specific group of devices
  * (e.g., ScreenManager, ServerManager, PumpAssemblyManager).
  * This interface does the following stuff:
- *  - Provide access to the IOPorts it manages
- *  - Handle incoming messages from devices connected to those ports
- *  - Send outgoing messages to the devices it controls
+ * - Provide access to the IOPorts it manages
+ * - Handle incoming messages from devices connected to those ports
+ * - Send outgoing messages to the devices it controls
  */
 public interface Manager {
     /**

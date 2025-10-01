@@ -405,7 +405,13 @@ public class HandleMessage {
         server.sendMessage(msg);
     }
 
-    private void resetVars(){
+    public void setWelcomeScreen() {
+        System.out.println("reached here");
+        onWelcomeScreen = true;
+    }
+
+    public void resetVars() {
+        System.out.println("reach here");
         onAuthorizing = false;
         onGasSelection = false;
         onPumping = false;
