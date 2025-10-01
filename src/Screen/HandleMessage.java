@@ -355,6 +355,7 @@ public class HandleMessage {
                 Platform.runLater(() -> {
                     screenDisplay.resetLabels();
                     screenDisplay.showTimeoutScreen();
+                    sendServerMessage(new Message("SC-CANCELTRANSACTION"));
                     System.out.println("Timeout triggered!"); // debug message
                 });
             }
