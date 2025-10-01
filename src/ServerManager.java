@@ -21,6 +21,9 @@ public class ServerManager implements Manager {
 
     private boolean inTransaction;
 
+    /**
+     * Server manager, creates gas, bank and card port
+     */
     public ServerManager() {
         //When called, it should then create the IOConnections that will then
         // connect to the corresponding devices
@@ -39,12 +42,23 @@ public class ServerManager implements Manager {
         cardReaderPort = new StatusPort(3);
     }
 
+    /**
+     * Get list of ports that the manager handles
+     *
+     * @return List of ports
+     */
     @Override
     public List<IOPort> getPorts() {
         // Provide MainController with the list of ports this manager listens to
         return List.of(gasServerPort, bankServerPort, cardReaderPort);
     }
 
+    /**
+     * Messages that are sent from the server devices
+     *
+     * @param message the incoming message
+     * @return List of messages being sent
+     */
     @Override
     public List<Message> handleMessage(Message message) {
         System.out.printf("[ServerManager] Received: %s%n", message.getDescription());
@@ -101,7 +115,7 @@ public class ServerManager implements Manager {
     /**
      * Called by the controller to send commands to this manager's devices.
      *
-     * @return
+     * @return List of messages that need to be sent
      */
     @Override
     public List<Message> sendMessage(Message message) {

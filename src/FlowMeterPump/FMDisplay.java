@@ -11,8 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -128,7 +126,6 @@ public class FMDisplay {
             });
             //If current volume is greater than total volume, then we are done
             if (curVol > totalVolume) {
-//                timerRunning = false;
                 handleStop();
                 sendGasTotals();
             }
@@ -268,6 +265,9 @@ public class FMDisplay {
         pumpCord.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Pick random gas tank size
+     */
     public void pickRandomSize() {
         Random rand = new Random();
         totalVolume = randomVolumes[rand.nextInt(randomVolumes.length)];
@@ -301,23 +301,6 @@ public class FMDisplay {
         this.gasRate = gasRate;
     }
 
-    /**
-     * Set how much gallons are pumped per minute
-     *
-     * @param volRate Gallons per minute
-     */
-    public void setVolRate(double volRate) {
-        this.volRate = volRate;
-    }
-
-    /**
-     * Set total gallons that a car can transport
-     *
-     * @param totalVolume Total gallons
-     */
-    public void setTotalVolume(double totalVolume) {
-        this.totalVolume = totalVolume;
-    }
 
     /**
      * Turn timer on or off
@@ -328,6 +311,9 @@ public class FMDisplay {
         this.timerRunning = timerRunning;
     }
 
+    /**
+     * Set last starting time
+     */
     public void setLastStartTime() {
         lastStartTime = System.currentTimeMillis();
     }

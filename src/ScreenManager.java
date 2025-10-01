@@ -17,16 +17,28 @@ import java.util.List;
 public class ScreenManager implements Manager {
     private final CommPort screenServerPort;
 
+    /**
+     * Screen manager that handles messages for screen device
+     */
     public ScreenManager() {
         screenServerPort = new CommPort(6);
     }
 
+    /**
+     * Get list of ports that the screen manager will handle
+     * @return List of ports screen manager handles
+     */
     @Override
     public List<IOPort> getPorts() {
         // Provide MainController with the list of ports this manager listens to
         return List.of(screenServerPort);
     }
 
+    /**
+     * Messages that the screen device need to send out
+     * @param message the incoming message
+     * @return List of messages being sent out
+     */
     @Override
     public List<Message> handleMessage(Message message) {
         System.out.printf("[ScreenManager] Received: %s%n", message.getDescription());

@@ -99,7 +99,6 @@ public class CRDisplay {
      * Load the tap to pay image so that it can then be displayed
      */
     private void loadImage() {
-//        String fileName = "Images/BlackTTP.png";
         String fileName = "Images/WhiteTTP.png";
         File imageFile = new File(fileName);
 
@@ -163,5 +162,4 @@ public class CRDisplay {
     public CRInput getInput() {
         return input;
     }
-
 }

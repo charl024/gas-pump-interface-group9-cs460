@@ -88,6 +88,11 @@ public class GSServer implements Runnable {
         }
     }
 
+    /**
+     * Check if hose is connected or not
+     *
+     * @return Hose Connected
+     */
     public boolean isConnected() {
         return connected;
     }

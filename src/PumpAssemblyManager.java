@@ -22,11 +22,20 @@ public class PumpAssemblyManager implements Manager {
     private boolean startedPumping = false;
     private boolean priceSelected = false;
 
+    /**
+     * Pump Assembly Manager constructor, handles messages for hose and
+     * flow meter device
+     */
     public PumpAssemblyManager() {
         hosePort = new StatusPort(5);
         flowMeterPumpPort = new CommPort(4);
     }
 
+    /**
+     * Get list of ports that manager will handle
+     *
+     * @return List of ports
+     */
     @Override
     public List<IOPort> getPorts() {
         // Provide MainController with the list of ports this manager listens to
@@ -94,11 +103,6 @@ public class PumpAssemblyManager implements Manager {
     private void handleFlowMeterMessage(String[] parts, Message message, List<Message> toForward) {
         String flowMeterInfo = parts[1];
         System.out.printf("[PumpAssemblyManager] FlowMeter message: %s%n", flowMeterInfo);
-        //TODO FIX
-//        if(flowMeterInfo.equals("DC")) {
-//            Message toScreen = new Message("SC-DC");
-//            toForward.add(toScreen);
-//        }
 
         if (flowMeterInfo.equals("NEWTOTAL")) {
             // End of pumping session so reset state
@@ -126,9 +130,7 @@ public class PumpAssemblyManager implements Manager {
      */
     @Override
     public List<Message> sendMessage(Message message) {
-        System.out.printf("[PumpAssemblyManager] Sending to %s: %s%n",
-                message.getDescription().split("-")[0],
-                message.getDescription());
+        System.out.printf("[PumpAssemblyManager] Sending to %s: %s%n", message.getDescription().split("-")[0], message.getDescription());
 
         List<Message> toForward = new ArrayList<>();
 
@@ -153,6 +155,9 @@ public class PumpAssemblyManager implements Manager {
         return toForward;
     }
 
+    /**
+     * Send a message to tell the flow meter to start flowing
+     */
     private void sendStartPump() {
         Message startPump = new Message("FM-START");
         pumping = true;

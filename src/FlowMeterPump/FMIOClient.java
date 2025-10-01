@@ -32,11 +32,9 @@ public class FMIOClient {
      * @param message Message sent by the IOPort
      */
     public void handleMessage(Message message) {
-        //Example message input: FM-START-2.86-10-15
+        //Example message input: FM-____
         //First part tells what device it is for: FM = Flow meter
         //Second part tells us how much the gas is going to be: 2.86 per gallon
-        //Third part tells us how fast the gas is being pumped (OPTIONAL): 10 gallons per minute
-        //Fourth part tells us how much gas is needed (OPTIONAL): 15 gallons total
 
         String messageRE = message.getDescription();
         String[] parts = messageRE.split("-");

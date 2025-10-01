@@ -5,7 +5,6 @@
 package CardReader;
 
 import Util.PortLookupMap;
-
 import java.io.IOException;
 
 /**
@@ -33,6 +32,4 @@ public class CardReader {
     public CRDisplay getDisplay() {
         return display;
     }
-
-
 }
