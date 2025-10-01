@@ -58,8 +58,8 @@ public class FMDisplay {
      */
     public FMDisplay(FMServer server) {
         this.server = server;
-        randomVolumes = new double[]{20, 15, 4, 6, 11, 8.75, 9.32, 7.44, 4.60, 13.20, 10.5, 13.8, 17.09};
-//        randomVolumes = new double[]{50};//Use for testing
+//        randomVolumes = new double[]{20, 15, 4, 6, 11, 8.75, 9.32, 7.44, 4.60, 13.20, 10.5, 13.8, 17.09};
+        randomVolumes = new double[]{1};//Use for testing
         pane = new BorderPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setMinSize(400, 200);

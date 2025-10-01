@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class ScreenDisplay {
@@ -450,20 +451,22 @@ public class ScreenDisplay {
         changeButtonColorV2(color, buttonNum);
 
         btn.setOnAction(e -> {
-            // Keep your original message functionality
+            Random random = new Random();
+            int randomNumber = random.nextInt();
             if (onGasSelection) {
                 if (buttonNum == 2 || buttonNum == 3) {
                     Message gasSelection =
-                            new Message("SC-GASSELECTION-" + inUseReg);
+                            new Message("SC-GASSELECTION-" + inUseReg + "-" + randomNumber);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();
                     handleMessage.timeoutTimer();
+                    System.out.println(gasSelection);
                     handleMessage.sendServerMessage(gasSelection);
                     onGasSelection = false;
                 } else if (buttonNum == 4 || buttonNum == 5) {
                     Message gasSelection =
-                            new Message("SC-GASSELECTION-" + inUsePlus);
+                            new Message("SC-GASSELECTION-" + inUsePlus + "-" + randomNumber);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();
@@ -471,7 +474,7 @@ public class ScreenDisplay {
                     handleMessage.sendServerMessage(gasSelection);
                     onGasSelection = false;
                 } else if (buttonNum == 6 || buttonNum == 7) {
-                    Message gasSelection = new Message("SC-GASSELECTION-" + inUsePrem);
+                    Message gasSelection = new Message("SC-GASSELECTION-" + inUsePrem + "-" + randomNumber);
                     handleMessage.cancelTimeout();
                     resetLabels();
                     showConnectHoseScreen();
@@ -512,7 +515,7 @@ public class ScreenDisplay {
                 if (index != section) {
                     Label below = labelMap.get("" + index);
                     below.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY))); // or transparent
-                    //System.out.println(index);
+
                 }
             }
         }

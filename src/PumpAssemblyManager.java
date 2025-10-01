@@ -142,8 +142,10 @@ public class PumpAssemblyManager implements Manager {
                 System.out.println("printing something");
                 System.out.println(hoseConnected);
                 if (hoseConnected) {
+                    System.out.println("Reaching here");
                     toForward.addAll(handleMessage(new Message("HS-CN")));
                 } else {
+                    System.out.println("Reaching here20112");
                     toForward.add(new Message("SC-DC"));
                 }
 

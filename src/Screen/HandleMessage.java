@@ -136,7 +136,6 @@ public class HandleMessage {
             } else if (onGasSelection) {
                 if (parts[1].equals("PUMPINGPROGRESS")) {
                     //display screen that says "hose is pumping"
-                    System.out.println("reach here yes");
                     Platform.runLater(() -> {
                         screenDisplay.resetLabels();
                         screenDisplay.showPumpingProgress();
@@ -144,7 +143,6 @@ public class HandleMessage {
                         onGasSelection = false;
                     });
                 } else if (parts[1].equals("DC")) {
-                    System.out.println("reaching here why");
                     //display screen that says "please connect hose"
                     Platform.runLater(() -> {
                         screenDisplay.resetLabels();
@@ -161,8 +159,6 @@ public class HandleMessage {
                         screenDisplay.showPumpingProgress();
                         onWaitingConnection = false;
                         onPumping = true;
-                        System.out.println("reach the waiting connection");
-
                     });
                 }
             } else if (onPumping) {
@@ -211,8 +207,6 @@ public class HandleMessage {
                         Platform.runLater(() -> {
                             screenDisplay.resetLabels();
                             screenDisplay.showWelcomeScreen();
-
-
                             onWelcomeScreen = true;
                         });
                     }
@@ -287,12 +281,10 @@ public class HandleMessage {
     }
 
     public void setWelcomeScreen() {
-        System.out.println("reached here");
         onWelcomeScreen = true;
     }
 
     public void resetVars() {
-        System.out.println("reach here");
         onAuthorizing = false;
         onGasSelection = false;
         onPumping = false;
