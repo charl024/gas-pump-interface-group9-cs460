@@ -13,7 +13,6 @@ public class HandleMessage {
     private ScreenDisplay.PossibleActionsForButton possibleActions;
     private Timer timer;
 
-    // TODO //IMPORTANT// Need to change to actual port number and fix this
     private ScreenServer server;
 
     private boolean onScreenUnavailable;

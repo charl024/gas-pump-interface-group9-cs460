@@ -232,7 +232,6 @@ public class ScreenDisplay {
      * Shows screen showing the gas options
      */
     public void showGasSelectionScreen() {
-        //TODO INCLUDE THE PRICE PER GALLON TOO
 
         // First label: instruction
         changeLabel(1, 2, 0);  // Span 1 row, 2 columns
@@ -443,7 +442,6 @@ public class ScreenDisplay {
 
     /// ////////////////////////////////////////////////////////////////////////
 
-    // TODO: need to finish/work on message sending from buttons and test
     // Modified to go to receipt after selecting gas
     private void setUpButtonPress(int buttonNum, PossibleActionsForButton action /*, String label*/, Color color) {
         Button btn = buttonMap.get(buttonNum);
@@ -542,10 +540,6 @@ public class ScreenDisplay {
 
     }
 
-    //TODO: need to pass string value (for map) of which label to add text to
-    //TODO: add label to map (perform same action in removeText())
-
-    //TODO: change this method
     public void writeText(String text, int label) {
         Label l = labelMap.get("" + label);
         l.setText(text);
