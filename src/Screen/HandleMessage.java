@@ -228,6 +228,7 @@ public class HandleMessage {
             @Override
             public void run() {
                 Platform.runLater(() -> {
+                    resetVars();
                     screenDisplay.resetLabels();
                     screenDisplay.showTimeoutScreen();
                     sendServerMessage(new Message("SC-CANCELTRANSACTION"));
@@ -240,6 +241,7 @@ public class HandleMessage {
             @Override
             public void run() {
                 Platform.runLater(() -> {
+                    onWelcomeScreen = true;
                     screenDisplay.resetLabels();
                     screenDisplay.showWelcomeScreen();
                     System.out.println("Back to welcome screen"); // debug message
